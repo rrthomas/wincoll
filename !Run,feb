@@ -1,0 +1,3 @@
+ChangeDynamicArea -SpriteSize 32k
+Dir <Obey$Dir>
+Run <Obey$Dir>.!RunImage
