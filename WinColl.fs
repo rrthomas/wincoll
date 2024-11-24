@@ -219,7 +219,7 @@ WORLDS-BYTES ALLOT
    ."  This game is an unashamed Repton clone,"
    ." with sprites and screens designed by"     CR
    ." Pav, Jes & Al, and programmed by Roobs"   CR
-   ." in aForth."                               CR
+   ." in pForth."                               CR
    ."  This version does not have eggs. It has"
    ." round bricks instead. Apart from that,"   CR
    ." it is almost the same as Repton 1."       CR
