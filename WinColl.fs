@@ -1,13 +1,43 @@
 \ WinColl
 \ Roughly equivalent to Repton 0.5
-\ need to fix: SPRITE (plot current sprite at given position),
-\              SPRITEN (*Schoose sprite N), @DATA (use OS_GBPB)
 
 ONLY FORTH DEFINITIONS  DECIMAL
 MARKER WINCOLL
 
 \ Utility words
-: KEY?   ( c -- f )   256 >-<  255 129 [ 3 ] OS_Byte  2DROP 255 = ;
+\ The argument to KEY? is the absolute value of the negative INKEY code.
+: KEY?   ( c -- f )   256 >-<  255 SWAP  129 [ 3 3 ] OS" OS_Byte"  2DROP 255 = ;
+: OFF   [ 0 0 ] OS" OS_RemoveCursors" ;
+
+\ Monotonic timer
+CREATE TIME-BUFFER  5 ALLOT
+: @TIME   ( -- u )   TIME-BUFFER 1 [ 2 0 ] OS" OS_Word"  TIME-BUFFER @ ;
+: !TIME   ( u -- )   TIME-BUFFER  TUCK !  2 [ 2 0 ] OS" OS_Word" ;
+
+: DELAY   ( n -- )   @TIME  BEGIN @TIME OVER -  2 PICK < WHILE  REPEAT 2DROP ;
+
+\ Graphics utilities
+: RGB-EMIT  ROT EMIT  SWAP EMIT  EMIT ;
+: COLOUR   17 EMIT   EMIT ;
+: RGB  19 EMIT  EMIT  16 EMIT  RGB-EMIT ;
+: BORDER  19 EMIT  255 EMIT  16 EMIT  RGB-EMIT ;
+
+: WAIT   19 [ 1 0 ] OS" OS_Byte" ;
+: MODE   ( u -- )   22 EMIT  EMIT ;
+\ : SHADOW    ( draw to shadow bank )  2 [ 2 0 ] 112 OS" OS_Byte" ;
+: SHADOW ;
+: DISPLAY-BANK   255 0 251 [ 3 2 ] OS" OS_Byte" DROP ;
+\ : FLIP   ( swap screen banks )
+\    DISPLAY-BANK  DUP 2 >-< 113 [ 2 0 ] OS" OS_Byte"  112 [ 2 0 ] OS" OS_Byte" ;
+: FLIP ;
+
+: SPRITE   ( x y -- ) SWAP 237 [ 3 0 ] OS" OS_Plot" ;
+
+: SPRITEN   ( n -- )
+   0 <# BL HOLD  #S #> DROP  \ format number as blank-delimited string, keep only the address
+   0    \ ignored
+   24   \ OS_SpriteOp code
+   [ 3 0 ] OS" OS_SpriteOp" ;
 
 \ Initialise miscellaneous variables
 0 CONSTANT Gap    1 CONSTANT Blob   2 CONSTANT Diamond
@@ -24,7 +54,8 @@ CREATE WORLD   \ world array
 AREA ALLOT
 AREA WORLD + 1+ CONSTANT ENDWORLD   \ end of array
 CREATE ORIGINAL   \ permanent array, WORLD used during game
-AREA LEVELS * ALLOT
+AREA LEVELS * CONSTANT WORLDS-BYTES
+WORLDS-BYTES ALLOT
 
 \ Set up screen and handle sound
 : PALETTE   \ set up screen palette
@@ -66,33 +97,46 @@ AREA LEVELS * ALLOT
 
 \ Move rocks
 1 CONSTANT X+
-: DOWN?   I LONG - C@ Gap = ;
-: SIDEWAYS?   X+ NEGATE TO X+  I X+ + DUP
+: DOWN?   LONG - C@ Gap = ;
+: SIDEWAYS?   X+ NEGATE TO X+  X+ + DUP
    LONG - C@ SWAP C@ + 0= IF TRUE ELSE FALSE THEN ;
 : FALL   \ make rocks fall
    ENDWORLD WORLD DO
       I C@ Rock = IF
-         I LONG - C@  Earth < IF @TIME 1 AND 1- 1 OR TO X+
-         DOWN? IF LONG NEGATE
-         ELSE SIDEWAYS? IF X+ LONG - ELSE SIDEWAYS? IF X+ LONG -
-         ELSE 0 THEN THEN THEN
-         DUP IF DUP I + LONG - C@ Win = IF TRUE DEAD? ! THEN
-         I + Rock SWAP C!  Gap I C! *" SOUND 2 65526 100 2"
-      ELSE DROP  THEN THEN THEN
+         I LONG - C@  Earth < IF
+            @TIME 1 AND 1- 1 OR TO X+  I DOWN? IF
+               LONG NEGATE
+            ELSE I SIDEWAYS? IF
+                  X+ LONG -
+               ELSE I SIDEWAYS? IF
+                     X+ LONG -
+                  ELSE 0
+                  THEN
+               THEN
+            THEN
+            DUP IF
+               DUP I + LONG - C@ Win = IF
+                  TRUE DEAD? !
+               THEN
+               I + Rock SWAP C!  Gap I C! *" SOUND 2 65526 100 2"
+            ELSE DROP
+            THEN
+         THEN
+      THEN
    LOOP ;
 
 \ Deal with Win's moves
 : GO   ( move through gap )   TRUE ;
 : DIG   ( through earth )   1 SCORE +!  TRUE ;
 : MUNCH   ( a diamond )   10 SCORE +!  TRUE -1 DIAMONDS +!
-*" SOUND 1 65526 110 2" ;
+   *" SOUND 1 65526 110 2" ;
 : UNLOCK   ( the safes )   5 SCORE +!  TRUE  ENDWORLD WORLD
-DO  I C@ Safe = IF Diamond I C! THEN  LOOP
-*" SOUND 1 65526 80 2" ;
+   DO  I C@ Safe = IF Diamond I C! THEN  LOOP
+   *" SOUND 1 65526 80 2" ;
 : PUSH   ( rock/egg )
-OVER 2* X @ + Y @ XY>MEM C@ Gap =  OVER 0=  AND IF OVER X @ + Y
-@ 2DUP  XY>MEM Gap SWAP C!  3 PICK UNDER+ XY>MEM Rock SWAP C!
-TRUE ELSE FALSE THEN ;
+   OVER 2* X @ + Y @ XY>MEM C@ Gap =  OVER 0=  AND IF OVER X @ + Y
+   @ 2DUP  XY>MEM Gap SWAP C!  3 PICK  ROT + SWAP  XY>MEM Rock SWAP C!
+   TRUE ELSE FALSE THEN ;
 : MOVE?   ( dx dy x' y' -- moved? )
    CASE XY>MEM C@
      0 OF GO ENDOF
@@ -149,8 +193,8 @@ TRUE ELSE FALSE THEN ;
         DUP 49 = IF 1 TO BEGINNING THEN
         DUP 50 = IF 2 TO BEGINNING THEN
         DUP 51 = IF 3 TO BEGINNING THEN
-   DUP ASCII + = IF MEN 1+ 10 MIN TO MEN  THEN
-   DUP ASCII - = IF MEN 1-  0 MAX TO MEN  THEN
+   DUP [CHAR] + = IF MEN 1+ 10 MIN TO MEN  THEN
+   DUP [CHAR] - = IF MEN 1-  0 MAX TO MEN  THEN
    25000 BEGINNING * 50000 + TO DURATION ;
 
 \ Play the game!
@@ -162,7 +206,7 @@ TRUE ELSE FALSE THEN ;
    BEGIN  0 !TIME 1 X ! 1 Y !  0 0 .WORLD .WIN .LOGO .STATUS
       BEGIN
          56 KEY? IF @TIME BEGIN 52 KEY? UNTIL !TIME THEN
-         WAIT FLIP  WALK FALL
+         WAIT FLIP  WALK FALL   10 DELAY \ FIXME constant frame rate
          @TIME DURATION > 36 KEY? OR IF TRUE DEAD? ! THEN
          X @ 3 - Y @ 3 - .WORLD .WIN .STATUS  SOUND
       DEAD? @ DIAMONDS @ 0= OR UNTIL
@@ -171,11 +215,11 @@ TRUE ELSE FALSE THEN ;
    LIVES @ 0= IF Splat SPLURGE ELSE Win SPLURGE THEN ;
 
 \ Instructions
-: INSTRUCT   9 MODE -CURSOR PALETTE  7 COLOUR  0 13 AT-XY  .LOGO
+: INSTRUCT   9 MODE OFF PALETTE  7 COLOUR  0 13 AT-XY  .LOGO
    ."  This game is an unashamed Repton clone,"
    ." with sprites and screens designed by"     CR
    ." Pav, Jes & Al, and programmed by Roobs"   CR
-   ." in pForth."                               CR
+   ." in aForth."                               CR
    ."  This version does not have eggs. It has"
    ." round bricks instead. Apart from that,"   CR
    ." it is almost the same as Repton 1."       CR
@@ -189,7 +233,12 @@ TRUE ELSE FALSE THEN ;
    BEGIN KEY CHEAT 32 = UNTIL ;
 
 \ Load world, sprites and sound module
-: @DATA   ( load data )   *" LOAD Data Original" ;
+: @DATA   ( load data )
+   ORIGINAL WORLDS-BYTES
+   S" Data" R/O OPEN-FILE  DROP   \ FIXME: check ior code
+   READ-FILE
+   2DROP   \ FIXME: check ior code and number of bytes
+   ;
 : *COMMANDS   ( load files )
    *" SLoad WinSpr"
    *" RMLoad UserVoices"  *" ChannelVoice 1 Ping"
