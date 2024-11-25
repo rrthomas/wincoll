@@ -43,7 +43,7 @@ CREATE TIME-BUFFER  5 ALLOT
 6 CONSTANT Brick  7 CONSTANT Safe
 100 CONSTANT Win  200 CONSTANT Splat
 VARIABLE X  VARIABLE Y   ( your coordinates )  0 X ! 0 Y !
-VARIABLE SCORE  VARIABLE LIVES  VARIABLE DEAD?
+VARIABLE LIVES  VARIABLE DEAD?
 VARIABLE LEVEL  4 CONSTANT LEVELS
 VARIABLE DIAMONDS   \ number of diamonds left on level
 50 CONSTANT LONG   \ length of side of world in blocks
@@ -85,11 +85,10 @@ WORLDS-BYTES ALLOT
    LOOP  LOOP ;
 
 \ Status display
-: .SCORE   2 1 AT-XY  7 COLOUR  ."    Score: " SCORE ? ;
 : .DIAMONDS   22 1 AT-XY  7 COLOUR  ." Diamonds: " DIAMONDS ? ;
-: .LIVES   2 3 AT-XY  7 COLOUR  ."    Lives: " LIVES ? ;
+: .LIVES   2 1 AT-XY  7 COLOUR  ."    Lives: " LIVES ? ;
 : .LEVEL   22 3 AT-XY  7 COLOUR  ."    Level: " LEVEL ? ;
-: .STATUS   .SCORE .DIAMONDS .LIVES .LEVEL ;
+: .STATUS   .DIAMONDS .LIVES .LEVEL ;
 
 
 \ Move rocks
@@ -124,10 +123,10 @@ WORLDS-BYTES ALLOT
 
 \ Deal with Win's moves
 : GO   ( move through gap )   TRUE ;
-: DIG   ( through earth )   1 SCORE +!  TRUE ;
-: MUNCH   ( a diamond )   10 SCORE +!  TRUE -1 DIAMONDS +!
+: DIG   ( through earth )   TRUE ;
+: MUNCH   ( a diamond )   TRUE -1 DIAMONDS +!
    *" SOUND 1 65526 110 2" ;
-: UNLOCK   ( the safes )   5 SCORE +!  TRUE  ENDWORLD WORLD
+: UNLOCK   ( the safes )   TRUE  ENDWORLD WORLD
    DO  I C@ Safe = IF Diamond I C! THEN  LOOP
    *" SOUND 1 65526 80 2" ;
 : PUSH   ( rock )
@@ -195,7 +194,7 @@ WORLDS-BYTES ALLOT
 \ Play the game!
 : PLAY
    9 MODE OFF PALETTE SHADOW
-   0 SCORE ! INITIAL-LIVES LIVES ! BEGINNING LEVEL ! 0 DEAD? !  0 !TIME
+   INITIAL-LIVES LIVES ! BEGINNING LEVEL ! 0 DEAD? !  0 !TIME
    ORIGINAL AREA LEVEL @ * + WORLD AREA CMOVE  SURVEY
    1 X ! 1 Y ! 0 0 .WORLD .WIN .STATUS  WAIT FLIP
    BEGIN  0 !TIME 1 X ! 1 Y !  0 0 .WORLD .WIN .STATUS
