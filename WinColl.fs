@@ -133,7 +133,7 @@ WORLDS-BYTES ALLOT
 : UNLOCK   ( the safes )   5 SCORE +!  TRUE  ENDWORLD WORLD
    DO  I C@ Safe = IF Diamond I C! THEN  LOOP
    *" SOUND 1 65526 80 2" ;
-: PUSH   ( rock/egg )
+: PUSH   ( rock )
    OVER 2* X @ + Y @ XY>MEM C@ Gap =  OVER 0=  AND IF OVER X @ + Y
    @ 2DUP  XY>MEM Gap SWAP C!  3 PICK  ROT + SWAP  XY>MEM Rock SWAP C!
    TRUE ELSE FALSE THEN ;
