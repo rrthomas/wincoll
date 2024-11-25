@@ -71,23 +71,24 @@ WORLDS-BYTES ALLOT
 \ Display world
 64 CONSTANT SIZE   \ of sprites
 0 CONSTANT WX  0 CONSTANT WY   \ base world coords
-200 CONSTANT OX  151 CONSTANT OY   \ graphics coords of window
+200 CONSTANT OX  50 CONSTANT OY   \ graphics coords of window
 : XY>MEM   ( x y -- addr )
    LONG *  +  WORLD + ;
 : XY>SCR   ( x y -- x' y' )
    SIZE * SWAP SIZE * OX + SWAP OY + ;
+13 CONSTANT WINDOW-SIZE
 : .WORLD   ( x y -- )
-   LONG 7 - SWAP 0 MAX MIN TO WY  LONG 7 - SWAP 0 MAX MIN TO WX
-   7 0 DO  7 0 DO
-      J WX + I WY +  XY>MEM C@  DUP Win < IF  LEVEL @ 10 * + SPRITEN
+   LONG WINDOW-SIZE - SWAP 0 MAX MIN TO WY  LONG WINDOW-SIZE - SWAP 0 MAX MIN TO WX
+   WINDOW-SIZE 0 DO  WINDOW-SIZE 0 DO
+      J WX + I WY +  XY>MEM C@   DUP Win < IF  LEVEL @ 10 * + SPRITEN
       J I XY>SCR SPRITE  ELSE DROP THEN
    LOOP  LOOP ;
 
 \ Status display
-: .SCORE   22 14 AT-XY  7 COLOUR  ."    Score: " SCORE ? ;
-: .DIAMONDS   22 16 AT-XY  7 COLOUR  ." Diamonds: " DIAMONDS ? ;
-: .LIVES   22 18 AT-XY  7 COLOUR  ."    Lives: " LIVES ? ;
-: .LEVEL   22 20 AT-XY  7 COLOUR  ."    Level: " LEVEL ? ;
+: .SCORE   2 1 AT-XY  7 COLOUR  ."    Score: " SCORE ? ;
+: .DIAMONDS   22 1 AT-XY  7 COLOUR  ." Diamonds: " DIAMONDS ? ;
+: .LIVES   2 3 AT-XY  7 COLOUR  ."    Lives: " LIVES ? ;
+: .LEVEL   22 3 AT-XY  7 COLOUR  ."    Level: " LEVEL ? ;
 : .STATUS   .SCORE .DIAMONDS .LIVES .LEVEL ;
 
 
@@ -178,7 +179,7 @@ WORLDS-BYTES ALLOT
 \ Finish the whole game; die, live, or cheat
 : SPLURGE   ( sprite# -- )
    0 TO WX  0 TO WY
-   7 0 DO  7 0 DO
+   WINDOW-SIZE 0 DO  WINDOW-SIZE 0 DO
       DUP SPRITEN  I J XY>SCR SPRITE
    LOOP LOOP
    WAIT FLIP  300 DELAY ;
@@ -196,13 +197,14 @@ WORLDS-BYTES ALLOT
    9 MODE OFF PALETTE SHADOW
    0 SCORE ! INITIAL-LIVES LIVES ! BEGINNING LEVEL ! 0 DEAD? !  0 !TIME
    ORIGINAL AREA LEVEL @ * + WORLD AREA CMOVE  SURVEY
-   1 X ! 1 Y ! 0 0 .WORLD .WIN .LOGO .STATUS  WAIT FLIP
-   BEGIN  0 !TIME 1 X ! 1 Y !  0 0 .WORLD .WIN .LOGO .STATUS
+   1 X ! 1 Y ! 0 0 .WORLD .WIN .STATUS  WAIT FLIP
+   BEGIN  0 !TIME 1 X ! 1 Y !  0 0 .WORLD .WIN .STATUS
       BEGIN
          56 KEY? IF @TIME BEGIN 52 KEY? UNTIL !TIME THEN
          WAIT FLIP  WALK FALL   10 DELAY \ FIXME constant frame rate
          36 KEY? IF TRUE DEAD? ! THEN
-         X @ 3 - Y @ 3 - .WORLD .WIN .STATUS  SOUND
+         X @ WINDOW-SIZE 2/ -  Y @ WINDOW-SIZE 2/ -  .WORLD
+         .WIN .STATUS  SOUND
       DEAD? @ DIAMONDS @ 0= OR UNTIL
    DEAD? @ IF DIE ELSE FINISH THEN
    LIVES @ 0= LEVEL @ LEVELS = OR UNTIL  .STATUS
