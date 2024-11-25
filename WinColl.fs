@@ -209,16 +209,14 @@ WORLDS-BYTES ALLOT
    LIVES @ 0= IF Splat SPLURGE ELSE Win SPLURGE THEN ;
 
 \ Instructions
-: INSTRUCT   9 MODE OFF PALETTE  7 COLOUR  0 13 AT-XY  .LOGO
+: INSTRUCT   9 MODE OFF PALETTE  7 COLOUR  0 14 AT-XY  .LOGO
    ."  This game is an unashamed Repton clone,"
    ." with sprites and screens designed by"     CR
-   ." Pav, Jes & Al, and programmed by Roobs"   CR
-   ." in pForth."                               CR
+   ." Pav, Jes, Al, and Roobs, who also "       CR
+   ." programmed it."                           CR
    ."  This version does not have eggs. It has"
    ." round bricks instead. Apart from that,"   CR
    ." it is almost the same as Repton 1."       CR
-   ."  If you have never played a Repton game,"
-   ." then you should be ashamed of yourself!"  CR
                                                 CR
    ."     Z/X - Left/Right   '/? - Up/Down"     CR
    ." S/Q - Sound on/off  P/R - Pause/Unpause"  CR
