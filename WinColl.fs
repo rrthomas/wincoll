@@ -100,7 +100,7 @@ WORLDS-BYTES ALLOT
    ENDWORLD WORLD DO
       I C@ Rock = IF
          I LONG - C@  Earth < IF
-            @TIME 1 AND 1- 1 OR TO X+  I DOWN? IF
+            I DOWN? IF
                LONG NEGATE
             ELSE I SIDEWAYS? IF
                   X+ LONG -
