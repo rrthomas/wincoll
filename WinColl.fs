@@ -71,12 +71,12 @@ WORLDS-BYTES ALLOT
 \ Display world
 64 CONSTANT SIZE   \ of sprites
 0 CONSTANT WX  0 CONSTANT WY   \ base world coords
-200 CONSTANT OX  50 CONSTANT OY   \ graphics coords of window
+160 CONSTANT OX  16 CONSTANT OY   \ graphics coords of window
 : XY>MEM   ( x y -- addr )
    LONG *  +  WORLD + ;
 : XY>SCR   ( x y -- x' y' )
    SIZE * SWAP SIZE * OX + SWAP OY + ;
-13 CONSTANT WINDOW-SIZE
+15 CONSTANT WINDOW-SIZE
 : .WORLD   ( x y -- )
    LONG WINDOW-SIZE - SWAP 0 MAX MIN TO WY  LONG WINDOW-SIZE - SWAP 0 MAX MIN TO WX
    WINDOW-SIZE 0 DO  WINDOW-SIZE 0 DO
@@ -85,9 +85,9 @@ WORLDS-BYTES ALLOT
    LOOP  LOOP ;
 
 \ Status display
-: .DIAMONDS   22 1 AT-XY  7 COLOUR  ." Diamonds: " DIAMONDS ? ;
-: .LIVES   2 1 AT-XY  7 COLOUR  ."    Lives: " LIVES ? ;
-: .LEVEL   22 3 AT-XY  7 COLOUR  ."    Level: " LEVEL ? ;
+: .DIAMONDS   23 0 AT-XY  7 COLOUR  ." Diamonds: " DIAMONDS ? ;
+: .LIVES   12 0 AT-XY  7 COLOUR  ." Lives: " LIVES ? ;
+: .LEVEL   1 0 AT-XY  7 COLOUR  ." Level: " LEVEL ? ;
 : .STATUS   .DIAMONDS .LIVES .LEVEL ;
 
 
