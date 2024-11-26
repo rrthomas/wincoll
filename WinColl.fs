@@ -81,8 +81,8 @@ WORLDS-BYTES ALLOT
 : .WORLD   ( x y -- )
    LONG 7 - SWAP 0 MAX MIN TO WY  LONG 7 - SWAP 0 MAX MIN TO WX
    7 0 DO  7 0 DO
-      J WX + I WY +  XY>MEM C@ LEVEL @ 10 * + SPRITEN
-      J I XY>SCR SPRITE
+      J WX + I WY +  XY>MEM C@  DUP Win < IF  LEVEL @ 10 * + SPRITEN
+      J I XY>SCR SPRITE  ELSE DROP THEN
    LOOP  LOOP ;
 
 \ Status display
