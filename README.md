@@ -21,7 +21,7 @@ WinColl should run on any version of RISC OS 3, and could probably be made
 to run on RISC OS 2 without difficulty.
 
 You can edit the levels with the provided level editor, the BASIC program
-`ScreenDes` that lives in the `!WinColl` folder.
+`LevelDes` that lives in the `!WinColl` folder.
 
 
 ## Copyright and Disclaimer
