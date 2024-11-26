@@ -24,12 +24,10 @@ CREATE TIME-BUFFER  5 ALLOT
 
 : WAIT   19 [ 1 0 ] OS" OS_Byte" ;
 : MODE   ( u -- )   22 EMIT  EMIT ;
-\ : SHADOW    ( draw to shadow bank )  2 [ 2 0 ] 112 OS" OS_Byte" ;
-: SHADOW ;   \ FIXME
+: SHADOW    ( draw to shadow bank )  2 [ 2 0 ] 112 OS" OS_Byte" ;
 : DISPLAY-BANK   255 0 251 [ 3 2 ] OS" OS_Byte" DROP ;
-\ : FLIP   ( swap screen banks )
-\    DISPLAY-BANK  DUP 2 >-< 113 [ 2 0 ] OS" OS_Byte"  112 [ 2 0 ] OS" OS_Byte" ;
-: FLIP ;   \ FIXME
+: FLIP   ( swap screen banks )
+   DISPLAY-BANK  DUP 2 >-< 113 [ 2 0 ] OS" OS_Byte"  112 [ 2 0 ] OS" OS_Byte" ;
 
 : SPRITE   ( x y -- ) SWAP 237 [ 3 0 ] OS" OS_Plot" ;
 
