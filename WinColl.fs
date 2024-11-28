@@ -196,7 +196,6 @@ WORLDS-BYTES ALLOT
    1 X ! 1 Y ! 0 0 .WORLD .STATUS  WAIT FLIP
    BEGIN  0 !TIME 1 X ! 1 Y !  0 0 .WORLD .STATUS
       BEGIN
-         56 KEY? IF @TIME BEGIN 52 KEY? UNTIL !TIME THEN
          WAIT FLIP  WALK FALL   10 DELAY \ FIXME constant frame rate
          36 KEY? IF TRUE DEAD? ! THEN
          X @ WINDOW-SIZE 2/ -  Y @ WINDOW-SIZE 2/ -  .WORLD
@@ -217,8 +216,7 @@ WORLDS-BYTES ALLOT
    ." it is almost the same as Repton 1."       CR
                                                 CR
    ."     Z/X - Left/Right   '/? - Up/Down"     CR
-   ." S/Q - Sound on/off  P/R - Pause/Unpause"  CR
-   ."            T  - Terminate life"           CR CR
+   ." S/Q - Sound on/off   T  - Terminate life" CR
    CR ."      Press the space bar to enjoy!      "
    BEGIN KEY CHEAT 32 = UNTIL ;
 
