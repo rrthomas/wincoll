@@ -17,8 +17,8 @@ is, run its `!Boot`, you can start WinColl by double-clicking `!WinColl`.
 Note that once you start the game you cannot exit; you will have to reset
 your computer (or emulator).
 
-WinColl should run on any version of RISC OS 3, and could probably be made
-to run on RISC OS 2 without difficulty.
+WinColl should run on RISC OS 3.5 to 3.7, and could probably be made to run
+on RISC OS 2 without difficulty.
 
 You can edit the levels with the provided level editor, the BASIC program
 `LevelDes` that lives in the `!WinColl` folder.
