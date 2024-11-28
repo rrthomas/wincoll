@@ -64,9 +64,6 @@ WORLDS-BYTES ALLOT
      0   0 255  BORDER ;
 : .LOGO   \ set up the sprite banner
    *" SChoose Centre"  440 654 SPRITE ;
-: SOUND   \ handle sound on/off
-   17 KEY? IF *" VOLUME 1  " THEN
-   82 KEY? IF *" VOLUME 100" THEN ;
 
 \ Display world
 64 CONSTANT SIZE   \ of sprites
@@ -199,7 +196,7 @@ WORLDS-BYTES ALLOT
          WAIT FLIP  WALK FALL   10 DELAY \ FIXME constant frame rate
          36 KEY? IF TRUE DEAD? ! THEN
          X @ WINDOW-SIZE 2/ -  Y @ WINDOW-SIZE 2/ -  .WORLD
-         .STATUS  SOUND
+         .STATUS
       DEAD? @ DIAMONDS @ 0= OR UNTIL
    DEAD? @ IF DIE ELSE FINISH THEN
    LIVES @ 0= LEVEL @ LEVELS = OR UNTIL  .STATUS
@@ -216,7 +213,7 @@ WORLDS-BYTES ALLOT
    ." it is almost the same as Repton 1."       CR
                                                 CR
    ."     Z/X - Left/Right   '/? - Up/Down"     CR
-   ." S/Q - Sound on/off   T  - Terminate life" CR
+   ."           T  - Terminate life"            CR CR
    CR ."      Press the space bar to enjoy!      "
    BEGIN KEY CHEAT 32 = UNTIL ;
 
