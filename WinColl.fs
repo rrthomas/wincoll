@@ -87,6 +87,13 @@ WORLDS-BYTES ALLOT
 : .LEVEL   1 0 AT-XY  7 COLOUR  ." Level: " LEVEL @ 1+ . ;
 : .STATUS   .DIAMONDS .LIVES .LEVEL ;
 
+\ Load and save data
+: LOAD-DATA R/O OPEN-FILE  DROP   \ FIXME: check ior code
+   DUP >R  READ-FILE 2DROP
+   R> CLOSE-FILE DROP ;  \ FIXME: check ior code and number of bytes
+: SAVE-DATA R/W CREATE-FILE  DROP   \ FIXME: check ior code
+   DUP >R  WRITE-FILE 2DROP
+   R> CLOSE-FILE DROP ;  \ FIXME: check ior code and number of bytes
 
 \ Move rocks
 1 CONSTANT X+
@@ -164,10 +171,15 @@ WORLDS-BYTES ALLOT
    0 DIAMONDS !  *" SOUND 1 65521 30 20"
    ENDWORLD WORLD DO
       I C@ DUP Diamond = SWAP Safe = OR IF 1 DIAMONDS +! THEN
+      I C@ Win = IF  I WORLD -  LONG U/MOD  Y ! X !  THEN
    LOOP ;
 : FINISH   ( a level )
    1 LEVEL +!  WAIT FLIP
    ORIGINAL AREA LEVEL @ * + WORLD AREA CMOVE  SURVEY ;
+
+\ Load and save current position
+: LOAD-POSITION   WORLD AREA S" Saved" LOAD-DATA  SURVEY ;
+: SAVE-POSITION   WORLD AREA S" Saved" SAVE-DATA ;
 
 \ Finish the whole game; die, live, or cheat
 : SPLURGE   ( sprite# -- )
@@ -194,6 +206,7 @@ WORLDS-BYTES ALLOT
    BEGIN  0 !TIME 1 X ! 1 Y !  0 0 .WORLD .STATUS
       BEGIN
          WAIT FLIP  WALK FALL   10 DELAY \ FIXME constant frame rate
+         52 KEY? IF LOAD-POSITION ELSE 82 KEY? IF SAVE-POSITION THEN THEN
          36 KEY? IF TRUE DEAD? ! THEN
          X @ WINDOW-SIZE 2/ -  Y @ WINDOW-SIZE 2/ -  .WORLD
          .STATUS
@@ -213,17 +226,13 @@ WORLDS-BYTES ALLOT
    ." it is almost the same as Repton 1."       CR
                                                 CR
    ."     Z/X - Left/Right   '/? - Up/Down"     CR
-   ."           T  - Terminate life"            CR CR
+   ."        S/R - Save/reload position"        CR
+   ."            T - Terminate life"            CR CR
    CR ."      Press the space bar to enjoy!      "
    BEGIN KEY CHEAT 32 = UNTIL ;
 
 \ Load world, sprites and sound module
-: @DATA   ( load data )
-   ORIGINAL WORLDS-BYTES
-   S" Data" R/O OPEN-FILE  DROP   \ FIXME: check ior code
-   READ-FILE
-   2DROP   \ FIXME: check ior code and number of bytes
-   ;
+: @DATA   ( load data )   ORIGINAL WORLDS-BYTES S" Data" LOAD-DATA ;
 : *COMMANDS   ( load files )
    *" SLoad WinSpr"
    *" RMLoad UserVoices"  *" ChannelVoice 1 Ping"
