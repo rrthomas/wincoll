@@ -12,16 +12,19 @@ It requires [pForth](https://github.com/rrthomas/pforth) to run. You will
 need the latest
 [RISC OS version](https://github.com/rrthomas/pforth/releases/tag/riscos).
 
-Once your machine (or emulator) has “seen” the `!pForth` application; that
-is, run its `!Boot`, you can start WinColl by double-clicking `!WinColl`.
-Note that once you start the game you cannot exit; you will have to reset
-your computer (or emulator).
+
+## Installation and use
+
+* Download and unpack the [Zip](https://github.com/rrthomas/wincoll/archive/refs/heads/main.zip) of the WinColl Git repository. Name the directory `!WinColl`.
++ Download and unpack the [Zip](https://github.com/rrthomas/pforth/archive/refs/tags/riscos.zip) of RISC OS pForth.
+* Copy the RISC OS application `src/!pForth` to a suitable location; for example, the same directory as that containing `!WinColl`.
+* Launch `!WinColl` (for example, by double left-clicking it).
 
 WinColl should run on RISC OS 3.5 to 3.7, and could probably be made to run
 on RISC OS 2 without difficulty.
 
 You can edit the levels with the provided level editor, the BASIC program
-`LevelDes` that lives in the `!WinColl` folder.
+`LevelDes` that lives in the `!WinColl` folder. (Shift+Left double-click to open the folder).
 
 
 ## Copyright and Disclaimer
