@@ -20,8 +20,8 @@ CREATE TIME-BUFFER  5 ALLOT
 : RGB-EMIT  ROT EMIT  SWAP EMIT  EMIT ;
 : COLOUR   17 EMIT   EMIT ;
 : RGB  19 EMIT  EMIT  16 EMIT  RGB-EMIT ;
-: BORDER  19 EMIT  255 EMIT  16 EMIT  RGB-EMIT ;
 
+: CLS   12 EMIT ;
 : WAIT   19 [ 1 0 ] OS" OS_Byte" ;
 : MODE   ( u -- )   22 EMIT  EMIT ;
 : SHADOW    ( draw to shadow bank )  2 [ 2 0 ] 112 OS" OS_Byte" ;
@@ -57,11 +57,9 @@ WORLDS-BYTES ALLOT
 
 \ Set up screen and handle sound
 : PALETTE   \ set up screen palette
-   255 255   0  2 RGB    0 255   0  3 RGB    0   0 200  4 RGB
-   144 176 176  9 RGB  240 176 112 10 RGB  192 144  64 11 RGB
-   144  80   0 12 RGB   48 128   0 13 RGB  128   0 128 14 RGB
-   224 178 224 15 RGB    0   0 255  0 RGB    0   0   0  8 RGB
-     0   0 255  BORDER ;
+     0   0 200  8 RGB  144 176 176  9 RGB  240 176 112 10 RGB
+   192 144  64 11 RGB  144  80   0 12 RGB   48 128   0 13 RGB
+   224 178 224 15 RGB ;
 : .LOGO   \ set up the sprite banner
    *" SChoose Centre"  440 654 SPRITE ;
 
@@ -198,8 +196,10 @@ WORLDS-BYTES ALLOT
    DUP [CHAR] - = IF INITIAL-LIVES 1-  0 MAX TO INITIAL-LIVES  THEN ;
 
 \ Play the game!
+: INIT-SCREEN   9 MODE OFF 132 COLOUR CLS PALETTE ;
+
 : PLAY
-   9 MODE OFF PALETTE SHADOW
+   INIT-SCREEN SHADOW
    INITIAL-LIVES LIVES ! BEGINNING LEVEL ! 0 DEAD? !  0 !TIME
    ORIGINAL AREA LEVEL @ * + WORLD AREA CMOVE  SURVEY
    1 X ! 1 Y ! 0 0 .WORLD .STATUS  WAIT FLIP
@@ -216,7 +216,7 @@ WORLDS-BYTES ALLOT
    LIVES @ 0= IF Splat SPLURGE ELSE Win SPLURGE THEN ;
 
 \ Instructions
-: INSTRUCT   9 MODE OFF PALETTE  7 COLOUR  0 14 AT-XY  .LOGO
+: INSTRUCT   INIT-SCREEN  7 COLOUR  0 14 AT-XY  .LOGO
    ."  This game is an unashamed Repton clone,"
    ." with sprites and screens designed by"     CR
    ." Pav, Jes, Al, and Roobs, who also "       CR
