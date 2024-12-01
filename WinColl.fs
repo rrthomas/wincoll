@@ -184,17 +184,6 @@ WORLDS-BYTES ALLOT
       DUP SPRITEN  I J XY>SCR SPRITE
    LOOP LOOP
    WAIT FLIP  300 DELAY ;
-0 CONSTANT BEGINNING
-: CHEAT   ( change start level )
-        DUP 49 = IF 0 TO BEGINNING THEN
-        DUP 50 = IF 1 TO BEGINNING THEN
-        DUP 51 = IF 2 TO BEGINNING THEN
-        DUP 52 = IF 3 TO BEGINNING THEN
-        DUP 53 = IF 4 TO BEGINNING THEN
-        DUP 54 = IF 5 TO BEGINNING THEN
-        DUP 55 = IF 6 TO BEGINNING THEN
-        DUP 56 = IF 7 TO BEGINNING THEN
-        DUP 57 = IF 8 TO BEGINNING THEN ;
 
 \ Play the game!
 : INIT-SCREEN   9 MODE OFF 132 COLOUR CLS PALETTE ;
@@ -203,9 +192,9 @@ WORLDS-BYTES ALLOT
 : RESTART-LEVEL   ORIGINAL AREA LEVEL @ * + WORLD AREA CMOVE  SURVEY
    RESET-POSITION ;
 
-: PLAY
+: PLAY   ( start-level -- )
    INIT-SCREEN SHADOW
-   BEGINNING LEVEL ! 0 DEAD? !
+   1- LEVEL ! 0 DEAD? !
    RESTART-LEVEL  0 0 .WORLD .STATUS  WAIT FLIP
    BEGIN  RESET-POSITION  0 0 .WORLD .STATUS
       BEGIN
@@ -223,7 +212,8 @@ WORLDS-BYTES ALLOT
    Win SPLURGE ;
 
 \ Instructions
-: INSTRUCT   INIT-SCREEN  7 COLOUR  0 14 AT-XY  .LOGO
+: INSTRUCT   ( -- start-level )
+   INIT-SCREEN  7 COLOUR  0 14 AT-XY  .LOGO
    ."  This game is an unashamed Repton clone,"
    ." with sprites and screens designed by"     CR
    ." Pav, Jes, Al, and Roobs, who also "       CR
@@ -234,9 +224,22 @@ WORLDS-BYTES ALLOT
                                                 CR
    ."     Z/X - Left/Right   '/? - Up/Down"     CR
    ."         S/L - Save/load position"         CR
-   ."       R - Restart level  Q - Quit game"   CR CR
+   ."       R - Restart level  Q - Quit game"   CR
+   ."     Type level number to select level"    CR CR
    CR ."      Press the space bar to enjoy!      "
-   BEGIN KEY CHEAT 32 = UNTIL ;
+   0   \ Accumulator for start level
+   BEGIN
+      KEY
+      DUP [CHAR] 0 [CHAR] 9 1+ WITHIN IF
+         \ If char is 0 to 9, add a digit to level number
+         DUP [CHAR] 0 -
+         ROT 10 * +  SWAP
+      ELSE
+         DUP BL <> IF  NIP  0 SWAP THEN   \ Else if not space, reset to 0
+      THEN
+   BL = UNTIL
+   DUP 0= IF DROP 1 THEN
+   LEVELS MIN ;
 
 \ Load world, sprites and sound module
 : @DATA   ( load data )   ORIGINAL WORLDS-BYTES S" Data" LOAD-DATA ;
