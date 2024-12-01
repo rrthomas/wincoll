@@ -238,15 +238,10 @@ WORLDS-BYTES ALLOT
 
 \ Load world, sprites and sound module
 : @DATA   ( load data )   ORIGINAL WORLDS-BYTES S" Data" LOAD-DATA ;
-: *COMMANDS   ( load files )
-   *" SLoad WinSpr"
-   *" RMLoad UserVoices"  *" ChannelVoice 1 Ping"
-   *" ChannelVoice 2 Slide"  *" Volume 100"
-   *" ChannelVoice 3 Bash" ;
 
 \ Main loop
 : ENJOY
-   @DATA *COMMANDS
+   @DATA
    BEGIN
       *" FX15"
       INSTRUCT PLAY
