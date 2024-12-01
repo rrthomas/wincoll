@@ -200,16 +200,20 @@ WORLDS-BYTES ALLOT
 \ Play the game!
 : INIT-SCREEN   9 MODE OFF 132 COLOUR CLS PALETTE ;
 
+: RESET-POSITION   1 X ! 1 Y ! ;
+: RESTART-LEVEL   ORIGINAL AREA LEVEL @ * + WORLD AREA CMOVE  SURVEY
+   RESET-POSITION ;
+
 : PLAY
    INIT-SCREEN SHADOW
    BEGINNING LEVEL ! 0 DEAD? !  0 !TIME
-   ORIGINAL AREA LEVEL @ * + WORLD AREA CMOVE  SURVEY
-   1 X ! 1 Y ! 0 0 .WORLD .STATUS  WAIT FLIP
-   BEGIN  0 !TIME 1 X ! 1 Y !  0 0 .WORLD .STATUS
+   RESTART-LEVEL  0 0 .WORLD .STATUS  WAIT FLIP
+   BEGIN  0 !TIME RESET-POSITION  0 0 .WORLD .STATUS
       BEGIN
          WAIT FLIP  WALK FALL   10 DELAY \ FIXME constant frame rate
-         52 KEY? IF LOAD-POSITION ELSE 82 KEY? IF SAVE-POSITION THEN THEN
-         36 KEY? IF TRUE DEAD? ! THEN
+         87 KEY? IF LOAD-POSITION ELSE 82 KEY? IF SAVE-POSITION THEN THEN
+         52 KEY? IF RESTART-LEVEL THEN
+         17 KEY? IF ABORT" Game over!" THEN \ FIXME: Make this nicer!
          X @ WINDOW-SIZE 2/ -  Y @ WINDOW-SIZE 2/ -  .WORLD
          .STATUS
       DEAD? @ DIAMONDS @ 0= OR UNTIL
@@ -228,8 +232,8 @@ WORLDS-BYTES ALLOT
    ." it is almost the same as Repton 1."       CR
                                                 CR
    ."     Z/X - Left/Right   '/? - Up/Down"     CR
-   ."        S/R - Save/reload position"        CR
-   ."            T - Terminate life"            CR CR
+   ."         S/L - Save/load position"         CR
+   ."       R - Restart level  Q - Quit game"   CR CR
    CR ."      Press the space bar to enjoy!      "
    BEGIN KEY CHEAT 32 = UNTIL ;
 
