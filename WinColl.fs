@@ -31,7 +31,7 @@ CREATE TIME-BUFFER  5 ALLOT
 : SPRITE   ( x y -- ) SWAP 237 [ 3 0 ] OS" OS_Plot" ;
 
 : SPRITEN   ( n -- )
-   0 <# BL HOLD  #S #> DROP  \ format number as blank-delimited string, keep only the address
+   U>UD <# BL HOLD  #S #> DROP  \ format number as blank-delimited string, keep only the address
    0    \ ignored
    24   \ OS_SpriteOp code
    [ 3 0 ] OS" OS_SpriteOp" ;
@@ -50,9 +50,6 @@ LONG LONG *  CONSTANT AREA   \ of world array
 CREATE WORLD   \ world array
 AREA ALLOT
 AREA WORLD + 1+ CONSTANT ENDWORLD   \ end of array
-CREATE ORIGINAL   \ permanent array, WORLD used during game
-AREA LEVELS * CONSTANT WORLDS-BYTES
-WORLDS-BYTES ALLOT
 
 \ Set up screen and handle sound
 : PALETTE   \ set up screen palette
@@ -169,9 +166,19 @@ WORLDS-BYTES ALLOT
       I C@ DUP Diamond = SWAP Safe = OR IF 1 DIAMONDS +! THEN
       I C@ Win = IF  I WORLD -  LONG U/MOD  Y ! X !  THEN
    LOOP ;
+
+CREATE DATA-FILE-NAME S" Level01" ",
+: LEVEL#   U>UD <# # # #> ;
+: @LEVEL   ( u --  )
+   LEVEL#  DATA-FILE-NAME COUNT DROP
+   5 + SWAP CMOVE   \ Copy level number into file name
+   WORLD AREA DATA-FILE-NAME COUNT LOAD-DATA ;
+
+: RESET-POSITION   1 X ! 1 Y ! ;
+: START-LEVEL   LEVEL @ 1+ @LEVEL  SURVEY RESET-POSITION CR ;
+
 : FINISH   ( a level )
-   1 LEVEL +!  WAIT FLIP
-   ORIGINAL AREA LEVEL @ * + WORLD AREA CMOVE  SURVEY ;
+   1 LEVEL +!  WAIT FLIP  START-LEVEL ;
 
 \ Load and save current position
 : LOAD-POSITION   WORLD AREA S" Saved" LOAD-DATA  SURVEY ;
@@ -188,20 +195,16 @@ WORLDS-BYTES ALLOT
 \ Play the game!
 : INIT-SCREEN   9 MODE OFF 132 COLOUR CLS PALETTE ;
 
-: RESET-POSITION   1 X ! 1 Y ! ;
-: RESTART-LEVEL   ORIGINAL AREA LEVEL @ * + WORLD AREA CMOVE  SURVEY
-   RESET-POSITION ;
-
 : PLAY   ( start-level -- )
    INIT-SCREEN SHADOW
    1- LEVEL ! 0 DEAD? !
-   RESTART-LEVEL  0 0 .WORLD .STATUS  WAIT FLIP
+   START-LEVEL  0 0 .WORLD .STATUS  WAIT FLIP
    BEGIN  RESET-POSITION  0 0 .WORLD .STATUS
       BEGIN
          @TIME 10 +
          WAIT FLIP  WALK FALL
          87 KEY? IF LOAD-POSITION ELSE 82 KEY? IF SAVE-POSITION THEN THEN
-         52 KEY? IF RESTART-LEVEL THEN
+         52 KEY? IF START-LEVEL THEN
          17 KEY? IF ABORT" Game over!" THEN \ FIXME: Make this nicer!
          X @ WINDOW-SIZE 2/ -  Y @ WINDOW-SIZE 2/ -  .WORLD
          .STATUS
@@ -241,12 +244,8 @@ WORLDS-BYTES ALLOT
    DUP 0= IF DROP 1 THEN
    LEVELS MIN ;
 
-\ Load world, sprites and sound module
-: @DATA   ( load data )   ORIGINAL WORLDS-BYTES S" Data" LOAD-DATA ;
-
 \ Main loop
 : ENJOY
-   @DATA
    BEGIN
       *" FX15"
       INSTRUCT PLAY
