@@ -37,9 +37,9 @@ CREATE TIME-BUFFER  5 ALLOT
    [ 3 0 ] OS" OS_SpriteOp" ;
 
 \ Initialise miscellaneous variables
-0 CONSTANT Gap    1 CONSTANT Blob   2 CONSTANT Diamond
-3 CONSTANT Key    4 CONSTANT Rock   5 CONSTANT Earth
-6 CONSTANT Brick  7 CONSTANT Safe
+    BL CONSTANT Gap    CHAR + CONSTANT Blob   CHAR * CONSTANT Diamond
+CHAR K CONSTANT Key    CHAR @ CONSTANT Rock   CHAR . CONSTANT Earth
+CHAR # CONSTANT Brick  CHAR $ CONSTANT Safe
 100 CONSTANT Win  200 CONSTANT Splat
 VARIABLE X  VARIABLE Y   ( your coordinates )  0 X ! 0 Y !
 VARIABLE DEAD?
@@ -92,11 +92,13 @@ AREA WORLD + 1+ CONSTANT ENDWORLD   \ end of array
 1 CONSTANT X+
 : DOWN?   LONG - C@ Gap = ;
 : SIDEWAYS?   X+ NEGATE TO X+  X+ + DUP
-   LONG - C@ SWAP C@ + 0= IF TRUE ELSE FALSE THEN ;
+   LONG - C@ Gap =  SWAP C@ Gap =  AND IF TRUE ELSE FALSE THEN ;
 : FALL   \ make rocks fall
    ENDWORLD WORLD DO
       I C@ Rock = IF
-         I LONG - C@  Earth < IF
+         I LONG - C@
+         DUP Rock =  OVER Key = OR  OVER Diamond = OR
+         OVER Blob = OR  SWAP Gap = OR IF
             I DOWN? IF
                LONG NEGATE
             ELSE I SIDEWAYS? IF
@@ -132,11 +134,11 @@ AREA WORLD + 1+ CONSTANT ENDWORLD   \ end of array
    TRUE ELSE FALSE THEN ;
 : MOVE?   ( dx dy x' y' -- moved? )
    CASE XY>MEM C@
-     0 OF GO ENDOF
-     2 OF MUNCH ENDOF
-     3 OF UNLOCK ENDOF
-     4 OF PUSH ENDOF
-     5 OF DIG ENDOF
+     Gap OF GO ENDOF
+     Diamond OF MUNCH ENDOF
+     Key OF UNLOCK ENDOF
+     Rock OF PUSH ENDOF
+     Earth OF DIG ENDOF
      >R  FALSE  R>
    ENDCASE ;
 
