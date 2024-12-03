@@ -64,7 +64,7 @@ AREA WORLD + 1+ CONSTANT ENDWORLD   \ end of array
 64 CONSTANT SIZE   \ of sprites
 0 CONSTANT WX  0 CONSTANT WY   \ base world coords
 160 CONSTANT OX  16 CONSTANT OY   \ graphics coords of window
-: XY>MEM   ( x y -- addr )   ROW *  +  WORLD + ;
+: XY>MEM   ( x y -- addr )   LONG 1- >-<  ROW *  +  WORLD + ;
 : XY>SCR   ( x y -- x' y' )
    SIZE * SWAP SIZE * OX + SWAP OY + ;
 15 CONSTANT WINDOW-SIZE
@@ -91,27 +91,27 @@ AREA WORLD + 1+ CONSTANT ENDWORLD   \ end of array
 
 \ Move rocks
 1 CONSTANT X+
-: DOWN?   ROW - C@ Gap = ;
+: DOWN?   ROW + C@ Gap = ;
 : SIDEWAYS?   X+ NEGATE TO X+  X+ + DUP
-   ROW - C@ Gap =  SWAP C@ Gap =  AND IF TRUE ELSE FALSE THEN ;
+   ROW + C@ Gap =  SWAP C@ Gap =  AND IF TRUE ELSE FALSE THEN ;
 : FALL   \ make rocks fall
-   ENDWORLD WORLD DO
+   WORLD ENDWORLD 1- DO
       I C@ Rock = IF
-         I ROW - C@
+         I ROW + C@
          DUP Rock =  OVER Key = OR  OVER Diamond = OR
          OVER Blob = OR  SWAP Gap = OR IF
             I DOWN? IF
-               ROW NEGATE
+               ROW
             ELSE I SIDEWAYS? IF
-                  X+ ROW -
+                  X+ ROW +
                ELSE I SIDEWAYS? IF
-                     X+ ROW -
+                     X+ ROW +
                   ELSE 0
                   THEN
                THEN
             THEN
             DUP IF
-               DUP I + ROW - C@ Win = IF
+               DUP I + ROW + C@ Win = IF
                   TRUE DEAD? !
                THEN
                I + Rock SWAP C!  Gap I C! *" SOUND 2 65526 100 2"
@@ -119,7 +119,7 @@ AREA WORLD + 1+ CONSTANT ENDWORLD   \ end of array
             THEN
          THEN
       THEN
-   LOOP ;
+   -1 +LOOP ;
 
 \ Deal with Win's moves
 : GO   ( move through gap )   TRUE ;
@@ -167,7 +167,7 @@ AREA WORLD + 1+ CONSTANT ENDWORLD   \ end of array
    0 DIAMONDS !  *" SOUND 1 65521 30 20"
    ENDWORLD WORLD DO
       I C@ DUP Diamond = SWAP Safe = OR IF 1 DIAMONDS +! THEN
-      I C@ Win = IF  I WORLD -  ROW U/MOD  Y ! X !  THEN
+      I C@ Win = IF  I WORLD -  ROW U/MOD  LONG 1- >-< Y ! X !  THEN
    LOOP ;
 
 CREATE DATA-FILE-NAME S" Level01" ",
