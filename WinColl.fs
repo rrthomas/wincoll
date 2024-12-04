@@ -1,9 +1,6 @@
 \ WinColl
 \ Roughly equivalent to Repton 0.5
 
-ONLY FORTH DEFINITIONS  DECIMAL
-MARKER WINCOLL
-
 \ Utility words
 \ The argument to KEY? is the absolute value of the negative INKEY code.
 : KEY?   ( c -- f )   256 >-<  255 SWAP  129 [ 3 3 ] OS" OS_Byte"  2DROP 255 = ;
