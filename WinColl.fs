@@ -82,12 +82,12 @@ AREA WORLD + 1+ CONSTANT ENDWORLD   \ end of array
 : .STATUS   .DIAMONDS .LEVEL ;
 
 \ Load and save data
-: LOAD-DATA R/O OPEN-FILE  DROP   \ FIXME: check ior code
+: LOAD-DATA R/O OPEN-FILE  DROP
    DUP >R  READ-FILE 2DROP
-   R> CLOSE-FILE DROP ;  \ FIXME: check ior code and number of bytes
-: SAVE-DATA R/W CREATE-FILE  DROP   \ FIXME: check ior code
+   R> CLOSE-FILE DROP ;
+: SAVE-DATA R/W CREATE-FILE  DROP
    DUP >R  WRITE-FILE 2DROP
-   R> CLOSE-FILE DROP ;  \ FIXME: check ior code and number of bytes
+   R> CLOSE-FILE DROP ;
 
 \ Move rocks
 1 CONSTANT X+
