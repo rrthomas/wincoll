@@ -2,8 +2,10 @@
 \ Roughly equivalent to Repton 0.5
 
 \ Utility words
-\ The argument to KEY? is the absolute value of the negative INKEY code.
-: KEY?   ( c -- f )   256 >-<  255 SWAP  129 [ 3 3 ] OS" OS_Byte"  2DROP 255 = ;
+: INKEY   ( u -- c )  256 U/MOD SWAP  129 [ 3 3 ] OS" OS_Byte"
+   DROP  SWAP 0<> IF  DROP -1 THEN 
+   126 [ 1 0 ] OS" XOS_Byte"   \ Clear any escape condition
+   ;
 : OFF   [ 0 0 ] OS" OS_RemoveCursors" ;
 
 \ Monotonic timer
@@ -132,34 +134,29 @@ AREA WORLD + 1+ CONSTANT ENDWORLD   \ end of array
    TRUE ELSE FALSE THEN ;
 : MOVE?   ( dx dy x' y' -- moved? )
    CASE XY>MEM C@
-     Gap OF GO ENDOF
-     Diamond OF MUNCH ENDOF
-     Key OF UNLOCK ENDOF
-     Rock OF PUSH ENDOF
-     Earth OF DIG ENDOF
-     >R  FALSE  R>
+      Gap OF GO ENDOF
+      Diamond OF MUNCH ENDOF
+      Key OF UNLOCK ENDOF
+      Rock OF PUSH ENDOF
+      Earth OF DIG ENDOF
+      >R  FALSE  R>
    ENDCASE ;
 
 \ Move around the world
-: DELTA   ( -- dx dy )
-   67 KEY? NEGATE   98 KEY?  +
-   80 KEY? NEGATE  105 KEY?  +
-   2DUP + 1 AND  IF EXIT  ELSE 2DROP 0 0  THEN ;
-: WALK
+: WALK   ( dx dy -- )
    Gap X @ Y @ XY>MEM C!
-   DELTA
    2DUP Y @ + SWAP X @ + SWAP MOVE? IF
       Y +! X +!
       ELSE 2DROP
    THEN Win X @ Y @ XY>MEM C! ;
 
-\ Die and finish a level
 : DIE
    Splat SPRITEN
    *" SOUND 3 65521 100 20"
    X @ WX - Y @ WY - XY>SCR SPRITE
    FALSE DEAD? !
    WAIT FLIP 100 DELAY ;
+
 : SURVEY   ( count the diamonds on the level )
    0 DIAMONDS !  *" SOUND 1 65521 30 20"
    ENDWORLD WORLD DO
@@ -182,7 +179,7 @@ CREATE DATA-FILE-NAME S" Level01" ",
 : RESTART-LEVEL   LEVEL @ 1+ @LEVEL  RESET-POSITION SURVEY ;
 : START-LEVEL   RESTART-LEVEL SAVE-POSITION ;
 
-\ Finish the whole game; die, live, or cheat
+\ Fill the screen with one sprite
 : SPLURGE   ( sprite# -- )
    0 TO WX  0 TO WY
    WINDOW-SIZE 0 DO  WINDOW-SIZE 0 DO
@@ -193,21 +190,38 @@ CREATE DATA-FILE-NAME S" Level01" ",
 \ Play the game!
 : INIT-SCREEN   9 MODE OFF 132 COLOUR CLS PALETTE ;
 
+10 CONSTANT FRAME-LENGTH
 : FINISHED?   DIAMONDS @ 0= ;
 : PLAY   ( start-level -- )
    INIT-SCREEN SHADOW  CLS WAIT FLIP
    1- LEVEL ! 0 DEAD? !
    BEGIN
       START-LEVEL
-      BEGIN  LOAD-POSITION  0 0 .WORLD .STATUS
+      BEGIN  LOAD-POSITION
          BEGIN
-            @TIME 10 +
-            WAIT FLIP  WALK FALL
-            87 KEY? IF LOAD-POSITION ELSE 82 KEY? IF SAVE-POSITION THEN THEN
-            52 KEY? IF RESTART-LEVEL THEN
-            17 KEY? IF DROP EXIT THEN
+            @TIME FRAME-LENGTH +
+            CASE 0 INKEY  *" FX 15"
+               [CHAR] x OF 1 0 WALK ENDOF
+               [CHAR] X OF 1 0 WALK ENDOF
+               [CHAR] z OF -1 0 WALK ENDOF
+               [CHAR] Z OF -1 0 WALK ENDOF
+               [CHAR] ' OF 0 1 WALK ENDOF
+               [CHAR] " OF 0 1 WALK ENDOF
+               [CHAR] / OF 0 -1 WALK ENDOF
+               [CHAR] ? OF 0 -1 WALK ENDOF
+               [CHAR] l OF LOAD-POSITION ENDOF
+               [CHAR] L OF LOAD-POSITION ENDOF
+               [CHAR] s OF SAVE-POSITION ENDOF
+               [CHAR] S OF SAVE-POSITION ENDOF
+               [CHAR] r OF RESTART-LEVEL ENDOF
+               [CHAR] R OF RESTART-LEVEL ENDOF
+               [CHAR] q OF DROP EXIT ENDOF
+               [CHAR] Q OF DROP EXIT ENDOF
+            ENDCASE
+            FALL
             X @ WINDOW-SIZE 2/ -  Y @ WINDOW-SIZE 2/ -  .WORLD
             .STATUS
+            WAIT FLIP
             BEGIN @TIME OVER - 0> UNTIL  DROP
          DEAD? @ FINISHED? OR UNTIL
          DEAD? @ IF DIE THEN
@@ -246,7 +260,9 @@ CREATE DATA-FILE-NAME S" Level01" ",
 
 \ Main loop
 : ENJOY
+   FRAME-LENGTH 11 [ 2 0 ] OS" OS_Byte"
+   FRAME-LENGTH 12 [ 2 0 ] OS" OS_Byte"
    BEGIN
-      *" FX15"
+      *" FX 15"
       INSTRUCT PLAY
    AGAIN ;
