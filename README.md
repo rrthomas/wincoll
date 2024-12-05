@@ -11,7 +11,7 @@ in Forth for RISC OS in 1990.
 
 ## Installation and use
 
-* Download and unpack the [Zip](https://github.com/rrthomas/wincoll/archive/refs/heads/main.zip) of the WinColl Git repository. Name the directory `!WinColl`.
+* Download and unpack the [Zip](https://github.com/rrthomas/wincoll/archive/refs/heads/main.zip) of the WinColl Git repository.
 * Launch `!WinColl` (for example, by double left-clicking it).
 
 WinColl should run on RISC OS 3.5 to 3.7, and could probably be made to run
