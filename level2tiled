@@ -1,0 +1,68 @@
+#!/usr/bin/env python3
+#
+# © Reuben Thomas <rrt@sc3d.org> 2024
+# Released under the GPL version 3, or (at your option) any later version.
+
+import sys
+import argparse
+import warnings
+from warnings import warn
+from typing import (
+    List, Optional, Union, Type, NoReturn, TextIO,
+)
+
+import tmxlib as tmx
+
+# Command-line arguments
+parser = argparse.ArgumentParser(
+    description="Convert plain text WinColl levels to Tiled .tmx format.",
+)
+parser.add_argument("-V", "--version", action="version",
+                    version="%(prog)s 0.1 (04 Dec 2024) by Reuben Thomas <rrt@sc3d.org>")
+parser.add_argument("wincoll_file", metavar="WINCOLL-LEVEL", help="plain text WinColl level file")
+parser.add_argument("tiled_file", metavar="TILED-MAP", help="Tiled map output file")
+args = parser.parse_args()
+
+# Error messages
+# pylint: disable=unused-argument, too-many-arguments, too-many-positional-arguments
+def simple_warning(message, category, filename, lineno, file, line):  # type: ignore
+    print(f"{parser.prog}: {message}", file=file or sys.stderr)
+
+warnings.showwarning = simple_warning  # type: ignore
+
+def die(code: int, msg: str) -> NoReturn:
+    warn(msg)
+    sys.exit(code)
+
+
+# Read the input and convert tile encoding
+def convert(row: List[str]) -> List[int]:
+    char_to_num = {
+        " ": 10,
+        "#": 11,
+        "$": 12,
+        "*": 13,
+        "+": 14,
+        ".": 15,
+        "@": 16,
+        "K": 17,
+        "W": 18,
+    }
+    return list(map(lambda c: char_to_num[c], row))
+
+wincoll_data = []
+with open(args.wincoll_file, "r") as fh:
+    for line in fh.readlines():
+        wincoll_data += convert(list(line.strip("\n")))
+
+
+# Construct the output map and save it
+tilesize = 16
+mapsize = 50
+tilemap = tmx.Map((mapsize, mapsize), (tilesize, tilesize))
+tilemap.tilesets = [
+    tmx.ImageTileset("WinColl", (tilesize, tilesize), 1, source="WinColl.tsx")]
+tilemap.layers = [
+    tmx.layer.TileLayer(tilemap, "Tile Layer 1", data=wincoll_data),
+    ]
+tilemap.save(args.tiled_file)

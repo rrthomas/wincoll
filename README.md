@@ -23,8 +23,11 @@ need the latest
 WinColl should run on RISC OS 3.5 to 3.7, and could probably be made to run
 on RISC OS 2 without difficulty.
 
-You can edit the levels with the provided level editor, the BASIC program
-`LevelDes` that lives in the `!WinColl` folder. (Shift+Left double-click to open the folder).
+You can edit the levels. Either use [Tiled](https://www.mapeditor.org/) and
+convert them to WinColl’s plain text format with `tiled2level`, for which
+the `pytmx` library is required; or use the BASIC program `LevelDes` that
+lives in the `!WinColl` folder. (Shift+Left double-click to open the
+folder).
 
 
 ## Copyright and Disclaimer
