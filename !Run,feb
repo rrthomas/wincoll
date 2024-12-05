@@ -2,4 +2,4 @@ ChangeDynamicArea -SpriteSize 32k
 Dir <Obey$Dir>
 RMEnsure UserVoiceGenerator Run InitSound
 SLoad WinSpr
-pforth WinColl.fs --evaluate ENJOY
+<Obey$Dir>.!RunImage WinColl.fs --evaluate ENJOY
