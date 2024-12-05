@@ -202,12 +202,16 @@ CREATE DATA-FILE-NAME S" Level01" ",
             CASE 0 INKEY  *" FX 15"
                [CHAR] x OF 1 0 WALK ENDOF
                [CHAR] X OF 1 0 WALK ENDOF
+                    137 OF 1 0 WALK ENDOF
                [CHAR] z OF -1 0 WALK ENDOF
                [CHAR] Z OF -1 0 WALK ENDOF
+                    136 OF -1 0 WALK ENDOF
                [CHAR] ' OF 0 1 WALK ENDOF
                [CHAR] " OF 0 1 WALK ENDOF
+                    139 OF 0 1 WALK ENDOF
                [CHAR] / OF 0 -1 WALK ENDOF
                [CHAR] ? OF 0 -1 WALK ENDOF
+                    138 OF 0 -1 WALK ENDOF
                [CHAR] l OF LOAD-POSITION ENDOF
                [CHAR] L OF LOAD-POSITION ENDOF
                [CHAR] s OF SAVE-POSITION ENDOF
@@ -238,6 +242,7 @@ CREATE DATA-FILE-NAME S" Level01" ",
    ." programmed it."                           CR
                                                 CR
    ."     Z/X - Left/Right   '/? - Up/Down"     CR
+   ."      or use the cursor keys to move"      CR
    ."         S/L - Save/load position"         CR
    ."       R - Restart level  Q - Quit game"   CR
    ."     Type level number to select level"    CR CR
@@ -261,6 +266,7 @@ CREATE DATA-FILE-NAME S" Level01" ",
 : ENJOY
    FRAME-LENGTH 11 [ 2 0 ] OS" OS_Byte"
    FRAME-LENGTH 12 [ 2 0 ] OS" OS_Byte"
+   *" FX 4,1"   \ Disable cursor editing, cursor keys return a character code
    BEGIN
       *" FX 15"
       INSTRUCT PLAY
