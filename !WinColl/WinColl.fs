@@ -214,7 +214,7 @@ CREATE DATA-FILE-NAME S" Level01" ",
 : INSTRUCT   ( -- start-level )
    INIT-SCREEN  7 COLOUR  0 14 AT-XY  .LOGO
    ."  This game is an unashamed Repton clone,"
-   ." with sprites and screens designed by"     CR
+   ." with graphics and levels designed by"     CR
    ." Pav, Jes, Al, and Roobs, who also "       CR
    ." programmed it."                           CR
                                                 CR
