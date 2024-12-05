@@ -1,5 +1,4 @@
 \ WinColl
-\ Roughly equivalent to Repton 0.5
 
 \ Utility words
 : INKEY   ( u -- c )  256 U/MOD SWAP  129 [ 3 3 ] OS" OS_Byte"
