@@ -7,9 +7,7 @@ import sys
 import argparse
 import warnings
 from warnings import warn
-from typing import (
-    List, Optional, Union, Type, NoReturn, TextIO,
-)
+from typing import NoReturn
 
 import pytmx
 
@@ -59,5 +57,5 @@ level_size = 50
 output = "\n".join(
     [text[i:i + level_size] for i in range(0, len(text), level_size)],
 ) + "\n"
-with open(args.wincoll_file, "w") as fh:
+with open(args.wincoll_file, "w", encoding="utf-8") as fh:
     fh.write(output)

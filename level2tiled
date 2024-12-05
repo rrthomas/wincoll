@@ -7,9 +7,7 @@ import sys
 import argparse
 import warnings
 from warnings import warn
-from typing import (
-    List, Optional, Union, Type, NoReturn, TextIO,
-)
+from typing import List, NoReturn
 
 import tmxlib as tmx
 
@@ -51,7 +49,7 @@ def convert(row: List[str]) -> List[int]:
     return list(map(lambda c: char_to_num[c], row))
 
 wincoll_data = []
-with open(args.wincoll_file, "r") as fh:
+with open(args.wincoll_file, "r", encoding="utf-8") as fh:
     for line in fh.readlines():
         wincoll_data += convert(list(line.strip("\n")))
 
