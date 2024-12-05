@@ -217,9 +217,6 @@ CREATE DATA-FILE-NAME S" Level01" ",
    ." with sprites and screens designed by"     CR
    ." Pav, Jes, Al, and Roobs, who also "       CR
    ." programmed it."                           CR
-   ."  This version does not have eggs. It has"
-   ." round bricks instead. Apart from that,"   CR
-   ." it is almost the same as Repton 1."       CR
                                                 CR
    ."     Z/X - Left/Right   '/? - Up/Down"     CR
    ."         S/L - Save/load position"         CR
