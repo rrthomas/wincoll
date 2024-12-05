@@ -246,7 +246,7 @@ CREATE DATA-FILE-NAME S" Level01" ",
    0   \ Accumulator for start level
    BEGIN
       KEY
-      DUP 27 = IF EXIT THEN
+      DUP 27 = IF *" Quit" THEN
       DUP [CHAR] 0 [CHAR] 9 1+ WITHIN IF
          \ If char is 0 to 9, add a digit to level number
          DUP [CHAR] 0 -
