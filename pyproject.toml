@@ -1,0 +1,69 @@
+[project]
+name = "wincoll"
+version = "0.9"
+description = "Simple rocks-and-diamonds game"
+license = {text = "GPL v3 or later"}
+authors = [
+    {name = "Reuben Thomas", email = "rrt@sc3d.org"}
+]
+readme = "README.md"
+urls = {Homepage = "https://github.com/rrthomas/wincoll"}
+requires-python = ">= 3.9"
+dependencies = [
+    "importlib_resources >= 5.10",
+    "pygame",
+    "pytmx",
+]
+classifiers = [
+    "Environment :: Desktop",
+    "Programming Language :: Python :: 3",
+]
+
+[project.scripts]
+linton = "wincoll:main"
+
+[build-system]
+requires = [
+    "setuptools >= 62.3.0",
+]
+
+[tool.setuptools]
+packages = [
+    "wincoll",
+]
+
+# [tool.setuptools.package-data]
+# wincoll = ["init-pages/**"]
+
+[tool.mypy]
+exclude = ['^dist', '^build']
+files = ['wincoll']
+strict = true
+
+[tool.pylint.main]
+# Use multiple processes to speed up Pylint: 0 = auto-detect.
+jobs = 0
+
+[tool.pylint.MASTER]
+init-hook = 'import sys; sys.path.append(".")'
+
+[tool.pylint.format]
+const-naming-style = "any"
+disable = [
+    "missing-module-docstring",
+    "missing-class-docstring",
+    "missing-function-docstring",
+    "no-member",
+    "fixme",
+    "global-statement",
+    "redefined-outer-name",
+    "too-many-arguments",
+    "too-many-branches",
+    "too-many-instance-attributes",
+    "too-many-locals",
+    "too-many-nested-blocks",
+    "too-many-positional-arguments",
+]
+enable = [
+    "useless-suppression",
+]
