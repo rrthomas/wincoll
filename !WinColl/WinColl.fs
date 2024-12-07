@@ -88,10 +88,8 @@ AREA WORLD + 1+ CONSTANT ENDWORLD   \ end of array
    R> CLOSE-FILE DROP ;
 
 \ Move rocks
-1 CONSTANT X+
 : DOWN?   ROW + C@ Gap = ;
-: SIDEWAYS?   X+ NEGATE TO X+  X+ + DUP
-   ROW + C@ Gap =  SWAP C@ Gap =  AND ;
+: SIDEWAYS?   DUP  ROW + C@ Gap =  SWAP C@ Gap =  AND ;
 : FALL   \ make rocks fall
    WORLD ENDWORLD 1- DO
       I C@ Rock = IF
@@ -100,10 +98,10 @@ AREA WORLD + 1+ CONSTANT ENDWORLD   \ end of array
          OVER Blob = OR  SWAP Gap = OR IF
             I DOWN? IF
                ROW
-            ELSE I SIDEWAYS? IF
-                  X+ ROW +
-               ELSE I SIDEWAYS? IF
-                     X+ ROW +
+            ELSE I 1- SIDEWAYS? IF
+                  ROW 1-
+               ELSE I 1+ SIDEWAYS? IF
+                     ROW 1+
                   ELSE 0
                   THEN
                THEN
