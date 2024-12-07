@@ -22,8 +22,7 @@ parser.add_argument("tiled_file", metavar="TILED-MAP", help="Tiled map output fi
 args = parser.parse_args()
 
 # Error messages
-# pylint: disable=unused-argument, too-many-arguments, too-many-positional-arguments
-def simple_warning(message, category, filename, lineno, file, line):  # type: ignore
+def simple_warning(message, category, filename, lineno, file, line):  # type: ignore, pylint: disable=unused-argument, too-many-arguments, too-many-positional-arguments
     print(f"{parser.prog}: {message}", file=file or sys.stderr)
 
 warnings.showwarning = simple_warning  # type: ignore
