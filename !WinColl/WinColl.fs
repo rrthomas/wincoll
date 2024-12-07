@@ -218,7 +218,7 @@ CREATE DATA-FILE-NAME S" Level01" ",
          DEAD? @ IF DIE THEN
       FINISHED? UNTIL
       1 LEVEL +!
-   LEVEL @ LEVELS = UNTIL  .STATUS
+   LEVEL @ LEVELS = UNTIL
    Win SPLURGE ;
 
 \ Instructions
