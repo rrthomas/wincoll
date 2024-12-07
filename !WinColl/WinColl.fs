@@ -195,28 +195,20 @@ CREATE DATA-FILE-NAME S" Level01" ",
       BEGIN  LOAD-POSITION
          BEGIN
             @TIME FRAME-LENGTH +
-            CASE 0 INKEY  *" FX 15"
-               [CHAR] x OF 1 0 WALK ENDOF
-               [CHAR] X OF 1 0 WALK ENDOF
-                    137 OF 1 0 WALK ENDOF
-               [CHAR] z OF -1 0 WALK ENDOF
-               [CHAR] Z OF -1 0 WALK ENDOF
-                    136 OF -1 0 WALK ENDOF
-               [CHAR] ' OF 0 1 WALK ENDOF
-               [CHAR] " OF 0 1 WALK ENDOF
-                    139 OF 0 1 WALK ENDOF
-               [CHAR] / OF 0 -1 WALK ENDOF
-               [CHAR] ? OF 0 -1 WALK ENDOF
-                    138 OF 0 -1 WALK ENDOF
-               [CHAR] l OF LOAD-POSITION ENDOF
-               [CHAR] L OF LOAD-POSITION ENDOF
-               [CHAR] s OF SAVE-POSITION ENDOF
-               [CHAR] S OF SAVE-POSITION ENDOF
-               [CHAR] r OF RESTART-LEVEL ENDOF
-               [CHAR] R OF RESTART-LEVEL ENDOF
-               [CHAR] q OF DROP EXIT ENDOF
-               [CHAR] Q OF DROP EXIT ENDOF
-            ENDCASE
+            0 INKEY  *" FX 15"
+            DUP [CHAR] x =  OVER [CHAR] X = OR  OVER 137 = OR IF
+               1 0 WALK
+            ELSE DUP [CHAR] z =  OVER [CHAR] Z = OR  OVER 136 = OR IF
+               -1 0 WALK
+            ELSE DUP [CHAR] ' =  OVER [CHAR] " = OR  OVER 139 = OR IF
+               0 1 WALK
+            ELSE DUP [CHAR] / =  OVER [CHAR] ? = OR  OVER 138 = OR IF
+                  0 -1 WALK
+            ELSE DUP [CHAR] l =  OVER [CHAR] L = OR IF LOAD-POSITION
+            ELSE DUP [CHAR] s =  OVER [CHAR] S = OR IF SAVE-POSITION
+            ELSE DUP [CHAR] r =  OVER [CHAR] R = OR IF RESTART-LEVEL
+            ELSE DUP [CHAR] q =  OVER [CHAR] Q = OR IF DROP EXIT
+            THEN THEN THEN THEN THEN THEN THEN THEN DROP
             FALL
             X @ WINDOW-SIZE 2/ -  Y @ WINDOW-SIZE 2/ -  .WORLD
             .STATUS
