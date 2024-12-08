@@ -2,7 +2,7 @@
 
 \ Utility words
 : INKEY   ( u -- c )  256 U/MOD SWAP  129 [ 3 3 ] OS" OS_Byte"
-   DROP  SWAP 0<> IF  DROP -1 THEN 
+   DROP  SWAP 0<> IF  DROP -1 THEN
    126 [ 1 0 ] OS" XOS_Byte"   \ Clear any escape condition
    ;
 : OFF   [ 0 0 ] OS" OS_RemoveCursors" ;
@@ -90,28 +90,22 @@ AREA WORLD + 1+ CONSTANT ENDWORLD   \ end of array
 \ Move rocks
 : DOWN?   ROW + C@ Gap = ;
 : SIDEWAYS?   DUP  ROW + C@ Gap =  SWAP C@ Gap =  AND ;
-: FALL   \ make rocks fall
+: FALL  2DUP + ROW + C@ Win = IF  TRUE DEAD? !  THEN
+   OVER + Rock SWAP C!  Gap SWAP C! *" SOUND 2 65526 100 2" ;
+: ROCKS   \ make rocks fall
    WORLD ENDWORLD 1- DO
       I C@ Rock = IF
          I ROW + C@
          DUP Rock =  OVER Key = OR  OVER Diamond = OR
          OVER Blob = OR  SWAP Gap = OR IF
             I DOWN? IF
-               ROW
+               I ROW FALL
             ELSE I 1- SIDEWAYS? IF
-                  ROW 1-
+                  I ROW 1- FALL
                ELSE I 1+ SIDEWAYS? IF
-                     ROW 1+
-                  ELSE 0
+                     I ROW 1+ FALL
                   THEN
                THEN
-            THEN
-            DUP IF
-               DUP I + ROW + C@ Win = IF
-                  TRUE DEAD? !
-               THEN
-               I + Rock SWAP C!  Gap I C! *" SOUND 2 65526 100 2"
-            ELSE DROP
             THEN
          THEN
       THEN
@@ -209,7 +203,7 @@ CREATE DATA-FILE-NAME S" Level01" ",
             ELSE DUP [CHAR] r =  OVER [CHAR] R = OR IF RESTART-LEVEL
             ELSE DUP [CHAR] q =  OVER [CHAR] Q = OR IF DROP EXIT
             THEN THEN THEN THEN THEN THEN THEN THEN DROP
-            FALL
+            ROCKS
             X @ WINDOW-SIZE 2/ -  Y @ WINDOW-SIZE 2/ -  .WORLD
             .STATUS
             WAIT FLIP
