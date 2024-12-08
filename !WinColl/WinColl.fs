@@ -223,7 +223,7 @@ CREATE DATA-FILE-NAME S" Level01" ",
    ."     Z/X - Left/Right   '/? - Up/Down"     CR
    ."      or use the cursor keys to move"      CR
    ."         S/L - Save/load position"         CR
-   ."       R - Restart level  Q - Quit game"   CR
+   ."     R - Restart level  Q - Quit game"     CR
    ."     Type level number to select level"    CR CR
    CR ."      Press the space bar to enjoy!      "
    0   \ Accumulator for start level
