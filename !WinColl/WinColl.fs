@@ -141,8 +141,8 @@ AREA WORLD + 1+ CONSTANT ENDWORLD   \ end of array
 
 : DIE
    Splat SPRITEN
-   *" SOUND 3 65521 100 20"
    X @ WX - Y @ WY - XY>SCR SPRITE
+   *" SOUND 3 65521 100 20"
    FALSE DEAD? !
    WAIT FLIP 100 DELAY ;
 
