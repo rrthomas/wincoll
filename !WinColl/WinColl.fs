@@ -170,7 +170,6 @@ CREATE DATA-FILE-NAME S" Level01" ",
 
 \ Fill the screen with one sprite
 : SPLURGE   ( sprite# -- )
-   0 TO WX  0 TO WY
    WINDOW-SIZE 0 DO  WINDOW-SIZE 0 DO
       DUP SPRITEN  I J XY>SCR SPRITE
    LOOP LOOP
