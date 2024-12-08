@@ -217,10 +217,9 @@ CREATE DATA-FILE-NAME S" Level01" ",
 \ Instructions
 : INSTRUCT   ( -- start-level )
    INIT-SCREEN  7 COLOUR  0 14 AT-XY  .LOGO
-   ."  This game is an unashamed Repton clone,"
-   ." with graphics and levels designed by"     CR
-   ." Pav, Jes, Al, and Roobs, who also "       CR
-   ." programmed it."                           CR
+   ." Collect all the diamonds on each level."  CR
+   ." Get a key to turn safes into diamonds."   CR
+   ." Avoid falling rocks!"                     CR
                                                 CR
    ."     Z/X - Left/Right   '/? - Up/Down"     CR
    ."      or use the cursor keys to move"      CR

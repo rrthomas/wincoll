@@ -8,6 +8,9 @@ WinColl is a simple
 [Repton](https://en.wikipedia.org/wiki/Repton_(video_game)) clone (but
 without eggs and monsters), written in Forth for RISC OS in 1989-90.
 
+Level design and graphics also by Alistair Turnbull, Paul Smith and Jeremy
+Douglas. Paul also designed the title graphic.
+
 
 ## Installation and use
 
