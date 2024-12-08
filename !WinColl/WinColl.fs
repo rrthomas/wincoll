@@ -50,7 +50,7 @@ CREATE WORLD   \ world array
 AREA ALLOT
 AREA WORLD + 1+ CONSTANT ENDWORLD   \ end of array
 
-\ Set up screen and handle sound
+\ Set up screen
 : PALETTE   \ set up screen palette
      0   0 200  8 RGB  144 176 176  9 RGB  240 176 112 10 RGB
    192 144  64 11 RGB  144  80   0 12 RGB   48 128   0 13 RGB
