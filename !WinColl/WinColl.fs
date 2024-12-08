@@ -55,7 +55,7 @@ AREA WORLD + 1+ CONSTANT ENDWORLD   \ end of array
      0   0 200  8 RGB  144 176 176  9 RGB  240 176 112 10 RGB
    192 144  64 11 RGB  144  80   0 12 RGB   48 128   0 13 RGB
    224 178 224 15 RGB ;
-: .LOGO   \ set up the sprite banner
+: .BANNER   \ draw the title banner
    *" SChoose title"  440 654 SPRITE ;
 
 \ Display world
@@ -216,7 +216,7 @@ CREATE DATA-FILE-NAME S" Level01" ",
 
 \ Instructions
 : INSTRUCT   ( -- start-level )
-   INIT-SCREEN  7 COLOUR  0 14 AT-XY  .LOGO
+   INIT-SCREEN  7 COLOUR  0 14 AT-XY  .BANNER
    ." Collect all the diamonds on each level."  CR
    ." Get a key to turn safes into diamonds."   CR
    ." Avoid falling rocks!"                     CR
