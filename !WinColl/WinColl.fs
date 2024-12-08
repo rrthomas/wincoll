@@ -56,7 +56,7 @@ AREA WORLD + 1+ CONSTANT ENDWORLD   \ end of array
    192 144  64 11 RGB  144  80   0 12 RGB   48 128   0 13 RGB
    224 178 224 15 RGB ;
 : .LOGO   \ set up the sprite banner
-   *" SChoose Centre"  440 654 SPRITE ;
+   *" SChoose title"  440 654 SPRITE ;
 
 \ Display world
 64 CONSTANT SIZE   \ of sprites
