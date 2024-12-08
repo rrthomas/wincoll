@@ -112,7 +112,7 @@ AREA WORLD + 1+ CONSTANT ENDWORLD   \ end of array
    -1 +LOOP ;
 
 \ Deal with Win's moves
-: MUNCH   ( a diamond )   TRUE -1 DIAMONDS +!
+: COLLECT   ( a diamond )   TRUE -1 DIAMONDS +!
    *" SOUND 1 65526 110 2" ;
 : UNLOCK   ( the safes )   TRUE  ENDWORLD WORLD
    DO  I C@ Safe = IF Diamond I C! THEN  LOOP
@@ -124,7 +124,7 @@ AREA WORLD + 1+ CONSTANT ENDWORLD   \ end of array
 : MOVE?   ( dx dy x' y' -- moved? )
    CASE XY>MEM C@
       Gap OF TRUE ENDOF
-      Diamond OF MUNCH ENDOF
+      Diamond OF COLLECT ENDOF
       Key OF UNLOCK ENDOF
       Rock OF PUSH ENDOF
       Earth OF TRUE ENDOF
