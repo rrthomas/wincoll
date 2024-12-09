@@ -439,8 +439,8 @@ DIGIT_KEYS = {
 
 def instructions() -> int:
     """Show instructions and choose start level."""
+    level = 0
     while True:
-        level = 0
         reinit_screen()
         screen.blit(TITLE_IMAGE, (105, 20))
         print_screen(
