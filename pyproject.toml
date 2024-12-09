@@ -17,7 +17,10 @@ dependencies = [
     "typing_extensions",
 ]
 classifiers = [
-    "Environment :: Desktop",
+    "Environment :: X11 Applications",
+    "Environment :: MacOS X",
+    "Environment :: Win32 (MS Windows)",
+    "Topic :: Games/Entertainment :: Puzzle Games",
     "Programming Language :: Python :: 3",
 ]
 
