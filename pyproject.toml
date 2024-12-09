@@ -20,7 +20,7 @@ classifiers = [
 ]
 
 [project.scripts]
-linton = "wincoll:main"
+wincoll = "wincoll:main"
 
 [build-system]
 requires = [
@@ -32,17 +32,21 @@ packages = [
     "wincoll",
 ]
 
-# [tool.setuptools.package-data]
-# wincoll = ["init-pages/**"]
+[tool.setuptools.package-data]
+wincoll = ["*.png", "*.wav", "*.tmx", "*.tsx", "*.ttf"]
 
 [tool.mypy]
 exclude = ['^dist', '^build']
-files = ['wincoll']
 strict = true
+
+[[tool.mypy.overrides]]
+module = "wincoll.ptext"
+ignore_errors = true
 
 [tool.pylint.main]
 # Use multiple processes to speed up Pylint: 0 = auto-detect.
 jobs = 0
+ignore-paths = ["wincoll/ptext.py"]
 
 [tool.pylint.MASTER]
 init-hook = 'import sys; sys.path.append(".")'

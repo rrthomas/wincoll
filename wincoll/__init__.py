@@ -17,7 +17,8 @@ from itertools import chain
 import pygame
 import pyscroll  # type: ignore
 import pytmx  # type: ignore
-import ptext  # type: ignore
+
+from . import ptext
 
 CURRENT_DIR = Path(__file__).parent
 RESOURCES_DIR = CURRENT_DIR
@@ -120,7 +121,7 @@ def print_screen(pos: Tuple[int, int], msg: str) -> None:
     ptext.draw(  # type: ignore[no-untyped-call]
         msg,
         (pos[0] * font_pixels, pos[1] * font_pixels),
-        fontname="master.ttf",
+        fontname=str(RESOURCES_DIR / "master.ttf"),
         fontsize=ptext.DEFAULT_FONT_SIZE / 2,
     )
 
@@ -157,7 +158,7 @@ class WincollGame:
         self.map_data: pyscroll.data.TiledMapData
 
     def restart_level(self) -> None:
-        filename = f"Level{str(self.level).zfill(2)}.tmx"
+        filename = RESOURCES_DIR / f"Level{str(self.level).zfill(2)}.tmx"
         self.dead = False
 
         tmx_data = pytmx.load_pygame(filename)
@@ -472,10 +473,10 @@ def main() -> None:
     init_screen()
 
     global COLLECT_SOUND, SLIDE_SOUND, UNLOCK_SOUND, SPLAT_SOUND
-    COLLECT_SOUND = pygame.mixer.Sound("Collect.wav")
-    SLIDE_SOUND = pygame.mixer.Sound("Slide.wav")
-    UNLOCK_SOUND = pygame.mixer.Sound("Unlock.wav")
-    SPLAT_SOUND = pygame.mixer.Sound("Splat.wav")
+    COLLECT_SOUND = pygame.mixer.Sound(RESOURCES_DIR / "Collect.wav")
+    SLIDE_SOUND = pygame.mixer.Sound(RESOURCES_DIR / "Slide.wav")
+    UNLOCK_SOUND = pygame.mixer.Sound(RESOURCES_DIR / "Unlock.wav")
+    SPLAT_SOUND = pygame.mixer.Sound(RESOURCES_DIR / "Splat.wav")
 
     try:
         while True:
