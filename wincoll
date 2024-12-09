@@ -494,9 +494,7 @@ def main() -> None:
             game = WincollGame(level)
             game.run()
     except KeyboardInterrupt:
-        pass
-    finally:
-        pygame.quit()
+        quit_game()
 
 
 if __name__ == "__main__":
