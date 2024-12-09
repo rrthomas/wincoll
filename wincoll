@@ -92,9 +92,9 @@ class Vector:
 screen: pygame.Surface
 
 
-def init_screen() -> None:
+def init_screen(flags: int = pygame.SCALED) -> None:
     global screen
-    screen = pygame.display.set_mode((320, 256), pygame.SCALED)
+    screen = pygame.display.set_mode((320, 256), flags)
     reinit_screen()
 
 
@@ -232,7 +232,8 @@ class WincollGame:
                     self.running = False
                     pygame.quit()
                     sys.exit()
-                # FIXME: support full-screen toggle with F11
+                elif event.key == pygame.K_F11:
+                    pygame.display.toggle_fullscreen()
 
         # using get_pressed is slightly less accurate than testing for events,
         # but is much easier to use.
@@ -451,6 +452,7 @@ Avoid falling rocks!
      or use the cursor keys to move
         S/L - Save/load position
     R - Restart level  Q - Quit game
+        F11 - toggle full screen
     Type level number to select level
 
 
