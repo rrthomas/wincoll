@@ -66,6 +66,12 @@ SPLAT_IMAGE = load_image("200.png")
 TITLE_IMAGE = load_image("title.png")
 
 
+COLLECT_SOUND: pygame.mixer.Sound
+SLIDE_SOUND: pygame.mixer.Sound
+UNLOCK_SOUND: pygame.mixer.Sound
+SPLAT_SOUND: pygame.mixer.Sound
+
+
 # pygame's Vector2d class is float-only. We want integer vectors!
 class Vector:
     def __init__(self, x: int, y: int):
@@ -193,7 +199,6 @@ class WincollGame:
 
     def survey(self) -> None:
         """Count diamonds on level and find start position."""
-        # FIXME: *" SOUND 1 65521 30 20"
         self.diamonds = 0
         for row, blocks in enumerate(self.map_blocks):
             for col, block in enumerate(blocks):
@@ -211,7 +216,7 @@ class WincollGame:
             for col, block in enumerate(blocks):
                 if block == self.gids[TilesetGids.SAFE]:
                     self.set(Vector(col, row), self.gids[TilesetGids.DIAMOND])
-        # FIXME: *" SOUND 1 65526 80 2"
+        UNLOCK_SOUND.play()
 
     def draw(self, surface: pygame.Surface) -> None:
         self.group.center(self.hero.rect.center)
@@ -257,7 +262,7 @@ class WincollGame:
         if block in (self.gids[TilesetGids.GAP], self.gids[TilesetGids.EARTH]):
             pass
         elif block == self.gids[TilesetGids.DIAMOND]:
-            # FIXME: *" SOUND 1 65526 110 2" ;
+            COLLECT_SOUND.play()
             self.diamonds -= 1
         elif block == self.gids[TilesetGids.KEY]:
             self.unlock()
@@ -290,7 +295,7 @@ class WincollGame:
                 self.dead = True
             self.set(oldpos, self.gids[TilesetGids.GAP])
             self.set(newpos, self.gids[TilesetGids.ROCK])
-            # FIXME: *" SOUND 2 65526 100 2"
+            SLIDE_SOUND.play()
 
         for row, blocks in reversed(list(enumerate(self.map_blocks))):
             for col, block in enumerate(blocks):
@@ -365,7 +370,7 @@ class WincollGame:
                         self.show_status()
                         self.show_screen()
                     if self.dead:
-                        # FIXME: *" SOUND 3 65521 100 20"
+                        SPLAT_SOUND.play()
                         self.game_surface.blit(
                             SPLAT_IMAGE,
                             self.game_to_screen(
@@ -454,6 +459,12 @@ def main() -> None:
     pygame.font.init()
     pygame.display.set_caption("WinColl")
     init_screen()
+
+    global COLLECT_SOUND, SLIDE_SOUND, UNLOCK_SOUND, SPLAT_SOUND
+    COLLECT_SOUND = pygame.mixer.Sound("Collect.wav")
+    SLIDE_SOUND = pygame.mixer.Sound("Slide.wav")
+    UNLOCK_SOUND = pygame.mixer.Sound("Unlock.wav")
+    SPLAT_SOUND = pygame.mixer.Sound("Splat.wav")
 
     try:
         while True:
