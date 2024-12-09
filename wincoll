@@ -145,7 +145,6 @@ class WincollGame:
             (screen.get_width() - window_pixels) // 2,
             12,
         )
-        self.running = False
         self.quit = False
         self.dead = False
         self.level = level
@@ -237,9 +236,6 @@ class WincollGame:
 
     def handle_input(self) -> None:
         for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                self.running = False
-                break
             handle_global_input(event)
             if event.type == pygame.KEYDOWN:
                 if event.key in (pygame.K_LEFT, pygame.K_z):
@@ -353,7 +349,6 @@ class WincollGame:
         clock = pygame.time.Clock()
         fps = 10
         pygame.key.set_repeat(1000 // fps)
-        self.running = True
 
         while self.level <= levels:
             self.start_level()
@@ -361,8 +356,6 @@ class WincollGame:
             while self.diamonds > 0:
                 self.load_position()
                 while not self.dead and self.diamonds > 0:
-                    if not self.running:
-                        break
                     clock.tick(fps)
                     self.hero.velocity = Vector(0, 0)
                     self.handle_input()
