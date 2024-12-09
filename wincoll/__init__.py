@@ -4,6 +4,7 @@
 # Released under the GPL version 3, or (at your option) any later version.
 
 import importlib.metadata
+import os
 import sys
 from enum import Enum
 import argparse
@@ -16,12 +17,19 @@ from collections.abc import Iterator
 from itertools import chain
 
 from typing_extensions import Self
-import pygame
+
 import pyscroll  # type: ignore
 import pytmx  # type: ignore
 
 from . import ptext
 from .warnings_util import simple_warning
+
+# Import pygame, suppressing extra messages that it prints on startup.
+os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
+with warnings.catch_warnings():
+    warnings.simplefilter("ignore")
+    import pygame
+
 
 VERSION = importlib.metadata.version("linton")
 
@@ -356,9 +364,7 @@ class WincollGame:
                     SPLAT_SOUND.play()
                     self.game_surface.blit(
                         SPLAT_IMAGE,
-                        self.game_to_screen(
-                            self.hero.position.x, self.hero.position.y
-                        ),
+                        self.game_to_screen(self.hero.position.x, self.hero.position.y),
                     )
                     self.show_screen()
                     pygame.time.wait(1000)
