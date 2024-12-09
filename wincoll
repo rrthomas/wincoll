@@ -412,9 +412,32 @@ def get_key() -> int:
                 return key
 
 
+DIGIT_KEYS = {
+    pygame.K_0: 0,
+    pygame.K_1: 1,
+    pygame.K_2: 2,
+    pygame.K_3: 3,
+    pygame.K_4: 4,
+    pygame.K_5: 5,
+    pygame.K_6: 6,
+    pygame.K_7: 7,
+    pygame.K_8: 8,
+    pygame.K_9: 9,
+    pygame.K_KP_0: 0,
+    pygame.K_KP_1: 1,
+    pygame.K_KP_2: 2,
+    pygame.K_KP_3: 3,
+    pygame.K_KP_4: 4,
+    pygame.K_KP_5: 5,
+    pygame.K_KP_6: 6,
+    pygame.K_KP_7: 7,
+    pygame.K_KP_8: 8,
+    pygame.K_KP_9: 9,
+}
+
 def instructions() -> int:
     """Show instructions and choose start level."""
-    level = 1
+    level = 0
     reinit_screen()
     screen.blit(TITLE_IMAGE, (105, 20))
     print_screen(
@@ -435,23 +458,15 @@ Avoid falling rocks!
 """,
     )
     pygame.display.flip()
-    while get_key() != pygame.K_SPACE:
-        pass
-    #    0   # Accumulator for start level
-    #    BEGIN
-    #       KEY
-    #       DUP 27 = IF *" Quit" THEN
-    #       DUP [CHAR] 0 [CHAR] 9 1+ WITHIN IF
-    #          # If char is 0 to 9, add a digit to level number
-    #          DUP [CHAR] 0 -
-    #          ROT 10 * +  SWAP
-    #       ELSE
-    #          DUP BL <> IF  NIP  0 SWAP THEN   # Else if not space, reset to 0
-    #       THEN
-    #    BL = UNTIL
-    #    DUP 0= IF DROP 1 THEN
-    #    LEVELS MIN ;
-    return level
+    while True:
+        key = get_key()
+        if key == pygame.K_SPACE:
+            break
+        if key in DIGIT_KEYS:
+            level = level * 10 + DIGIT_KEYS[key]
+        else:
+            level = 0
+    return max(min(level, levels), 1)
 
 
 def main() -> None:
