@@ -31,7 +31,7 @@ with warnings.catch_warnings():
     import pygame
 
 
-VERSION = importlib.metadata.version("linton")
+VERSION = importlib.metadata.version("wincoll")
 
 CURRENT_DIR = Path(__file__).parent
 RESOURCES_DIR = CURRENT_DIR
