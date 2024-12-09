@@ -3,6 +3,7 @@
 # © Reuben Thomas <rrt@sc3d.org> 2024
 # Released under the GPL version 3, or (at your option) any later version.
 
+import importlib.metadata
 import sys
 from enum import Enum
 import argparse
@@ -21,6 +22,8 @@ import pytmx  # type: ignore
 
 from . import ptext
 
+VERSION = importlib.metadata.version("linton")
+
 CURRENT_DIR = Path(__file__).parent
 RESOURCES_DIR = CURRENT_DIR
 SAVED_POSITION_FILE = RESOURCES_DIR / "saved_position.pkl"
@@ -33,7 +36,7 @@ parser.add_argument(
     "-V",
     "--version",
     action="version",
-    version="%(prog)s 0.1 (05 Dec 2024) by Reuben Thomas <rrt@sc3d.org>",
+    version=f"%(prog)s {VERSION} (05 Dec 2024) by Reuben Thomas <rrt@sc3d.org>",
 )
 args = parser.parse_args()
 
