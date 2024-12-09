@@ -355,41 +355,37 @@ class WincollGame:
         pygame.key.set_repeat(1000 // fps)
         self.running = True
 
-        try:
-            while self.level <= levels:
-                self.start_level()
-                self.show_status()
-                while self.diamonds > 0:
-                    self.load_position()
-                    while not self.dead and self.diamonds > 0:
-                        if not self.running:
-                            break
-                        clock.tick(fps)
-                        self.hero.velocity = Vector(0, 0)
-                        self.handle_input()
-                        if self.quit:
-                            self.quit = False
-                            return
-                        self.update()
-                        self.draw(self.game_surface)
-                        self.show_status()
-                        self.show_screen()
-                    if self.dead:
-                        SPLAT_SOUND.play()
-                        self.game_surface.blit(
-                            SPLAT_IMAGE,
-                            self.game_to_screen(
-                                self.hero.position.x, self.hero.position.y
-                            ),
-                        )
-                        self.show_screen()
-                        pygame.time.wait(1000)
-                        self.dead = False
-                self.level += 1
-            self.splurge(self.hero.image)
-
-        except KeyboardInterrupt:
-            pass
+        while self.level <= levels:
+            self.start_level()
+            self.show_status()
+            while self.diamonds > 0:
+                self.load_position()
+                while not self.dead and self.diamonds > 0:
+                    if not self.running:
+                        break
+                    clock.tick(fps)
+                    self.hero.velocity = Vector(0, 0)
+                    self.handle_input()
+                    if self.quit:
+                        self.quit = False
+                        return
+                    self.update()
+                    self.draw(self.game_surface)
+                    self.show_status()
+                    self.show_screen()
+                if self.dead:
+                    SPLAT_SOUND.play()
+                    self.game_surface.blit(
+                        SPLAT_IMAGE,
+                        self.game_to_screen(
+                            self.hero.position.x, self.hero.position.y
+                        ),
+                    )
+                    self.show_screen()
+                    pygame.time.wait(1000)
+                    self.dead = False
+            self.level += 1
+        self.splurge(self.hero.image)
 
 
 class Win(pygame.sprite.Sprite):  # pylint: disable=too-few-public-methods
