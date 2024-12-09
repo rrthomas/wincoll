@@ -13,6 +13,7 @@ dependencies = [
     "importlib_resources >= 5.10",
     "pygame",
     "pytmx",
+    "typing_extensions",
 ]
 classifiers = [
     "Environment :: Desktop",

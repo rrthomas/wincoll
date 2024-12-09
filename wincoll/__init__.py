@@ -10,10 +10,11 @@ from pathlib import Path
 import pickle
 import warnings
 from warnings import warn
-from typing import NoReturn, Self, Tuple, Optional
+from typing import NoReturn, Tuple, Optional
 from collections.abc import Iterator
 from itertools import chain
 
+from typing_extensions import Self
 import pygame
 import pyscroll  # type: ignore
 import pytmx  # type: ignore
