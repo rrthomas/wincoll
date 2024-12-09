@@ -11,7 +11,7 @@ from pathlib import Path
 import pickle
 import warnings
 from warnings import warn
-from typing import NoReturn, Tuple, Optional
+from typing import NoReturn, Tuple, List, Optional
 from collections.abc import Iterator
 from itertools import chain
 
@@ -21,32 +21,13 @@ import pyscroll  # type: ignore
 import pytmx  # type: ignore
 
 from . import ptext
+from .warnings_util import simple_warning
 
 VERSION = importlib.metadata.version("linton")
 
 CURRENT_DIR = Path(__file__).parent
 RESOURCES_DIR = CURRENT_DIR
 SAVED_POSITION_FILE = RESOURCES_DIR / "saved_position.pkl"
-
-# Command-line arguments
-parser = argparse.ArgumentParser(
-    description="Collect all the diamonds while digging through earth dodging rocks.",
-)
-parser.add_argument(
-    "-V",
-    "--version",
-    action="version",
-    version=f"%(prog)s {VERSION} (05 Dec 2024) by Reuben Thomas <rrt@sc3d.org>",
-)
-args = parser.parse_args()
-
-
-# Error messages
-def simple_warning(message, category, filename, lineno, file, line):  # type: ignore  # pylint: disable=unused-argument, too-many-arguments, too-many-positional-arguments
-    print(f"{parser.prog}: {message}", file=file or sys.stderr)
-
-
-warnings.showwarning = simple_warning  # type: ignore
 
 
 def die(code: int, msg: str) -> NoReturn:
@@ -470,7 +451,20 @@ Avoid falling rocks!
     return max(min(level, levels), 1)
 
 
-def main() -> None:
+def main(argv: List[str] = sys.argv[1:]) -> None:
+    # Command-line arguments
+    parser = argparse.ArgumentParser(
+        description="Collect all the diamonds while digging through earth dodging rocks.",
+    )
+    parser.add_argument(
+        "-V",
+        "--version",
+        action="version",
+        version=f"%(prog)s {VERSION} (05 Dec 2024) by Reuben Thomas <rrt@sc3d.org>",
+    )
+    warnings.showwarning = simple_warning(parser.prog)
+    parser.parse_args(argv)
+
     pygame.init()
     pygame.font.init()
     pygame.display.set_caption("WinColl")
