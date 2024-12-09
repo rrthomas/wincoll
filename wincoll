@@ -125,6 +125,19 @@ def print_screen(pos: Tuple[int, int], msg: str) -> None:
     )
 
 
+def quit_game() -> NoReturn:
+    pygame.quit()
+    sys.exit()
+
+
+def handle_global_input(event: pygame.event.Event) -> None:
+    if event.type == pygame.QUIT:
+        quit_game()
+    if event.type == pygame.KEYDOWN:
+        if event.key == pygame.K_F11:
+            pygame.display.toggle_fullscreen()
+
+
 class WincollGame:
     def __init__(self, level: int = 1) -> None:
         self.game_surface = pygame.Surface((window_pixels, window_pixels)).convert()
@@ -227,13 +240,7 @@ class WincollGame:
             if event.type == pygame.QUIT:
                 self.running = False
                 break
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    self.running = False
-                    pygame.quit()
-                    sys.exit()
-                elif event.key == pygame.K_F11:
-                    pygame.display.toggle_fullscreen()
+            handle_global_input(event)
 
         # using get_pressed is slightly less accurate than testing for events,
         # but is much easier to use.
@@ -405,10 +412,10 @@ class Win(pygame.sprite.Sprite):  # pylint: disable=too-few-public-methods
 def get_key() -> int:
     while True:
         for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
+            handle_global_input(event)
             if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    quit_game()
                 key: int = event.key
                 return key
 
@@ -436,14 +443,16 @@ DIGIT_KEYS = {
     pygame.K_KP_9: 9,
 }
 
+
 def instructions() -> int:
     """Show instructions and choose start level."""
-    level = 0
-    reinit_screen()
-    screen.blit(TITLE_IMAGE, (105, 20))
-    print_screen(
-        (0, 14),
-        """\
+    while True:
+        level = 0
+        reinit_screen()
+        screen.blit(TITLE_IMAGE, (105, 20))
+        print_screen(
+            (0, 14),
+            """\
 Collect all the diamonds on each level.
 Get a key to turn safes into diamonds.
 Avoid falling rocks!
@@ -457,10 +466,9 @@ Avoid falling rocks!
 
 
       Press the space bar to enjoy!
-""",
-    )
-    pygame.display.flip()
-    while True:
+    """,
+        )
+        pygame.display.flip()
         key = get_key()
         if key == pygame.K_SPACE:
             break
