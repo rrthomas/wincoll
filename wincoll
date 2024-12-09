@@ -241,28 +241,23 @@ class WincollGame:
                 self.running = False
                 break
             handle_global_input(event)
-
-        # using get_pressed is slightly less accurate than testing for events,
-        # but is much easier to use.
-        # FIXME: see if we can do better
-        pressed = pygame.key.get_pressed()
-        self.hero.velocity = Vector(0, 0)
-        if pressed[pygame.K_LEFT] or pressed[pygame.K_z]:
-            self.hero.velocity = Vector(-1, 0)
-        elif pressed[pygame.K_RIGHT] or pressed[pygame.K_x]:
-            self.hero.velocity = Vector(1, 0)
-        elif pressed[pygame.K_UP] or pressed[pygame.K_QUOTE]:
-            self.hero.velocity = Vector(0, -1)
-        elif pressed[pygame.K_DOWN] or pressed[pygame.K_SLASH]:
-            self.hero.velocity = Vector(0, 1)
-        elif pressed[pygame.K_l]:
-            self.load_position()
-        elif pressed[pygame.K_s]:
-            self.save_position()
-        elif pressed[pygame.K_r]:
-            self.restart_level()
-        elif pressed[pygame.K_q]:
-            self.quit = True
+            if event.type == pygame.KEYDOWN:
+                if event.key in (pygame.K_LEFT, pygame.K_z):
+                    self.hero.velocity = Vector(-1, 0)
+                elif event.key in (pygame.K_RIGHT, pygame.K_x):
+                    self.hero.velocity = Vector(1, 0)
+                elif event.key in (pygame.K_UP, pygame.K_QUOTE):
+                    self.hero.velocity = Vector(0, -1)
+                elif event.key in (pygame.K_DOWN, pygame.K_SLASH):
+                    self.hero.velocity = Vector(0, 1)
+                elif event.key == pygame.K_l:
+                    self.load_position()
+                elif event.key == pygame.K_s:
+                    self.save_position()
+                elif event.key == pygame.K_r:
+                    self.restart_level()
+                elif event.key == pygame.K_q:
+                    self.quit = True
 
     def process_move(self) -> None:
         newpos = self.hero.position + self.hero.velocity
@@ -357,6 +352,7 @@ class WincollGame:
     def run(self) -> None:
         clock = pygame.time.Clock()
         fps = 10
+        pygame.key.set_repeat(1000 // fps)
         self.running = True
 
         try:
@@ -369,6 +365,7 @@ class WincollGame:
                         if not self.running:
                             break
                         clock.tick(fps)
+                        self.hero.velocity = Vector(0, 0)
                         self.handle_input()
                         if self.quit:
                             self.quit = False
