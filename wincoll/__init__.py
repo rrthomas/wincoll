@@ -124,7 +124,7 @@ def quit_game() -> NoReturn:
     sys.exit()
 
 
-def handle_global_input(event: pygame.event.Event) -> None:
+def handle_global_event(event: pygame.event.Event) -> None:
     if event.type == pygame.QUIT:
         quit_game()
     if event.type == pygame.KEYDOWN:
@@ -230,7 +230,7 @@ class WincollGame:
 
     def handle_input(self) -> None:
         for event in pygame.event.get():
-            handle_global_input(event)
+            handle_global_event(event)
             if event.type == pygame.KEYDOWN:
                 if event.key in (pygame.K_LEFT, pygame.K_z):
                     self.hero.velocity = Vector(-1, 0)
@@ -342,7 +342,7 @@ class WincollGame:
     def run(self) -> None:
         clock = pygame.time.Clock()
         fps = 10
-        pygame.key.set_repeat(1000 // fps)
+        pygame.key.set_repeat(1000 // fps * 2, 1000 // fps)
 
         while self.level <= levels:
             self.start_level()
@@ -388,10 +388,17 @@ class Win(pygame.sprite.Sprite):  # pylint: disable=too-few-public-methods
         self.rect.topleft = (screen_pos.x, screen_pos.y)
 
 
+def clear_keys() -> None:
+    for event in pygame.event.get():
+        if event.type == pygame.KEYDOWN:
+            pass
+        handle_global_event(event)
+
+
 def get_key() -> int:
     while True:
         for event in pygame.event.get():
-            handle_global_input(event)
+            handle_global_event(event)
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     quit_game()
@@ -425,6 +432,7 @@ DIGIT_KEYS = {
 
 def instructions() -> int:
     """Show instructions and choose start level."""
+    clear_keys()
     level = 0
     while True:
         reinit_screen()
