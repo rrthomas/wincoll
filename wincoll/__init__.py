@@ -347,6 +347,7 @@ class WincollGame:
         while self.level <= levels:
             self.start_level()
             self.show_status()
+            self.show_screen()
             while self.diamonds > 0:
                 self.load_position()
                 while not self.dead and self.diamonds > 0:
