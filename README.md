@@ -18,19 +18,7 @@ versions](<https://github.com/rrthomas/wincoll/RISC OS.md>) are available.
 Level design and graphics also by Alistair Turnbull, Paul Smith and Jeremy
 Douglas. Paul also designed the title graphic.
 
-The sounds are from [Freesound](https://freesound.org), lightly adapted:
-
-+ Diamond collection:
-  [Ding.wav by datasoundsample](https://freesound.org/s/638638/) under CC
-  BY 4.0
-+ Rock fall:
-  [WHITE_NOISE-10s.wav by newagesoup](https://freesound.org/s/349315/)
-  under CC 0
-+ Safe unlock:
-  [Old Church Bell (no noise) by igroglaz](https://freesound.org/s/633208/)
-  under CC 0
-+ Death splat:
-  [Splat1.wav by Shakedown_M](https://freesound.org/s/685205/) under CC 0
+The sounds are from [Freesound](https://freesound.org), lightly adapted.
 
 
 ## Installation and use
@@ -44,7 +32,22 @@ You can edit the levels (the `.tmx` files) with
 
 ## Copyright and Disclaimer
 
-The package is distributed under the GNU Public License version 3, or, at
-your option, any later version. See the file COPYING.
+WinColl is distributed under the GNU Public License version 3, or, at your
+option, any later version. See the file COPYING.
 
 THIS PROGRAM IS PROVIDED AS IS, WITH NO WARRANTY. USE IS AT THE USER'S RISK.
+WinColl’s code is copyright Reuben Thomas, and its levels and graphics by Reuben Thomas, Alistair Turnbull, Paul Smith and Jeremy Douglas.
+
+The sound effects are copyrighted and licensed as follows:
+
++ Diamond collection:
+  [Ding.wav by datasoundsample](https://freesound.org/s/638638/) under CC
+  BY 4.0
++ Rock fall:
+  [WHITE_NOISE-10s.wav by newagesoup](https://freesound.org/s/349315/)
+  under CC 0
++ Safe unlock:
+  [Old Church Bell (no noise) by igroglaz](https://freesound.org/s/633208/)
+  under CC 0
++ Death splat:
+  [Splat1.wav by Shakedown_M](https://freesound.org/s/685205/) under CC 0
