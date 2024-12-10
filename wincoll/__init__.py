@@ -130,6 +130,8 @@ def handle_global_event(event: pygame.event.Event) -> None:
             pygame.display.toggle_fullscreen()
 
 
+FRAMES_PER_SECOND = 10
+
 class WincollGame:
     def __init__(self, level: int = 1) -> None:
         self.game_surface = pygame.Surface((window_pixels, window_pixels)).convert()
@@ -359,7 +361,6 @@ class WincollGame:
 
     def run(self) -> None:
         clock = pygame.time.Clock()
-        fps = 10
 
         while self.level <= levels:
             self.start_level()
@@ -368,7 +369,7 @@ class WincollGame:
             while self.diamonds > 0:
                 self.load_position()
                 while not self.dead and self.diamonds > 0:
-                    clock.tick(fps)
+                    clock.tick(FRAMES_PER_SECOND)
                     self.hero.velocity = pygame.Vector2(0, 0)
                     for event in pygame.event.get():
                         handle_global_event(event)
@@ -384,7 +385,7 @@ class WincollGame:
                         self.draw()
                         self.show_status()
                         self.show_screen()
-                        pygame.time.wait(1000 // fps // subframes)
+                        pygame.time.wait(1000 // FRAMES_PER_SECOND // subframes)
                 if self.dead:
                     SPLAT_SOUND.play()
                     self.game_surface.blit(
@@ -460,6 +461,7 @@ def instructions() -> int:
     """Show instructions and choose start level."""
     clear_keys()
     level = 0
+    clock = pygame.time.Clock()
     while True:
         reinit_screen()
         screen.blit(TITLE_IMAGE, (105, 20))
@@ -483,6 +485,7 @@ Avoid falling rocks!
         )
         pygame.display.flip()
         key = get_key()
+        clock.tick(FRAMES_PER_SECOND)
         if key == pygame.K_SPACE:
             break
         if key in DIGIT_KEYS:
