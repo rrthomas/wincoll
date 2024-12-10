@@ -139,6 +139,7 @@ class WincollGame:
         )
         self.quit = False
         self.dead = False
+        self.falling = False
         self.level = level
         self.map_blocks: pytmx.TiledTileLayer
         self.gids: dict[TilesetGids, int]
@@ -293,13 +294,19 @@ class WincollGame:
         )
 
     def rockfall(self) -> None:
+        new_fall = False
+
         def fall(oldpos: pygame.Vector2, newpos: pygame.Vector2) -> None:
             block_below = self.get(newpos + pygame.Vector2(0, 1))
             if block_below == self.gids[TilesetGids.WIN_PLACE]:
                 self.dead = True
             self.set(oldpos, self.gids[TilesetGids.GAP])
             self.set(newpos, self.gids[TilesetGids.ROCK])
-            SLIDE_SOUND.play()
+            nonlocal new_fall
+            if self.falling is False:
+                self.falling = True
+                SLIDE_SOUND.play(-1)
+            new_fall = True
 
         for row, blocks in reversed(list(enumerate(self.map_blocks))):
             for col, block in enumerate(blocks):
@@ -322,6 +329,10 @@ class WincollGame:
                             pos_right = pos + pygame.Vector2(1, 0)
                             if self.can_roll(pos_right):
                                 fall(pos, pos_right + pygame.Vector2(0, 1))
+
+        if new_fall is False:
+            self.falling = False
+            SLIDE_SOUND.stop()
 
     def game_to_screen(self, x: int, y: int) -> Tuple[int, int]:
         origin = self.map_layer.get_center_offset()
