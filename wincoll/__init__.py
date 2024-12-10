@@ -52,6 +52,20 @@ TEXT_COLOUR = (255, 255, 255)
 BACKGROUND_COLOUR = (0, 0, 255)
 
 
+def flash_background() -> None:
+    global BACKGROUND_COLOUR
+    BACKGROUND_COLOUR = (160, 160, 255)
+
+
+def fade_background() -> None:
+    global BACKGROUND_COLOUR
+    BACKGROUND_COLOUR = (
+        max(BACKGROUND_COLOUR[0] - 10, 0),
+        max(BACKGROUND_COLOUR[0] - 10, 0),
+        255,
+    )
+
+
 def load_image(filename: str) -> pygame.Surface:
     return pygame.image.load(RESOURCES_DIR / filename)
 
@@ -226,10 +240,13 @@ class WincollGame:
         elif pressed[pygame.K_DOWN] or pressed[pygame.K_SLASH]:
             self.hero.velocity = pygame.Vector2(0, 1)
         elif pressed[pygame.K_l]:
+            flash_background()
             self.load_position()
         elif pressed[pygame.K_s]:
+            flash_background()
             self.save_position()
         elif pressed[pygame.K_r]:
+            flash_background()
             self.restart_level()
         elif pressed[pygame.K_q]:
             self.quit = True
@@ -316,6 +333,7 @@ class WincollGame:
         screen.blit(surface or self.game_surface, self.window_pos)
         pygame.display.flip()
         screen.fill(BACKGROUND_COLOUR)
+        fade_background()
 
     def show_status(self) -> None:
         print_screen((1, 0), f"Level: {self.level}")
