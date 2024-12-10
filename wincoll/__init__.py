@@ -215,25 +215,24 @@ class WincollGame:
         self.group.draw(self.game_surface)
 
     def handle_input(self) -> None:
-        for event in pygame.event.get():
-            handle_global_event(event)
-            if event.type == pygame.KEYDOWN:
-                if event.key in (pygame.K_LEFT, pygame.K_z):
-                    self.hero.velocity = pygame.Vector2(-1, 0)
-                elif event.key in (pygame.K_RIGHT, pygame.K_x):
-                    self.hero.velocity = pygame.Vector2(1, 0)
-                elif event.key in (pygame.K_UP, pygame.K_QUOTE):
-                    self.hero.velocity = pygame.Vector2(0, -1)
-                elif event.key in (pygame.K_DOWN, pygame.K_SLASH):
-                    self.hero.velocity = pygame.Vector2(0, 1)
-                elif event.key == pygame.K_l:
-                    self.load_position()
-                elif event.key == pygame.K_s:
-                    self.save_position()
-                elif event.key == pygame.K_r:
-                    self.restart_level()
-                elif event.key == pygame.K_q:
-                    self.quit = True
+        pressed = pygame.key.get_pressed()
+        self.hero.velocity = pygame.Vector2(0, 0)
+        if pressed[pygame.K_LEFT] or pressed[pygame.K_z]:
+            self.hero.velocity = pygame.Vector2(-1, 0)
+        elif pressed[pygame.K_RIGHT] or pressed[pygame.K_x]:
+            self.hero.velocity = pygame.Vector2(1, 0)
+        elif pressed[pygame.K_UP] or pressed[pygame.K_QUOTE]:
+            self.hero.velocity = pygame.Vector2(0, -1)
+        elif pressed[pygame.K_DOWN] or pressed[pygame.K_SLASH]:
+            self.hero.velocity = pygame.Vector2(0, 1)
+        elif pressed[pygame.K_l]:
+            self.load_position()
+        elif pressed[pygame.K_s]:
+            self.save_position()
+        elif pressed[pygame.K_r]:
+            self.restart_level()
+        elif pressed[pygame.K_q]:
+            self.quit = True
 
     def process_move(self) -> None:
         newpos = self.hero.position + self.hero.velocity
@@ -325,7 +324,6 @@ class WincollGame:
     def run(self) -> None:
         clock = pygame.time.Clock()
         fps = 10
-        pygame.key.set_repeat(1000 // fps * 2, 1000 // fps)
 
         while self.level <= levels:
             self.start_level()
@@ -336,6 +334,8 @@ class WincollGame:
                 while not self.dead and self.diamonds > 0:
                     clock.tick(fps)
                     self.hero.velocity = pygame.Vector2(0, 0)
+                    for event in pygame.event.get():
+                        handle_global_event(event)
                     self.handle_input()
                     if self.quit:
                         self.quit = False
@@ -472,6 +472,7 @@ def main(argv: List[str] = sys.argv[1:]) -> None:
 
     pygame.init()
     pygame.font.init()
+    pygame.key.set_repeat()
     pygame.display.set_caption("WinColl")
     init_screen()
 
