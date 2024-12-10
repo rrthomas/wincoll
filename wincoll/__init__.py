@@ -175,7 +175,14 @@ class WincollGame:
         self.save_position()
 
     def get(self, pos: pygame.Vector2) -> int:
-        return self.map_blocks[int(pos.y)][int(pos.x)]  # type: ignore[no-any-return]
+        # Anything outside the map is a brick
+        x, y = int(pos.x), int(pos.y)
+        if not ((0 <= x < level_size) and (0 <= y < level_size)):
+            return self.gids[TilesetGids.BRICK]
+        block = self.map_blocks[y][x]
+        if block == 0:  # Missing tiles are gaps
+            block = self.gids[TilesetGids.GAP]
+        return block  # type: ignore[no-any-return]
 
     def set(self, pos: pygame.Vector2, gid: int) -> None:
         self.map_blocks[int(pos.y)][int(pos.x)] = gid
