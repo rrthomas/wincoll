@@ -66,23 +66,6 @@ UNLOCK_SOUND: pygame.mixer.Sound
 SPLAT_SOUND: pygame.mixer.Sound
 
 
-# pygame's Vector2d class is float-only. We want integer vectors!
-class Vector:
-    def __init__(self, x: int, y: int):
-        self.x = x
-        self.y = y
-
-    def __add__(self, v: Self) -> Self:
-        return type(self)(self.x + v.x, self.y + v.y)
-
-    def __mul__(self, n: int) -> Self:
-        return type(self)(self.x * n, self.y * n)
-
-    def __iter__(self) -> Iterator[int]:
-        yield self.x
-        yield self.y
-
-
 screen: pygame.Surface
 
 
@@ -107,6 +90,7 @@ class TilesetGids(Enum):
     ROCK = 15
     KEY = 16
     WIN = 17
+    WIN_PLACE = 18
 
 
 def print_screen(pos: Tuple[int, int], msg: str) -> None:
@@ -167,7 +151,7 @@ class WincollGame:
         self.group = pyscroll.PyscrollGroup(map_layer=self.map_layer)
 
         self.hero = Win()
-        self.hero.position = Vector(0, 0)
+        self.hero.position = pygame.Vector2(0, 0)
         self.group.add(self.hero)
         self.diamonds = 0
         self.survey()
@@ -176,21 +160,22 @@ class WincollGame:
         self.restart_level()
         self.save_position()
 
-    def get(self, pos: Vector) -> int:
-        return self.map_blocks[pos.y][pos.x]  # type: ignore[no-any-return]
+    def get(self, pos: pygame.Vector2) -> int:
+        return self.map_blocks[int(pos.y)][int(pos.x)]  # type: ignore[no-any-return]
 
-    def set(self, pos: Vector, gid: int) -> None:
-        self.map_blocks[pos.y][pos.x] = gid
+    def set(self, pos: pygame.Vector2, gid: int) -> None:
+        self.map_blocks[int(pos.y)][int(pos.x)] = gid
         # Update map
         # FIXME: We invoke protected methods and access protected members.
         ml = self.map_layer
-        rect = (pos.x, pos.y, 1, 1)
+        rect = (int(pos.x), int(pos.y), 1, 1)
         # pylint: disable-next=protected-access
         ml._tile_queue = chain(ml._tile_queue, ml.data.get_tile_images_by_rect(rect))
         # pylint: disable-next=protected-access
         self.map_layer._flush_tile_queue(self.map_layer._buffer)
 
     def save_position(self) -> None:
+        self.set(self.hero.position, self.gids[TilesetGids.WIN])
         with open(SAVED_POSITION_FILE, "wb") as fh:
             pickle.dump(self.map_blocks, fh)
 
@@ -200,7 +185,7 @@ class WincollGame:
                 map_blocks = pickle.load(fh)
             for row, blocks in enumerate(map_blocks):
                 for col, block in enumerate(blocks):
-                    self.set(Vector(col, row), block)
+                    self.set(pygame.Vector2(col, row), block)
             self.survey()
 
     def survey(self) -> None:
@@ -214,32 +199,33 @@ class WincollGame:
                 ):
                     self.diamonds += 1
                 elif block == self.gids[TilesetGids.WIN]:
-                    self.hero.position = Vector(col, row)
+                    self.hero.position = pygame.Vector2(col, row)
+                    self.set(self.hero.position, self.gids[TilesetGids.WIN_PLACE])
 
     def unlock(self) -> None:
         """Turn safes into diamonds"""
         for row, blocks in enumerate(self.map_blocks):
             for col, block in enumerate(blocks):
                 if block == self.gids[TilesetGids.SAFE]:
-                    self.set(Vector(col, row), self.gids[TilesetGids.DIAMOND])
+                    self.set(pygame.Vector2(col, row), self.gids[TilesetGids.DIAMOND])
         UNLOCK_SOUND.play()
 
-    def draw(self, surface: pygame.Surface) -> None:
+    def draw(self) -> None:
         self.group.center(self.hero.rect.center)
-        self.group.draw(surface)
+        self.group.draw(self.game_surface)
 
     def handle_input(self) -> None:
         for event in pygame.event.get():
             handle_global_event(event)
             if event.type == pygame.KEYDOWN:
                 if event.key in (pygame.K_LEFT, pygame.K_z):
-                    self.hero.velocity = Vector(-1, 0)
+                    self.hero.velocity = pygame.Vector2(-1, 0)
                 elif event.key in (pygame.K_RIGHT, pygame.K_x):
-                    self.hero.velocity = Vector(1, 0)
+                    self.hero.velocity = pygame.Vector2(1, 0)
                 elif event.key in (pygame.K_UP, pygame.K_QUOTE):
-                    self.hero.velocity = Vector(0, -1)
+                    self.hero.velocity = pygame.Vector2(0, -1)
                 elif event.key in (pygame.K_DOWN, pygame.K_SLASH):
-                    self.hero.velocity = Vector(0, 1)
+                    self.hero.velocity = pygame.Vector2(0, 1)
                 elif event.key == pygame.K_l:
                     self.load_position()
                 elif event.key == pygame.K_s:
@@ -267,24 +253,26 @@ class WincollGame:
             ):
                 self.set(new_rockpos, self.gids[TilesetGids.ROCK])
             else:
-                self.hero.velocity = Vector(0, 0)
+                self.hero.velocity = pygame.Vector2(0, 0)
         else:
-            self.hero.velocity = Vector(0, 0)
+            self.hero.velocity = pygame.Vector2(0, 0)
         self.set(self.hero.position, self.gids[TilesetGids.GAP])
-        self.set(self.hero.position + self.hero.velocity, self.gids[TilesetGids.WIN])
+        self.set(
+            self.hero.position + self.hero.velocity, self.gids[TilesetGids.WIN_PLACE]
+        )
 
-    def can_roll(self, pos: Vector) -> bool:
+    def can_roll(self, pos: pygame.Vector2) -> bool:
         side_block = self.get(pos)
-        side_below_block = self.get(pos + Vector(0, 1))
+        side_below_block = self.get(pos + pygame.Vector2(0, 1))
         return (
             side_block == self.gids[TilesetGids.GAP]
             and side_below_block == self.gids[TilesetGids.GAP]
         )
 
     def rockfall(self) -> None:
-        def fall(oldpos: Vector, newpos: Vector) -> None:
-            block_below = self.get(newpos + Vector(0, 1))
-            if block_below == self.gids[TilesetGids.WIN]:
+        def fall(oldpos: pygame.Vector2, newpos: pygame.Vector2) -> None:
+            block_below = self.get(newpos + pygame.Vector2(0, 1))
+            if block_below == self.gids[TilesetGids.WIN_PLACE]:
                 self.dead = True
             self.set(oldpos, self.gids[TilesetGids.GAP])
             self.set(newpos, self.gids[TilesetGids.ROCK])
@@ -293,8 +281,8 @@ class WincollGame:
         for row, blocks in reversed(list(enumerate(self.map_blocks))):
             for col, block in enumerate(blocks):
                 if block == self.gids[TilesetGids.ROCK]:
-                    pos = Vector(col, row)
-                    pos_below = pos + Vector(0, 1)
+                    pos = pygame.Vector2(col, row)
+                    pos_below = pos + pygame.Vector2(0, 1)
                     block_below = self.get(pos_below)
                     if block_below == self.gids[TilesetGids.GAP]:
                         fall(pos, pos_below)
@@ -304,18 +292,13 @@ class WincollGame:
                         self.gids[TilesetGids.DIAMOND],
                         self.gids[TilesetGids.BLOB],
                     ):
-                        pos_left = pos + Vector(-1, 0)
+                        pos_left = pos + pygame.Vector2(-1, 0)
                         if self.can_roll(pos_left):
-                            fall(pos, pos_left + Vector(0, 1))
+                            fall(pos, pos_left + pygame.Vector2(0, 1))
                         else:
-                            pos_right = pos + Vector(1, 0)
+                            pos_right = pos + pygame.Vector2(1, 0)
                             if self.can_roll(pos_right):
-                                fall(pos, pos_right + Vector(0, 1))
-
-    def update(self) -> None:
-        self.process_move()
-        self.rockfall()
-        self.group.update()
+                                fall(pos, pos_right + pygame.Vector2(0, 1))
 
     def game_to_screen(self, x: int, y: int) -> Tuple[int, int]:
         origin = self.map_layer.get_center_offset()
@@ -352,20 +335,27 @@ class WincollGame:
                 self.load_position()
                 while not self.dead and self.diamonds > 0:
                     clock.tick(fps)
-                    self.hero.velocity = Vector(0, 0)
+                    self.hero.velocity = pygame.Vector2(0, 0)
                     self.handle_input()
                     if self.quit:
                         self.quit = False
                         return
-                    self.update()
-                    self.draw(self.game_surface)
-                    self.show_status()
-                    self.show_screen()
+                    self.process_move()
+                    self.rockfall()
+                    subframes = 4
+                    for _subframe in range(subframes):
+                        self.group.update(1 / subframes)
+                        self.draw()
+                        self.show_status()
+                        self.show_screen()
+                        pygame.time.wait(1000 // fps // subframes)
                 if self.dead:
                     SPLAT_SOUND.play()
                     self.game_surface.blit(
                         SPLAT_IMAGE,
-                        self.game_to_screen(self.hero.position.x, self.hero.position.y),
+                        self.game_to_screen(
+                            int(self.hero.position.x), int(self.hero.position.y)
+                        ),
                     )
                     self.show_screen()
                     pygame.time.wait(1000)
@@ -378,14 +368,14 @@ class Win(pygame.sprite.Sprite):  # pylint: disable=too-few-public-methods
     def __init__(self) -> None:
         pygame.sprite.Sprite.__init__(self)
         self.image = load_image("87.png")
-        self.velocity = Vector(0, 0)
-        self.position = Vector(0, 0)
+        self.velocity = pygame.Vector2(0, 0)
+        self.position = pygame.Vector2(0, 0)
         self.rect = self.image.get_rect()
 
-    def update(self) -> None:
-        self.position += self.velocity
+    def update(self, dt: float) -> None:
+        self.position += self.velocity * dt
         screen_pos = self.position * block_pixels
-        self.rect.topleft = (screen_pos.x, screen_pos.y)
+        self.rect.topleft = (int(screen_pos.x), int(screen_pos.y))
 
 
 def clear_keys() -> None:
