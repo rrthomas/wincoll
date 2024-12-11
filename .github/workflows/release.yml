@@ -1,13 +1,13 @@
 name: Build Release Binaries
 
 on:
-  release:
-    types:
-      - created
+  push:
+    tags:
+      - "v*"
 
 jobs:
   build:
-    name: Build Release Assets
+    name: Make release
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -16,8 +16,16 @@ jobs:
         run: echo ${{ github.event.release.tag_name }}
       - name: Install dependencies
         run: ./.github/install-dependencies.sh
+      - name: Make the release
+        run: gh release create v$$version --title "Release v$$version" dist/*
       - name: Build the executable
-        run: pyinstaller --noconfirm --onefile --windowed --name wincoll --add-data "wincoll/*.wav:wincoll/" --add-data "wincoll/*.png:wincoll/" --add-data "wincoll/*.ttf:wincoll/" --add-data "wincoll/levels/*:wincoll/levels/" wincoll/__main__.py
+        run: |
+          pyinstaller --noconfirm --onefile --windowed --name wincoll \
+            --add-data "wincoll/*.wav:wincoll/" \
+            --add-data "wincoll/*.png:wincoll/" \
+            --add-data "wincoll/*.ttf:wincoll/" \
+            --add-data "wincoll/levels/*:wincoll/levels/" \
+            wincoll/__main__.py
       - name: Upload the binaries
         uses: svenstaro/upload-release-action@v2
         with:
