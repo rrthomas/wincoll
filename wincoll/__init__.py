@@ -366,43 +366,46 @@ class WincollGame:
     def run(self) -> None:
         clock = pygame.time.Clock()
 
-        while self.level <= levels:
-            self.start_level()
-            self.show_status()
-            self.show_screen()
-            while self.diamonds > 0:
-                self.load_position()
-                while not self.dead and self.diamonds > 0:
-                    clock.tick(FRAMES_PER_SECOND)
-                    self.hero.velocity = pygame.Vector2(0, 0)
-                    for event in pygame.event.get():
-                        handle_global_event(event)
-                    self.handle_input()
-                    if self.quit:
-                        self.quit = False
-                        return
-                    self.process_move()
-                    self.rockfall()
-                    subframes = 4
-                    for _subframe in range(subframes):
-                        self.group.update(1 / subframes)
-                        self.draw()
-                        self.show_status()
+        try:
+            while self.level <= levels:
+                self.start_level()
+                self.show_status()
+                self.show_screen()
+                while self.diamonds > 0:
+                    self.load_position()
+                    while not self.dead and self.diamonds > 0:
+                        clock.tick(FRAMES_PER_SECOND)
+                        self.hero.velocity = pygame.Vector2(0, 0)
+                        for event in pygame.event.get():
+                            handle_global_event(event)
+                        self.handle_input()
+                        if self.quit:
+                            self.quit = False
+                            return
+                        self.process_move()
+                        self.rockfall()
+                        subframes = 4
+                        for _subframe in range(subframes):
+                            self.group.update(1 / subframes)
+                            self.draw()
+                            self.show_status()
+                            self.show_screen()
+                            pygame.time.wait(1000 // FRAMES_PER_SECOND // subframes)
+                    if self.dead:
+                        SPLAT_SOUND.play()
+                        self.game_surface.blit(
+                            SPLAT_IMAGE,
+                            self.game_to_screen(
+                                int(self.hero.position.x), int(self.hero.position.y)
+                            ),
+                        )
                         self.show_screen()
-                        pygame.time.wait(1000 // FRAMES_PER_SECOND // subframes)
-                if self.dead:
-                    SPLAT_SOUND.play()
-                    self.game_surface.blit(
-                        SPLAT_IMAGE,
-                        self.game_to_screen(
-                            int(self.hero.position.x), int(self.hero.position.y)
-                        ),
-                    )
-                    self.show_screen()
-                    pygame.time.wait(1000)
-                    self.dead = False
-            self.level += 1
-        self.splurge(self.hero.image)
+                        pygame.time.wait(1000)
+                        self.dead = False
+                self.level += 1
+            self.splurge(self.hero.image)
+        finally:
+            SLIDE_SOUND.stop()
 
 
 class Win(pygame.sprite.Sprite):  # pylint: disable=too-few-public-methods
