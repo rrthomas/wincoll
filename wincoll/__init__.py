@@ -19,10 +19,7 @@ from itertools import chain
 import importlib_resources
 from typing_extensions import Self
 from platformdirs import user_cache_dir
-import pyscroll  # type: ignore
-import pytmx  # type: ignore
 
-from . import ptext
 from .warnings_util import simple_warning
 
 # Import pygame, suppressing extra messages that it prints on startup.
@@ -30,6 +27,9 @@ os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
 with warnings.catch_warnings():
     warnings.simplefilter("ignore")
     import pygame
+    import pyscroll  # type: ignore
+    import pytmx  # type: ignore
+    from . import ptext
 
 
 VERSION = importlib.metadata.version("wincoll")
