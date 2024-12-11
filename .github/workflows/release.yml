@@ -9,6 +9,8 @@ jobs:
   build:
     name: Make release
     runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -29,7 +31,7 @@ jobs:
       - name: Upload the binaries
         uses: svenstaro/upload-release-action@v2
         with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          repo_token: ${{ github.token }}
           tag: ${{ github.ref }}
           file: ./dist/wincoll
           file_glob: true
