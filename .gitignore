@@ -94,5 +94,4 @@ ENV/
 
 # WinColl-specific files
 Saved,ffd
-saved_position.pkl
 *.tiled-session

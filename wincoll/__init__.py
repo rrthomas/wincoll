@@ -16,8 +16,9 @@ from typing import NoReturn, Tuple, List, Optional, Union
 from collections.abc import Iterator
 from itertools import chain
 
+import importlib_resources
 from typing_extensions import Self
-
+from platformdirs import user_cache_dir
 import pyscroll  # type: ignore
 import pytmx  # type: ignore
 
@@ -33,9 +34,9 @@ with warnings.catch_warnings():
 
 VERSION = importlib.metadata.version("wincoll")
 
-CURRENT_DIR = Path(__file__).parent
-RESOURCES_DIR = CURRENT_DIR
-SAVED_POSITION_FILE = RESOURCES_DIR / "saved_position.pkl"
+CACHE_DIR = Path(user_cache_dir("wincoll"))
+CACHE_DIR.mkdir(parents=True, exist_ok=True)
+SAVED_POSITION_FILE = CACHE_DIR / "saved_position.pkl"
 
 
 def die(code: int, msg: str) -> NoReturn:
@@ -43,7 +44,8 @@ def die(code: int, msg: str) -> NoReturn:
     sys.exit(code)
 
 
-levels = len(list(Path(RESOURCES_DIR / "levels").glob("Level??.tmx")))
+with importlib_resources.as_file(importlib_resources.files()) as path:
+    levels = len(list(Path(path / "levels").glob("Level??.tmx")))
 level_size = 50  # length of side of world in blocks
 block_pixels = 16  # size of (square) block sprites in pixels
 window_blocks = 15
@@ -67,7 +69,8 @@ def fade_background() -> None:
 
 
 def load_image(filename: str) -> pygame.Surface:
-    return pygame.image.load(RESOURCES_DIR / filename)
+    with importlib_resources.as_file(importlib_resources.files()) as path:
+        return pygame.image.load(path / filename)
 
 
 SPLAT_IMAGE = load_image("splat.png")
@@ -111,13 +114,14 @@ def print_screen(
     pos: Tuple[int, int], msg: str, colour: Optional[Union[pygame.Color, str]] = None
 ) -> None:
     font_pixels = 8
-    ptext.draw(  # type: ignore[no-untyped-call]
-        msg,
-        (pos[0] * font_pixels, pos[1] * font_pixels),
-        fontname=str(RESOURCES_DIR / "acorn-mode-1.ttf"),
-        fontsize=8,
-        color=colour,
-    )
+    with importlib_resources.as_file(importlib_resources.files()) as path:
+        ptext.draw(  # type: ignore[no-untyped-call]
+            msg,
+            (pos[0] * font_pixels, pos[1] * font_pixels),
+            fontname=str(path / "acorn-mode-1.ttf"),
+            fontsize=8,
+            color=colour,
+        )
 
 
 def quit_game() -> NoReturn:
@@ -156,7 +160,8 @@ class WincollGame:
         self.map_data: pyscroll.data.TiledMapData
 
     def restart_level(self) -> None:
-        filename = RESOURCES_DIR / "levels" / f"Level{str(self.level).zfill(2)}.tmx"
+        with importlib_resources.as_file(importlib_resources.files()) as path:
+            filename = path / "levels" / f"Level{str(self.level).zfill(2)}.tmx"
         self.dead = False
 
         tmx_data = pytmx.load_pygame(filename)
@@ -534,10 +539,11 @@ def main(argv: List[str] = sys.argv[1:]) -> None:
     init_screen()
 
     global COLLECT_SOUND, SLIDE_SOUND, UNLOCK_SOUND, SPLAT_SOUND
-    COLLECT_SOUND = pygame.mixer.Sound(RESOURCES_DIR / "Collect.wav")
-    SLIDE_SOUND = pygame.mixer.Sound(RESOURCES_DIR / "Slide.wav")
-    UNLOCK_SOUND = pygame.mixer.Sound(RESOURCES_DIR / "Unlock.wav")
-    SPLAT_SOUND = pygame.mixer.Sound(RESOURCES_DIR / "Splat.wav")
+    with importlib_resources.as_file(importlib_resources.files()) as path:
+        COLLECT_SOUND = pygame.mixer.Sound(path / "Collect.wav")
+        SLIDE_SOUND = pygame.mixer.Sound(path / "Slide.wav")
+        UNLOCK_SOUND = pygame.mixer.Sound(path / "Unlock.wav")
+        SPLAT_SOUND = pygame.mixer.Sound(path / "Splat.wav")
 
     try:
         while True:
