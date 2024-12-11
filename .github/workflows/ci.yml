@@ -1,6 +1,6 @@
 name: CI
 
-on: [ push, pull_request ]
+on: [push, pull_request]
 
 jobs:
   build:
@@ -9,24 +9,12 @@ jobs:
         os: [ubuntu-latest, macos-latest]
     runs-on: ${{ matrix.os }}
     steps:
-    - uses: actions/checkout@v4
-    - name: Install dependencies (Ubuntu)
-      if: ${{ matrix.os == 'ubuntu-latest' }}
-      run: |
-        sudo apt-get -y install python3-build python3-venv python3-pygame python3-importlib-resources make
-        pip install --user pyscroll
-    - name: Install dependencies (macOS)
-      if: ${{ matrix.os == 'macos-latest' }}
-      run: |
-        brew install tox
-        # Prepend optional brew binary directories to PATH
-        echo "$(brew --prefix)/opt/python/libexec/bin" >> $GITHUB_PATH
-        pip install --user --break-system-packages pyscroll
-        # Prepend user bin directory to PATH
-        echo $(python -c "import os; import sysconfig; print(sysconfig.get_path('scripts', f'{os.name}_user'))") >> $GITHUB_PATH
-    - name: Build
-      run: |
-        if [ "$RUNNER_OS" != "macOS" ]; then
-          pip install tox
-        fi
-        tox
+      - uses: actions/checkout@v4
+      - name: Install dependencies
+        run: ./.github/install-dependencies.sh
+      - name: Build
+        run: |
+          if [ "$RUNNER_OS" != "macOS" ]; then
+            pip install tox
+          fi
+          tox
