@@ -43,7 +43,7 @@ def die(code: int, msg: str) -> NoReturn:
     sys.exit(code)
 
 
-levels = 16
+levels = len(list(Path(RESOURCES_DIR / "levels").glob("Level??.tmx")))
 level_size = 50  # length of side of world in blocks
 block_pixels = 16  # size of (square) block sprites in pixels
 window_blocks = 15
@@ -70,7 +70,7 @@ def load_image(filename: str) -> pygame.Surface:
     return pygame.image.load(RESOURCES_DIR / filename)
 
 
-SPLAT_IMAGE = load_image("200.png")
+SPLAT_IMAGE = load_image("splat.png")
 TITLE_IMAGE = load_image("title.png")
 
 
@@ -156,7 +156,7 @@ class WincollGame:
         self.map_data: pyscroll.data.TiledMapData
 
     def restart_level(self) -> None:
-        filename = RESOURCES_DIR / f"Level{str(self.level).zfill(2)}.tmx"
+        filename = RESOURCES_DIR / "levels" / f"Level{str(self.level).zfill(2)}.tmx"
         self.dead = False
 
         tmx_data = pytmx.load_pygame(filename)
@@ -411,7 +411,7 @@ class WincollGame:
 class Win(pygame.sprite.Sprite):  # pylint: disable=too-few-public-methods
     def __init__(self) -> None:
         pygame.sprite.Sprite.__init__(self)
-        self.image = load_image("87.png")
+        self.image = load_image("levels/87.png")
         self.velocity = pygame.Vector2(0, 0)
         self.position = pygame.Vector2(0, 0)
         self.rect = self.image.get_rect()
