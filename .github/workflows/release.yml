@@ -1,0 +1,66 @@
+name: Build release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  source-release:
+    name: Make source release
+    runs-on: ubuntu-24.04
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Install build dependencies
+        run: pip install tox build pygame importlib-resources typing-extensions platformdirs pyscroll pytmx
+      - name: Build
+        run: make dist
+      - name: Make the release
+        run: gh release create ${{ github.ref_name }} --title "Release ${{ github.ref_name}}" dist/*
+
+  binary-release:
+    name: Make binary release
+    strategy:
+      matrix:
+        # Use oldest available macOS for greatest compatibility of resulting binary.
+        os: [ubuntu-24.04, macos-13, windows-latest]
+    runs-on: ${{ matrix.os }}
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Install build dependencies
+        run: pip install tox build pygame importlib-resources typing-extensions platformdirs pyscroll pytmx
+      - name: Install additional dependencies for binary builds
+        run: pip install --break-system-packages pyinstaller
+      - name: Build
+        run: make dist
+      - name: Build the executable (except macOS)
+        if: ${{ matrix.os != 'macos-13' }}
+        run: |
+          pyinstaller --noconfirm --onefile --windowed --name wincoll-${{ runner.os }}-${{ runner.arch }} --add-data "wincoll/*.wav:wincoll/" --add-data "wincoll/*.png:wincoll/" --add-data "wincoll/*.ttf:wincoll/" --add-data "wincoll/levels/*:wincoll/levels/" wincoll/__main__.py
+          ./dist/wincoll-${{ runner.os }}-${{ runner.arch }} --help
+      - name: Build the executable (macOS)
+        if: ${{ matrix.os == 'macos-13' }}
+        run: |
+          pyinstaller --noconfirm --windowed --name wincoll --add-data "wincoll/*.wav:wincoll/" --add-data "wincoll/*.png:wincoll/" --add-data "wincoll/*.ttf:wincoll/" --add-data "wincoll/levels/*:wincoll/levels/" wincoll/__main__.py
+          brew install create-dmg
+          mkdir dmg-folder
+          mv dist/wincoll.app dmg-folder/
+          create-dmg ./dist/wincoll-${{ runner.os }}-${{ runner.arch }}.dmg dmg-folder/
+      - name: Upload the binaries
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ github.token }}
+          tag: ${{ github.ref }}
+          file: ./dist/wincoll-${{ runner.os }}-${{ runner.arch }}*
+          file_glob: true

@@ -6,15 +6,19 @@ jobs:
   build:
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        os: [ubuntu-24.04, macos-latest]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
       - name: Install dependencies
-        run: ./.github/install-dependencies.sh
+        run: pip install tox build pygame importlib-resources typing-extensions platformdirs pyscroll pytmx
       - name: Build
         run: |
           if [ "$RUNNER_OS" != "macOS" ]; then
             pip install tox
           fi
           tox
+          PYTHONPATH=. python -m wincoll --help
