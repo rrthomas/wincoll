@@ -12,6 +12,8 @@ without eggs and monsters).
 I originally wrote WinColl for Acorn RISC OS. Original and updated [RISC OS
 versions](<https://github.com/rrthomas/wincoll/RISC OS.md>) are available.
 
+The name of the game is an abbreviation of my school’s. “Repton” is also the name of a school, but I don’t believe the game was named after it!
+
 
 ## Credits
 
@@ -37,6 +39,8 @@ option, any later version. See the file COPYING.
 
 THIS PROGRAM IS PROVIDED AS IS, WITH NO WARRANTY. USE IS AT THE USER'S RISK.
 WinColl’s code is copyright Reuben Thomas, and its levels and graphics by Reuben Thomas, Alistair Turnbull, Paul Smith and Jeremy Douglas.
+
+The font “Acorn Mode 1”, which is based on the design of Acorn computers’ system font, as used on the Acorn Archimedes on which WinColl was originally written, is by p1.mark and licensed under CC BY-SA 3.0.
 
 The sound effects are copyrighted and licensed as follows:
 

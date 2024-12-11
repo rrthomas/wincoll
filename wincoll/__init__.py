@@ -112,8 +112,8 @@ def print_screen(pos: Tuple[int, int], msg: str) -> None:
     ptext.draw(  # type: ignore[no-untyped-call]
         msg,
         (pos[0] * font_pixels, pos[1] * font_pixels),
-        fontname=str(RESOURCES_DIR / "master.ttf"),
-        fontsize=ptext.DEFAULT_FONT_SIZE / 2,
+        fontname=str(RESOURCES_DIR / "acorn-mode-1.ttf"),
+        fontsize=8,
     )
 
 
