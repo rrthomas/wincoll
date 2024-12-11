@@ -12,7 +12,7 @@ from pathlib import Path
 import pickle
 import warnings
 from warnings import warn
-from typing import NoReturn, Tuple, List, Optional
+from typing import NoReturn, Tuple, List, Optional, Union
 from collections.abc import Iterator
 from itertools import chain
 
@@ -107,13 +107,16 @@ class TilesetGids(Enum):
     WIN_PLACE = 18
 
 
-def print_screen(pos: Tuple[int, int], msg: str) -> None:
+def print_screen(
+    pos: Tuple[int, int], msg: str, colour: Optional[Union[pygame.Color, str]] = None
+) -> None:
     font_pixels = 8
     ptext.draw(  # type: ignore[no-untyped-call]
         msg,
         (pos[0] * font_pixels, pos[1] * font_pixels),
         fontname=str(RESOURCES_DIR / "acorn-mode-1.ttf"),
         fontsize=8,
+        color=colour,
     )
 
 
@@ -131,6 +134,7 @@ def handle_global_event(event: pygame.event.Event) -> None:
 
 
 FRAMES_PER_SECOND = 10
+
 
 class WincollGame:
     def __init__(self, level: int = 1) -> None:
@@ -477,19 +481,30 @@ Avoid falling rocks!
         S/L - Save/load position
     R - Restart level  Q - Quit game
         F11 - toggle full screen
-    Type level number to select level
 
 
-      Press the space bar to enjoy!
+ (choose with movement keys and digits)
+
+      Press the space bar to play!
     """,
+            "grey",
+        )
+        print_screen(
+            (0, 24),
+            f"            Start level: {1 if level == 0 else level}",
+            "white",
         )
         pygame.display.flip()
         key = get_key()
         clock.tick(FRAMES_PER_SECOND)
         if key == pygame.K_SPACE:
             break
-        if key in DIGIT_KEYS:
-            level = level * 10 + DIGIT_KEYS[key]
+        if key in (pygame.K_z, pygame.K_LEFT, pygame.K_SLASH, pygame.K_DOWN):
+            level = max(1, level - 1)
+        elif key in (pygame.K_x, pygame.K_RIGHT, pygame.K_QUOTE, pygame.K_UP):
+            level = min(levels, level + 1)
+        elif key in DIGIT_KEYS:
+            level = min(levels, level * 10 + DIGIT_KEYS[key])
         else:
             level = 0
     return max(min(level, levels), 1)
