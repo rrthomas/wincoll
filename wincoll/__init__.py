@@ -12,8 +12,7 @@ from pathlib import Path
 import pickle
 import warnings
 from warnings import warn
-from typing import NoReturn, Tuple, List, Optional, Union
-from collections.abc import Iterator
+from typing import NoReturn, Tuple, List, Optional, Union, Iterator
 from itertools import chain
 
 import importlib_resources
