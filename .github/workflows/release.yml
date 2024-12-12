@@ -41,6 +41,8 @@ jobs:
         run: ./.github/install-dependencies.sh
       - name: Install additional dependencies for binary builds
         run: pip install --break-system-packages pyinstaller
+      - name: Build
+        run: make dist
       - name: Build the executable
         run: |
           pyinstaller --noconfirm --onefile --windowed --name wincoll-${{ runner.os }}-${{ runner.arch }} \
