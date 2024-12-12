@@ -1,4 +1,4 @@
-name: Build Release Binaries
+name: Build release
 
 on:
   push:
@@ -6,8 +6,25 @@ on:
       - "v*"
 
 jobs:
-  build:
-    name: Make release
+  source-release:
+    name: Make source release
+    runs-on: ubuntu-24.04
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Install build dependencies
+        run: ./.github/install-dependencies.sh
+      - name: Build
+        run: make dist
+      - name: Make the release
+        run: gh release create v$$version --title "Release v$$version" dist/*
+
+  binary-release:
+    name: Make binary release
     strategy:
       matrix:
         os: [ubuntu-24.04, macos-latest]
@@ -17,19 +34,16 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      - name: Display the release tag
-        run: echo ${{ github.event.release.tag_name }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
       - name: Install build dependencies
         run: ./.github/install-dependencies.sh
       - name: Install additional dependencies for binary builds
         run: pip install --break-system-packages pyinstaller
-      - name: Build
-        run: make dist
-      - name: Make the release
-        run: gh release create v$$version --title "Release v$$version" dist/*
       - name: Build the executable
         run: |
-          pyinstaller --noconfirm --onefile --windowed --name wincoll \
+          pyinstaller --noconfirm --onefile --windowed --name wincoll-${{ runner.os }}-${{ runner.arch }} \
             --add-data "wincoll/*.wav:wincoll/" \
             --add-data "wincoll/*.png:wincoll/" \
             --add-data "wincoll/*.ttf:wincoll/" \
