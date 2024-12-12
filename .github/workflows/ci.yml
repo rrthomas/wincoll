@@ -18,3 +18,4 @@ jobs:
             pip install tox
           fi
           tox
+          PYTHONPATH=. python -m wincoll --help
