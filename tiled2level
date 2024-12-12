@@ -36,15 +36,15 @@ def die(code: int, msg: str) -> NoReturn:
 tiled_map = pytmx.TiledMap(args.tiled_file)
 
 gid_to_char = {
-    "wincoll/32.png": " ",
-    "wincoll/35.png": "#",
-    "wincoll/36.png": "$",
-    "wincoll/42.png": "*",
-    "wincoll/43.png": "+",
-    "wincoll/46.png": ".",
-    "wincoll/64.png": "@",
-    "wincoll/75.png": "K",
-    "wincoll/87.png": "W",
+    "wincoll/levels/32.png": " ",
+    "wincoll/levels/35.png": "#",
+    "wincoll/levels/36.png": "$",
+    "wincoll/levels/42.png": "*",
+    "wincoll/levels/43.png": "+",
+    "wincoll/levels/46.png": ".",
+    "wincoll/levels/64.png": "@",
+    "wincoll/levels/75.png": "K",
+    "wincoll/levels/87.png": "W",
 }
 lines = []
 text = ""
