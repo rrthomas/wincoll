@@ -44,13 +44,7 @@ jobs:
       - name: Build
         run: make dist
       - name: Build the executable
-        run: |
-          pyinstaller --noconfirm --onefile --windowed --name wincoll-${{ runner.os }}-${{ runner.arch }} \
-            --add-data "wincoll/*.wav:wincoll/" \
-            --add-data "wincoll/*.png:wincoll/" \
-            --add-data "wincoll/*.ttf:wincoll/" \
-            --add-data "wincoll/levels/*:wincoll/levels/" \
-            wincoll/__main__.py
+        run:  pyinstaller --noconfirm --onefile --windowed --name wincoll-${{ runner.os }}-${{ runner.arch }} --add-data "wincoll/*.wav:wincoll/" --add-data "wincoll/*.png:wincoll/" --add-data "wincoll/*.ttf:wincoll/" --add-data "wincoll/levels/*:wincoll/levels/" wincoll/__main__.py
       - name: Check the binary runs
         run: ./dist/wincoll-${{ runner.os }}-${{ runner.arch }} --help
       - name: Upload the binaries
