@@ -3,7 +3,7 @@
 # Ubuntu
 if [ "$RUNNER_OS" = "Linux" ]; then
     sudo apt-get -y install python3-build python3-venv python3-pygame python3-importlib-resources make
-    pip install --user pyscroll
+    pip install --user pyscroll pytmx
 fi
 
 # macOS
