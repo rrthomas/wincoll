@@ -396,6 +396,7 @@ class WincollGame:
                             self.show_screen()
                             pygame.time.wait(1000 // FRAMES_PER_SECOND // subframes)
                     if self.dead:
+                        SLIDE_SOUND.stop()
                         SPLAT_SOUND.play()
                         self.game_surface.blit(
                             SPLAT_IMAGE,
