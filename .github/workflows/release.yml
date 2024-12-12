@@ -51,6 +51,8 @@ jobs:
             --add-data "wincoll/*.ttf:wincoll/" \
             --add-data "wincoll/levels/*:wincoll/levels/" \
             wincoll/__main__.py
+      - name: Check the binary runs
+        run: ./dist/wincoll-${{ runner.os }}-${{ runner.arch }} --help
       - name: Upload the binaries
         uses: svenstaro/upload-release-action@v2
         with:
