@@ -18,6 +18,8 @@ jobs:
         run: echo ${{ github.event.release.tag_name }}
       - name: Install dependencies
         run: ./.github/install-dependencies.sh
+      - name: Build
+        run: make dist
       - name: Make the release
         run: gh release create v$$version --title "Release v$$version" dist/*
       - name: Build the executable
