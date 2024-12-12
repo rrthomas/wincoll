@@ -52,5 +52,5 @@ jobs:
         with:
           repo_token: ${{ github.token }}
           tag: ${{ github.ref }}
-          file: ./dist/wincoll-${{ runner.os }}-${{ runner.arch }}
+          file: ./dist/wincoll-${{ runner.os }}-${{ runner.arch }}*
           file_glob: true
