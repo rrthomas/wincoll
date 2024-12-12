@@ -16,8 +16,10 @@ jobs:
         uses: actions/checkout@v4
       - name: Display the release tag
         run: echo ${{ github.event.release.tag_name }}
-      - name: Install dependencies
+      - name: Install build dependencies
         run: ./.github/install-dependencies.sh
+      - name: Install additional dependencies for binary builds
+        run: pip install --break-system-packages pyinstaller
       - name: Build
         run: make dist
       - name: Make the release
