@@ -5,13 +5,15 @@ import importlib.metadata
 import os
 import sys
 from enum import Enum
-import argparse
 from pathlib import Path
 import pickle
 import warnings
 from warnings import warn
 from typing import NoReturn, Tuple, List, Optional, Union, Iterator
 from itertools import chain
+import locale
+import gettext
+from datetime import datetime
 
 import importlib_resources
 from typing_extensions import Self
@@ -19,8 +21,16 @@ from platformdirs import user_cache_dir
 
 from .warnings_util import simple_warning
 
+locale.setlocale(locale.LC_ALL, "")
+
 # Set app name for SDL
 os.environ["SDL_APP_NAME"] = "WinColl"
+
+# Internationalize argparse
+with importlib_resources.as_file(importlib_resources.files()) as path:
+    gettext.bindtextdomain("argparse", path / "locale")
+    gettext.textdomain("argparse")
+    import argparse
 
 # Import pygame, suppressing extra messages that it prints on startup.
 os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
@@ -33,6 +43,10 @@ with warnings.catch_warnings():
 
 
 VERSION = importlib.metadata.version("wincoll")
+
+with importlib_resources.as_file(importlib_resources.files()) as path:
+    cat = gettext.translation("wincoll", path / "locale", fallback=True)
+    _ = cat.gettext
 
 CACHE_DIR = Path(user_cache_dir("wincoll"))
 CACHE_DIR.mkdir(parents=True, exist_ok=True)
@@ -365,8 +379,8 @@ class WincollGame:
         fade_background()
 
     def show_status(self) -> None:
-        print_screen((1, 0), f"Level: {self.level}")
-        print_screen((23, 0), f"Diamonds: {self.diamonds}")
+        print_screen((1, 0), _("Level: {}").format(self.level))
+        print_screen((23, 0), _("Diamonds: {}").format(self.diamonds))
 
     def run(self) -> None:
         clock = pygame.time.Clock()
@@ -475,12 +489,8 @@ def instructions() -> int:
     clear_keys()
     level = 0
     clock = pygame.time.Clock()
-    while True:
-        reinit_screen()
-        screen.blit(TITLE_IMAGE, (105, 20))
-        print_screen(
-            (0, 14),
-            """\
+    instructions = _(
+        """\
 Collect all the diamonds on each level.
 Get a key to turn safes into diamonds.
 Avoid falling rocks!
@@ -495,12 +505,19 @@ Avoid falling rocks!
  (choose with movement keys and digits)
 
       Press the space bar to play!
-    """,
-            "grey",
-        )
+"""
+    )
+    instructions_y = 14
+    start_level_y = (
+        instructions_y + len(instructions.split("\n\n\n")[0].split("\n")) + 1
+    )
+    while True:
+        reinit_screen()
+        screen.blit(TITLE_IMAGE, (105, 20))
+        print_screen((0, 14), instructions, "grey")
         print_screen(
-            (0, 24),
-            f"            Start level: {1 if level == 0 else level}",
+            (0, start_level_y),
+            _("            Start level: {}").format(1 if level == 0 else level),
             "white",
         )
         pygame.display.flip()
@@ -522,13 +539,17 @@ Avoid falling rocks!
 def main(argv: List[str] = sys.argv[1:]) -> None:
     # Command-line arguments
     parser = argparse.ArgumentParser(
-        description="Collect all the diamonds while digging through earth dodging rocks.",
+        description=_(
+            "Collect all the diamonds while digging through earth dodging rocks."
+        ),
     )
     parser.add_argument(
         "-V",
         "--version",
         action="version",
-        version=f"%(prog)s {VERSION} (05 Dec 2024) by Reuben Thomas <rrt@sc3d.org>",
+        version=_("%(prog)s {} ({}) by Reuben Thomas <rrt@sc3d.org>").format(
+            VERSION, datetime(2024, 12, 16).strftime("%d %b %Y")
+        ),
     )
     warnings.showwarning = simple_warning(parser.prog)
     parser.parse_args(argv)

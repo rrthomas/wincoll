@@ -1,0 +1,71 @@
+# French strings for WinColl.
+# Copyright (C) 2024 Reuben Thomas
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-12-16 23:26+0000\n"
+"PO-Revision-Date: 2024-12-16 20:03+0000\n"
+"Last-Translator: Reuben Thomas <rrt@sc3d.org>\n"
+"Language: French\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: pygettext.py 1.5\n"
+
+#: wincoll/__init__.py:382
+msgid "Level: {}"
+msgstr "Niveau: {}"
+
+#: wincoll/__init__.py:383
+msgid "Diamonds: {}"
+msgstr "Diamants: {}"
+
+#: wincoll/__init__.py:493
+#, fuzzy
+msgid ""
+"Collect all the diamonds on each level.\n"
+"Get a key to turn safes into diamonds.\n"
+"Avoid falling rocks!\n"
+"\n"
+"    Z/X - Left/Right   '/? - Up/Down\n"
+"     or use the cursor keys to move\n"
+"        S/L - Save/load position\n"
+"    R - Restart level  Q - Quit game\n"
+"        F11 - toggle full screen\n"
+"\n"
+"\n"
+" (choose with movement keys and digits)\n"
+"\n"
+"      Press the space bar to play!\n"
+msgstr ""
+"Ramasse les diamants de chaque niveau.\n"
+"Une clé transforme les coffres-forts en\n"
+"diamants. Évite les rochers tombants!\n"
+"\n"
+"Z/X - gauche/droite  '/? - monte/descend\n"
+"  ou bouge avec les touches de curseur\n"
+"   S/L - sauvegarder/charger position\n"
+"R - recommence niveau  Q - quitte le jeu\n"
+"        F11 - bascule plein écran\n"
+"\n"
+"\n"
+"       (choisis avec les chiffres et\n"
+"          touches de déplacement)\n"
+"\n"
+"    Tape la barre éspace pour jouer!\n"
+"    "
+
+#: wincoll/__init__.py:520
+msgid "            Start level: {}"
+msgstr "        Niveau à commencer: {}"
+
+#: wincoll/__init__.py:543
+msgid "Collect all the diamonds while digging through earth dodging rocks."
+msgstr "Ramasse les diamants en creusant la terre esquivant les rochers."
+
+#: wincoll/__init__.py:550
+#, python-format
+msgid "%(prog)s {} ({}) by Reuben Thomas <rrt@sc3d.org>"
+msgstr "%(prog)s {} ({}) de Reuben THOMAS <rrt@sc3d.org>"

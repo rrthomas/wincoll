@@ -1,6 +1,19 @@
 # Makefile for maintainer tasks
 
+update-pot:
+	find wincoll -name "*.py" | xargs xgettext --default-domain=wincoll --output=po/wincoll.pot
+
+update-po:
+	for po in po/*.po; do msgmerge --update $$po po/wincoll.pot; done
+
+compile-po:
+	for po in po/*.po; do mo=wincoll/locale/$$(basename $${po%.po})/LC_MESSAGES/wincoll.mo; mkdir -p $$(dirname $$mo); msgfmt --output-file=$$mo $$po; done
+	for po in po-argparse/*.po; do mo=wincoll/locale/$$(basename $${po%.po})/LC_MESSAGES/argparse.mo; mkdir -p $$(dirname $$mo); msgfmt --output-file=$$mo $$po; done
+
 build:
+	$(MAKE) update-pot
+	$(MAKE) update-po
+	$(MAKE) compile-po
 	python -m build
 
 dist:

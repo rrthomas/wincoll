@@ -40,7 +40,7 @@ packages = [
 ]
 
 [tool.setuptools.package-data]
-wincoll = ["**/*.png", "**/*.wav", "**/*.tmx", "**/*.tsx", "**/*.ttf"]
+wincoll = ["**/*.png", "**/*.wav", "**/*.tmx", "**/*.tsx", "**/*.ttf", "**/*.mo"]
 
 [tool.mypy]
 exclude = ['^dist', '^build']

@@ -16,6 +16,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.13"
+      - name: Install non-Python build dependencies
+        run: sudo apt-get -y install gettext
       - name: Install build dependencies
         run: pip install tox build pygame importlib-resources typing-extensions platformdirs pyscroll pytmx
       - name: Build
@@ -38,10 +40,19 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.13"
+      - name: Install non-Python build dependencies (Ubuntu)
+        if: ${{ matrix.os == 'ubuntu-24.04' }}
+        run: sudo apt-get -y install gettext
+      - name: Install non-Python build dependencies (macOS)
+        if: ${{ matrix.os == 'macos-latest' }}
+        run: brew install gettext
+      - name: Install non-Python build dependencies (Windows)
+        if: ${{ matrix.os == 'windows-latest' }}
+        run: choco install gettext
       - name: Install build dependencies
-        run: pip install tox build pygame importlib-resources typing-extensions platformdirs pyscroll pytmx
+        run: pip install tox build setuptools pygame importlib-resources typing-extensions platformdirs pyscroll pytmx
       - name: Install additional dependencies for binary builds
-        run: pip install --break-system-packages pyinstaller
+        run: pip install pyinstaller
       - name: Build
         run: make dist
       - name: Build the executable (except macOS)
