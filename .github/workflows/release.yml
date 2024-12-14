@@ -52,11 +52,12 @@ jobs:
       - name: Build the executable (macOS)
         if: ${{ matrix.os == 'macos-13' }}
         run: |
-          pyinstaller --noconfirm --windowed --name wincoll --add-data "wincoll/*.wav:wincoll/" --add-data "wincoll/*.png:wincoll/" --add-data "wincoll/*.ttf:wincoll/" --add-data "wincoll/levels/*:wincoll/levels/" wincoll/__main__.py
+          ./make-macos-icns ./wincoll/levels/87.png wincoll.iconset
+          pyinstaller --noconfirm --windowed --name wincoll --icon wincoll.icns --add-data "wincoll/*.wav:wincoll/" --add-data "wincoll/*.png:wincoll/" --add-data "wincoll/*.ttf:wincoll/" --add-data "wincoll/levels/*:wincoll/levels/" wincoll/__main__.py
           brew install create-dmg
           mkdir dmg-folder
           mv dist/wincoll.app dmg-folder/
-          create-dmg ./dist/wincoll-${{ runner.os }}-${{ runner.arch }}.dmg dmg-folder/
+          create-dmg --volname "WinColl ${{ github.ref_name }}" ./dist/wincoll-${{ runner.os }}-${{ runner.arch }}.dmg dmg-folder/
       - name: Upload the binaries
         uses: svenstaro/upload-release-action@v2
         with:
