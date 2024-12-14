@@ -19,6 +19,9 @@ from platformdirs import user_cache_dir
 
 from .warnings_util import simple_warning
 
+# Set app name for SDL
+os.environ["SDL_APP_NAME"] = "WinColl"
+
 # Import pygame, suppressing extra messages that it prints on startup.
 os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
 with warnings.catch_warnings():
