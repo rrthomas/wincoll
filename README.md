@@ -12,7 +12,8 @@ without eggs and monsters).
 I originally wrote WinColl for Acorn RISC OS. Original and updated [RISC OS
 versions](<https://github.com/rrthomas/wincoll/RISC OS.md>) are available.
 
-The name of the game is an abbreviation of my school’s. “Repton” is also the name of a school, but I don’t believe the game was named after it!
+The name of the game is an abbreviation of my school’s. “Repton” is also the
+name of a school, but I don’t believe the game was named after it!
 
 
 ## Credits
@@ -24,12 +25,67 @@ The sounds are from [Freesound](https://freesound.org), lightly adapted.
 
 
 ## Installation and use
+ 
+The game provides instructions on how to play.
+
+### Binary installers
+
+Installers are available for GNU/Linux, macOS and Windows. See the
+[latest release](https://github.com/wincoll/releases):
+
+* The GNU/Linux version is a single binary; you need to make it executable
+  and then either copy it to a directory on your path, or run it directly:
+  `chmod +x NAME-OF-FILE; ./NAME-OF-FILE`
+* The macOS version is a disk image file containing an application. Drag the
+  application to a suitable location (e.g. your Applications folder). macOS
+  will probably refuse to run it until you have approved it in System
+  Settings→Privacy and Security, under “Security”.
+* The Windows version is a single `.exe`. Unfortunately it is detected as a
+  virus by most virus scanners, including Microsoft Defender, because Python
+  apps have often been used to distribute malware. Hence, you will probably
+  have to turn off virus scanning before you download it (to prevent it from
+  being immediately quarantined or deleted), and then add an exception for
+  it. After that, you can put the `.exe` file in a suitable location and
+  double-click it to play.
+
+### Python package
+
+If you are a Python user, this is the simplest way to get WinColl on most
+machines.
 
 Install with `pip`: `pip install wincoll`, then execute the command
-`wincoll`. The game provides instructions on how to play.
+`wincoll`.
 
-You can edit the levels (the `.tmx` files) with
-[Tiled](https://www.mapeditor.org/).
+
+## Creating and editing levels
+
+Currently, to play edited or new levels you must have a source check-out of
+WinColl from GitHub. (If this doesn’t make sense to you, sorry! I hope to
+provide a simpler way to edit and play new levels soon.)
+
+The level files are in the `wincoll/levels` subdirectory of the project, and
+are [Tiled](https://www.mapeditor.org/) level editor files, so you will need
+to install Tiled to edit them.
+
+Having saved an edited level you can install the Python package with
+`pip install .` or run it directly with `PYTHONPATH=. python -m wincoll`.
+
+Some notes about level design:
+
++ The supplied levels have a brick wall all the way around. This is
+  conventional but not necessary: there’s an imaginary brick wall around the
+  outside of the level already.
++ Levels need exactly one start position (represented by placing the Win
+  character).
++ No other checks are done to make sure a level is possible to complete; for
+  example, you can place diamonds surrounded by bricks, or have safes but no
+  key.
+
+The files are named `Level??.tmx` where the question marks represent two
+decimal digits.
+
+I welcome [pull requests](https://github.com/rrthomas/wincoll/pulls) for new
+levels.
 
 
 ## Copyright and Disclaimer
@@ -38,9 +94,12 @@ WinColl is distributed under the GNU Public License version 3, or, at your
 option, any later version. See the file COPYING.
 
 THIS PROGRAM IS PROVIDED AS IS, WITH NO WARRANTY. USE IS AT THE USER'S RISK.
-WinColl’s code is copyright Reuben Thomas, and its levels and graphics by Reuben Thomas, Alistair Turnbull, Paul Smith and Jeremy Douglas.
+WinColl’s code is copyright Reuben Thomas, and its levels and graphics by
+Reuben Thomas, Alistair Turnbull, Paul Smith and Jeremy Douglas.
 
-The font “Acorn Mode 1”, which is based on the design of Acorn computers’ system font, as used on the Acorn Archimedes on which WinColl was originally written, is by p1.mark and licensed under CC BY-SA 3.0.
+The font “Acorn Mode 1”, which is based on the design of Acorn computers’
+system font, as used on the Acorn Archimedes on which WinColl was originally
+written, is by p1.mark and licensed under CC BY-SA 3.0.
 
 The sound effects are copyrighted and licensed as follows:
 
