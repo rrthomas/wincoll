@@ -126,12 +126,20 @@ def quit_game() -> NoReturn:
     sys.exit()
 
 
+muted = False
+
 def handle_global_event(event: pygame.event.Event) -> None:
+    global muted
     if event.type == pygame.QUIT:
         quit_game()
     if event.type == pygame.KEYDOWN:
         if event.key == pygame.K_F11:
             pygame.display.toggle_fullscreen()
+        elif event.key == pygame.K_m:
+            if not muted:
+                SLIDE_SOUND.stop()
+            muted = not muted
+
 
 
 FRAMES_PER_SECOND = 10
@@ -238,7 +246,8 @@ class WincollGame:
             for col, block in enumerate(blocks):
                 if block == self.gids[TilesetGids.SAFE]:
                     self.set(pygame.Vector2(col, row), self.gids[TilesetGids.DIAMOND])
-        UNLOCK_SOUND.play()
+        if not muted:
+            UNLOCK_SOUND.play()
 
     def draw(self) -> None:
         self.group.center(self.hero.rect.center)
@@ -273,7 +282,8 @@ class WincollGame:
         if block in (self.gids[TilesetGids.GAP], self.gids[TilesetGids.EARTH]):
             pass
         elif block == self.gids[TilesetGids.DIAMOND]:
-            COLLECT_SOUND.play()
+            if not muted:
+                COLLECT_SOUND.play()
             self.diamonds -= 1
         elif block == self.gids[TilesetGids.KEY]:
             self.unlock()
@@ -313,7 +323,8 @@ class WincollGame:
             nonlocal new_fall
             if self.falling is False:
                 self.falling = True
-                SLIDE_SOUND.play(-1)
+                if not muted:
+                    SLIDE_SOUND.play(-1)
             new_fall = True
 
         for row, blocks in reversed(list(enumerate(self.map_blocks))):
@@ -394,8 +405,9 @@ class WincollGame:
                             self.show_screen()
                             pygame.time.wait(1000 // FRAMES_PER_SECOND // subframes)
                     if self.dead:
-                        SLIDE_SOUND.stop()
-                        SPLAT_SOUND.play()
+                        if not muted:
+                            SLIDE_SOUND.stop()
+                            SPLAT_SOUND.play()
                         self.game_surface.blit(
                             SPLAT_IMAGE,
                             self.game_to_screen(
@@ -487,6 +499,8 @@ Avoid falling rocks!
         S/L - Save/load position
     R - Restart level  Q - Quit game
         F11 - toggle full screen
+        M - toggle sound on/off
+
 
 
  (choose with movement keys and digits)
@@ -496,7 +510,7 @@ Avoid falling rocks!
             "grey",
         )
         print_screen(
-            (0, 24),
+            (0, 25),
             f"            Start level: {1 if level == 0 else level}",
             "white",
         )
