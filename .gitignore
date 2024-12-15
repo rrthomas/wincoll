@@ -95,3 +95,4 @@ ENV/
 # WinColl-specific files
 Saved,ffd
 *.tiled-session
+\!WinColl/Level??,ffd

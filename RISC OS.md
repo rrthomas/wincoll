@@ -7,10 +7,8 @@ The sound module `UserVoices` was generated using a program from [RISC User Volu
 
 ## Installation and use
 
-* Download and unpack the
-  [Zip](https://github.com/rrthomas/wincoll/archive/refs/heads/main.zip) of
-  the WinColl Git repository.
-* Launch `!WinColl` (for example, by double left-clicking it).
+* Download and unpack the most recent [RISC OS release](https://github.com/rrthomas/wincoll/releases/latest/wincoll-riscos.zip).
+* Launch `!WinColl` (left double-click it).
 
 WinColl should run on RISC OS 3.5 to 3.7, and could probably be made to run on RISC OS 2 without difficulty.
 
