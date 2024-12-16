@@ -21,10 +21,13 @@ CREATE TIME-BUFFER  5 ALLOT
 : CLS   12 EMIT ;
 : WAIT   19 [ 1 0 ] OS" OS_Byte" ;
 : MODE   ( u -- )   22 EMIT  EMIT ;
-: SHADOW    ( draw to shadow bank )  2 [ 2 0 ] 112 OS" OS_Byte" ;
-: DISPLAY-BANK   255 0 251 [ 3 2 ] OS" OS_Byte" DROP ;
+2 VALUE BANK
 : FLIP   ( swap screen banks )
-   DISPLAY-BANK  DUP 2 >-< 113 [ 2 0 ] OS" OS_Byte"  112 [ 2 0 ] OS" OS_Byte" ;
+   BANK
+   DUP 113 [ 2 0 ] OS" OS_Byte"
+   3 XOR  DUP TO BANK
+   WAIT
+   112 [ 2 0 ] OS" OS_Byte" ;
 
 : SPRITE   ( x y -- ) SWAP 237 [ 3 0 ] OS" OS_Plot" ;
 
@@ -56,6 +59,10 @@ AREA WORLD + CONSTANT ENDWORLD   \ end of array
    224 178 224 15 RGB ;
 : .BANNER   \ draw the title banner
    *" SChoose title"  440 654 SPRITE ;
+: INIT-SCREEN
+   9 MODE OFF 132 COLOUR
+   FLIP CLS  FLIP CLS
+   PALETTE ;
 
 \ Display world
 64 CONSTANT SIZE   \ of sprites
@@ -144,7 +151,7 @@ AREA WORLD + CONSTANT ENDWORLD   \ end of array
    X @ WX - Y @ WY - XY>SCR SPRITE
    *" SOUND 3 65521 100 20"
    FALSE DEAD? !
-   WAIT FLIP 100 DELAY ;
+   FLIP 100 DELAY ;
 
 : SURVEY   ( count the diamonds on the level )
    0 DIAMONDS !  *" SOUND 1 65521 30 20"
@@ -173,16 +180,13 @@ CREATE DATA-FILE-NAME S" Level01" ",
    WINDOW-SIZE 0 DO  WINDOW-SIZE 0 DO
       I J XY>SCR SPRITE
    LOOP LOOP
-   WAIT FLIP  300 DELAY ;
+   FLIP  300 DELAY ;
 
 \ Play the game!
-: INIT-SCREEN   9 MODE OFF 132 COLOUR CLS PALETTE ;
-
 10 CONSTANT FRAME-LENGTH
 : FINISHED?   DIAMONDS @ 0= ;
 : PLAY   ( start-level -- )
-   INIT-SCREEN SHADOW  CLS WAIT FLIP
-   1- LEVEL ! 0 DEAD? !
+   INIT-SCREEN  1- LEVEL !  0 DEAD? !
    BEGIN
       START-LEVEL
       BEGIN  LOAD-POSITION
@@ -205,7 +209,7 @@ CREATE DATA-FILE-NAME S" Level01" ",
             ROCKS
             X @ WINDOW-SIZE 2/ -  Y @ WINDOW-SIZE 2/ -  .WORLD
             .STATUS
-            WAIT FLIP
+            FLIP
             BEGIN @TIME OVER > UNTIL  DROP
          DEAD? @ FINISHED? OR UNTIL
          DEAD? @ IF DIE THEN
@@ -227,6 +231,7 @@ CREATE DATA-FILE-NAME S" Level01" ",
    ."     R - Restart level  Q - Quit game"     CR
    ."     Type level number to select level"    CR CR
    CR ."      Press the space bar to enjoy!      "
+   FLIP
    0   \ Accumulator for start level
    BEGIN
       KEY
