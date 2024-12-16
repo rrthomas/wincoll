@@ -117,10 +117,11 @@ AREA WORLD + CONSTANT ENDWORLD   \ end of array
    DO  I C@ Safe = IF Diamond I C! THEN  LOOP
    *" SOUND 1 65526 80 2" ;
 : PUSH   ( rock )
-   OVER 2* X @ + Y @ XY>MEM C@ Gap =  OVER 0=  AND IF
-      OVER 2* X @ + Y @ XY>MEM Rock SWAP C!  TRUE
-   ELSE FALSE THEN ;
-: MOVE?   ( dx dy x' y' -- moved? )
+   OVER 2* X @ + Y @ XY>MEM
+   DUP C@ Gap =  2 PICK 0=  AND IF
+      Rock SWAP C!  TRUE
+   ELSE DROP FALSE THEN ;
+: MOVE?   ( dx dy x' y' -- dx dy moved? )
    CASE XY>MEM C@
       Gap OF TRUE ENDOF
       Diamond OF COLLECT ENDOF
