@@ -206,7 +206,7 @@ CREATE DATA-FILE-NAME S" Level01" ",
             X @ WINDOW-SIZE 2/ -  Y @ WINDOW-SIZE 2/ -  .WORLD
             .STATUS
             WAIT FLIP
-            BEGIN @TIME OVER - 0> UNTIL  DROP
+            BEGIN @TIME OVER > UNTIL  DROP
          DEAD? @ FINISHED? OR UNTIL
          DEAD? @ IF DIE THEN
       FINISHED? UNTIL
