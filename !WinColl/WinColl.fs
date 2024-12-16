@@ -3,8 +3,7 @@
 \ Utility words
 : INKEY   ( u -- c )  256 U/MOD SWAP  129 [ 3 3 ] OS" OS_Byte"
    DROP  SWAP 0<> IF  DROP -1 THEN
-   126 [ 1 0 ] OS" XOS_Byte"   \ Clear any escape condition
-   ;
+   126 [ 1 0 ] OS" XOS_Byte" ;   \ Clear any escape condition
 : OFF   [ 0 0 ] OS" OS_RemoveCursors" ;
 
 \ Monotonic timer
@@ -69,8 +68,7 @@ AREA WORLD + CONSTANT ENDWORLD   \ end of array
 0 VALUE WX  0 VALUE WY   \ base world coords
 160 CONSTANT OX  16 CONSTANT OY   \ graphics coords of window
 : XY>MEM   ( x y -- addr )   LONG 1- >-<  ROW *  +  WORLD + ;
-: XY>SCR   ( x y -- x' y' )
-   SIZE * SWAP SIZE * OX + SWAP OY + ;
+: XY>SCR   ( x y -- x' y' )   SIZE * SWAP SIZE * OX + SWAP OY + ;
 15 CONSTANT WINDOW-SIZE
 : .WORLD   ( x y -- )
    LONG WINDOW-SIZE - SWAP 0 MAX MIN TO WY
