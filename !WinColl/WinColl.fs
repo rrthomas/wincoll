@@ -59,7 +59,7 @@ AREA WORLD + CONSTANT ENDWORLD   \ end of array
 
 \ Display world
 64 CONSTANT SIZE   \ of sprites
-0 CONSTANT WX  0 CONSTANT WY   \ base world coords
+0 VALUE WX  0 VALUE WY   \ base world coords
 160 CONSTANT OX  16 CONSTANT OY   \ graphics coords of window
 : XY>MEM   ( x y -- addr )   LONG 1- >-<  ROW *  +  WORLD + ;
 : XY>SCR   ( x y -- x' y' )
