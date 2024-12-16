@@ -196,7 +196,7 @@ CREATE DATA-FILE-NAME S" Level01" ",
             ELSE DUP [CHAR] ' =  OVER [CHAR] " = OR  OVER 139 = OR IF
                0 1 WALK
             ELSE DUP [CHAR] / =  OVER [CHAR] ? = OR  OVER 138 = OR IF
-                  0 -1 WALK
+               0 -1 WALK
             ELSE DUP [CHAR] l =  OVER [CHAR] L = OR IF LOAD-POSITION
             ELSE DUP [CHAR] s =  OVER [CHAR] S = OR IF SAVE-POSITION
             ELSE DUP [CHAR] r =  OVER [CHAR] R = OR IF RESTART-LEVEL
