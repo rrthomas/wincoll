@@ -167,10 +167,11 @@ CREATE DATA-FILE-NAME S" Level01" ",
 : RESTART-LEVEL   LEVEL @ 1+ @LEVEL  SURVEY ;
 : START-LEVEL   RESTART-LEVEL SAVE-POSITION ;
 
-\ Fill the screen with one sprite
+\ Fill the game window with one sprite
 : SPLURGE   ( sprite# -- )
+   SPRITEN
    WINDOW-SIZE 0 DO  WINDOW-SIZE 0 DO
-      DUP SPRITEN  I J XY>SCR SPRITE
+      I J XY>SCR SPRITE
    LOOP LOOP
    WAIT FLIP  300 DELAY ;
 
