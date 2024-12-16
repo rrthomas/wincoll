@@ -46,9 +46,8 @@ VARIABLE DIAMONDS   \ number of diamonds left on level
 50 CONSTANT LONG   \ length of side of world in blocks
 LONG 1+ CONSTANT ROW   \ length of data row in bytes
 LONG ROW *  CONSTANT AREA   \ size of world array
-CREATE WORLD   \ world array
-AREA ALLOT
-AREA WORLD + 1+ CONSTANT ENDWORLD   \ end of array
+CREATE WORLD   AREA ALLOT   \ world array
+AREA WORLD + CONSTANT ENDWORLD   \ end of array
 
 \ Set up screen
 : PALETTE   \ set up screen palette
