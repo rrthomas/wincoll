@@ -61,13 +61,13 @@ jobs:
       - name: Build the executable (except macOS)
         if: ${{ matrix.os != 'macos-13' }}
         run: |
-          pyinstaller --noconfirm --onefile --windowed --name wincoll-${{ runner.os }}-${{ runner.arch }} --add-data "wincoll/*.wav:wincoll/" --add-data "wincoll/*.png:wincoll/" --add-data "wincoll/*.ttf:wincoll/" --add-data "wincoll/levels/*:wincoll/levels/" wincoll/__main__.py
+          pyinstaller --noconfirm --onefile --windowed --name wincoll-${{ runner.os }}-${{ runner.arch }} --add-data "wincoll/*.wav:wincoll/" --add-data "wincoll/*.png:wincoll/" --add-data "wincoll/*.ttf:wincoll/" --add-data "wincoll/levels:wincoll/levels" --add-data "wincoll/locale:wincoll/locale" wincoll/__main__.py
           ./dist/wincoll-${{ runner.os }}-${{ runner.arch }} --help
       - name: Build the executable (macOS)
         if: ${{ matrix.os == 'macos-13' }}
         run: |
           ./make-macos-icns ./wincoll/levels/87.png wincoll.iconset
-          pyinstaller --noconfirm --windowed --name WinColl --icon wincoll.icns --add-data "wincoll/*.wav:wincoll/" --add-data "wincoll/*.png:wincoll/" --add-data "wincoll/*.ttf:wincoll/" --add-data "wincoll/levels/*:wincoll/levels/" wincoll/__main__.py
+          pyinstaller --noconfirm --windowed --name WinColl --icon wincoll.icns --add-data "wincoll/*.wav:wincoll/" --add-data "wincoll/*.png:wincoll/" --add-data "wincoll/*.ttf:wincoll/" --add-data "wincoll/levels:wincoll/levels" --add-data "wincoll/locale:wincoll/locale" wincoll/__main__.py
           brew install create-dmg
           mkdir dmg-folder
           mv dist/wincoll.app dmg-folder/
