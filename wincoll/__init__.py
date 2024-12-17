@@ -409,7 +409,7 @@ class WincollGame:
                         pygame.time.wait(1000)
                         self.dead = False
                 self.level += 1
-            self.splurge(self.hero.image)
+            self.splurge(Win().image)
         finally:
             SLIDE_SOUND.stop()
 

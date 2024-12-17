@@ -30,6 +30,7 @@ wincoll = "wincoll:main"
 
 [build-system]
 requires = [
+    "build",
     "setuptools >= 62.3.0",
 ]
 
@@ -39,7 +40,7 @@ packages = [
 ]
 
 [tool.setuptools.package-data]
-wincoll = ["*.png", "*.wav", "*.tmx", "*.tsx", "*.ttf"]
+wincoll = ["**/*.png", "**/*.wav", "**/*.tmx", "**/*.tsx", "**/*.ttf"]
 
 [tool.mypy]
 exclude = ['^dist', '^build']
