@@ -50,8 +50,8 @@ jobs:
       - name: Install non-Python build dependencies (Windows)
         if: ${{ matrix.os == 'windows-latest' }}
         run: |
-          Install-Package Gettext.Tools -Force;
-          Get-Item Env:PATH
+          nuget install Gettext.Tools -Version 0.22.4 -OutputDirectory c:\nuget;
+          Add-Content $env:GITHUB_PATH "C:\nuget\Gettext.Tools.0.22.4\tools\bin"
       - name: Install build dependencies
         run: pip install tox build setuptools pygame importlib-resources typing-extensions platformdirs pyscroll pytmx
       - name: Install additional dependencies for binary builds
