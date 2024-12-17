@@ -1,6 +1,10 @@
 # Makefile for maintainer tasks
 
+po/wincoll.pot: po/wincoll.pot.in
+	sed -e s/VERSION/$$(grep version pyproject.toml | grep -o "[0-9.]\+")/ < $^ > $@
+
 update-pot:
+	$(MAKE) po/wincoll.pot
 	find wincoll -name "*.py" | xargs xgettext --from-code=utf-8 --default-domain=wincoll --output=po/wincoll.pot
 
 update-po:

@@ -95,3 +95,4 @@ ENV/
 Saved,ffd
 *.tiled-session
 \!WinColl/Level??,ffd
+po/wincoll.pot
