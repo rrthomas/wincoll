@@ -23,7 +23,6 @@ msgid "Diamonds: {}"
 msgstr "Diamants: {}"
 
 #: wincoll/__init__.py:493
-#, fuzzy
 msgid ""
 "Collect all the diamonds on each level.\n"
 "Get a key to turn safes into diamonds.\n"
@@ -55,7 +54,6 @@ msgstr ""
 "          touches de déplacement)\n"
 "\n"
 "    Tape la barre éspace pour jouer!\n"
-"    "
 
 #: wincoll/__init__.py:520
 msgid "            Start level: {}"
