@@ -41,7 +41,7 @@ jobs:
         with:
           python-version: "3.13"
       - name: Install non-Python build dependencies (Ubuntu)
-        if: ${{ matrix.os == 'ubuntu-24.04' }}
+        if: ${{ matrix.os == 'ubuntu-20.04' }}
         run: sudo apt-get -y install gettext
       - name: Install non-Python build dependencies (macOS)
         if: ${{ matrix.os == 'macos-latest' }}
