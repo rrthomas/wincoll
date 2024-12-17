@@ -1,13 +1,18 @@
 ﻿The font file in this archive was created using Fontstruct the free, online
 font-building tool.
-This font was created by “p1.mark”.
+This font was created by “rrthomas”*.
 This font has a homepage where this archive and other versions may be found:
-https://fontstruct.com/fontstructions/show/1271337
+https://fontstruct.com/fontstructions/show/2594322
+
+*NOTE: “Acorn Mode 1” was originally cloned (copied) from the FontStruction
+“Acorn Mode 1” (https://fontstruct.com/fontstructions/show/1271337) by
+“p1.mark”, which is licensed under a Creative Commons Attribution Share
+Alike license (http://creativecommons.org/licenses/by-sa/3.0/).
 
 Try Fontstruct at https://fontstruct.com
 It’s easy and it’s fun.
 
-Fontstruct is copyright ©2016-2023 Rob Meek
+Fontstruct is copyright ©2024 Rob Meek
 
 LEGAL NOTICE:
 In using this font you must comply with the licensing terms described in the
