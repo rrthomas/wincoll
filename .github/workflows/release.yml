@@ -49,7 +49,9 @@ jobs:
         run: brew install gettext
       - name: Install non-Python build dependencies (Windows)
         if: ${{ matrix.os == 'windows-latest' }}
-        run: Install-Package Gettext.Tools -Force
+        run: |
+          Install-Package Gettext.Tools -Force;
+          Get-Item Env:PATH
       - name: Install build dependencies
         run: pip install tox build setuptools pygame importlib-resources typing-extensions platformdirs pyscroll pytmx
       - name: Install additional dependencies for binary builds
