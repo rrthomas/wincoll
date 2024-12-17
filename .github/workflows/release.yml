@@ -8,7 +8,7 @@ on:
 jobs:
   source-release:
     name: Make source release
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-20.04
     env:
       GH_TOKEN: ${{ github.token }}
     steps:
@@ -28,7 +28,7 @@ jobs:
     strategy:
       matrix:
         # Use oldest available macOS for greatest compatibility of resulting binary.
-        os: [ubuntu-24.04, macos-13, windows-latest]
+        os: [ubuntu-20.04, macos-13, windows-latest]
     runs-on: ${{ matrix.os }}
     env:
       GH_TOKEN: ${{ github.token }}
@@ -66,10 +66,10 @@ jobs:
           file: ./dist/wincoll-${{ runner.os }}-${{ runner.arch }}*
           file_glob: true
       - name: Build the RISC OS distribution
-        if: ${{ matrix.os == 'ubuntu-24.04' }}
+        if: ${{ matrix.os == 'ubuntu-20.04' }}
         run: ./dist-riscos
       - name: Upload the RISC OS distribution
-        if: ${{ matrix.os == 'ubuntu-24.04' }}
+        if: ${{ matrix.os == 'ubuntu-20.04' }}
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ github.token }}
