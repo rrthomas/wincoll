@@ -1,7 +1,7 @@
 # Makefile for maintainer tasks
 
 update-pot:
-	find wincoll -name "*.py" | xargs xgettext --default-domain=wincoll --output=po/wincoll.pot
+	find wincoll -name "*.py" | xargs xgettext --from-code=utf-8 --default-domain=wincoll --output=po/wincoll.pot
 
 update-po:
 	for po in po/*.po; do msgmerge --update $$po po/wincoll.pot; done
