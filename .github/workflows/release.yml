@@ -27,6 +27,7 @@ jobs:
 
   binary-release:
     name: Make binary release
+    needs: source-release
     strategy:
       matrix:
         # Use oldest available macOS for greatest compatibility of resulting binary.
