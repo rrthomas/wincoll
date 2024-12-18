@@ -106,9 +106,11 @@ SPLAT_SOUND: pygame.mixer.Sound
 
 screen: pygame.Surface
 
+app_icon = load_image("levels/87.png")
 
 def init_screen(flags: int = pygame.SCALED) -> None:
     global screen
+    pygame.display.set_icon(app_icon)
     screen = pygame.display.set_mode((320, 256), flags)
     reinit_screen()
 
