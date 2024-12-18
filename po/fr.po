@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-16 23:26+0000\n"
+"POT-Creation-Date: 2024-12-18 15:48+0000\n"
 "PO-Revision-Date: 2024-12-16 20:03+0000\n"
 "Last-Translator: Reuben Thomas <rrt@sc3d.org>\n"
 "Language: French\n"
@@ -14,15 +14,15 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: pygettext.py 1.5\n"
 
-#: wincoll/__init__.py:382
+#: wincoll/__init__.py:391
 msgid "Level: {}"
 msgstr "Niveau: {}"
 
-#: wincoll/__init__.py:383
+#: wincoll/__init__.py:392
 msgid "Diamonds: {}"
 msgstr "Diamants: {}"
 
-#: wincoll/__init__.py:493
+#: wincoll/__init__.py:502
 msgid ""
 "Collect all the diamonds on each level.\n"
 "Get a key to turn safes into diamonds.\n"
@@ -55,15 +55,15 @@ msgstr ""
 "\n"
 "    Tape la barre éspace pour jouer!\n"
 
-#: wincoll/__init__.py:520
+#: wincoll/__init__.py:529
 msgid "            Start level: {}"
 msgstr "        Niveau à commencer: {}"
 
-#: wincoll/__init__.py:543
+#: wincoll/__init__.py:552
 msgid "Collect all the diamonds while digging through earth dodging rocks."
 msgstr "Ramasse les diamants en creusant la terre esquivant les rochers."
 
-#: wincoll/__init__.py:550
+#: wincoll/__init__.py:559
 #, python-format
 msgid "%(prog)s {} ({}) by Reuben Thomas <rrt@sc3d.org>"
 msgstr "%(prog)s {} ({}) de Reuben THOMAS <rrt@sc3d.org>"
