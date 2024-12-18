@@ -58,8 +58,8 @@ jobs:
         run: pip install pyinstaller
       - name: Build
         run: make dist
-      - name: Build the executable (except macOS)
-        if: ${{ matrix.os != 'macos-13' }}
+      - name: Build the executable (Ubuntu)
+        if: ${{ matrix.os == 'ubuntu-20.04' }}
         run: |
           pyinstaller --noconfirm --onefile --windowed --name wincoll-${{ runner.os }}-${{ runner.arch }} --add-data "wincoll/*.wav:wincoll/" --add-data "wincoll/*.png:wincoll/" --add-data "wincoll/*.ttf:wincoll/" --add-data "wincoll/levels:wincoll/levels" --add-data "wincoll/locale:wincoll/locale" wincoll/__main__.py
           ./dist/wincoll-${{ runner.os }}-${{ runner.arch }} --help
@@ -75,12 +75,26 @@ jobs:
           mkdir dmg-folder
           mv dist/wincoll.app dmg-folder/
           create-dmg --volname "WinColl ${{ github.ref_name }}" ./dist/wincoll-${{ runner.os }}-${{ runner.arch }}.dmg dmg-folder/
-      - name: Upload the binaries
+      - name: Build the executable (Windows)
+        if: ${{ matrix.os == 'windows-latest' }}
+        run: |
+          pip install cx_Freeze
+          cxfreeze bdist_msi
+      - name: Upload the binary (Ubuntu and macOS)
+        if: ${{ matrix.os != 'windows-latest' }}
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ github.token }}
           tag: ${{ github.ref }}
           file: ./dist/wincoll-${{ runner.os }}-${{ runner.arch }}*
+          file_glob: true
+      - name: Upload the binary (Windows)
+        if: ${{ matrix.os == 'windows-latest' }}
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ github.token }}
+          tag: ${{ github.ref }}
+          file: ./dist/wincoll*.msi
           file_glob: true
       - name: Build the RISC OS distribution
         if: ${{ matrix.os == 'ubuntu-20.04' }}
