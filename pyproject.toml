@@ -1,5 +1,5 @@
 [project]
-name = "wincoll"
+name = "WinColl"
 version = "0.9.5"
 description = "Simple rocks-and-diamonds game"
 license = {text = "GPL v3 or later"}
@@ -78,3 +78,13 @@ disable = [
 enable = [
     "useless-suppression",
 ]
+
+[[tool.cxfreeze.executables]]
+script = "wincoll/__main__.py"
+base = "gui"
+icon = "win"
+shortcut_name = "WinColl"
+shortcut_dir = "DesktopFolder"
+
+[tool.cxfreeze.build_exe]
+include_msvcr = true
