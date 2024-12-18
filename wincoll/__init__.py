@@ -20,8 +20,15 @@ from typing_extensions import Self
 from platformdirs import user_cache_dir
 
 from .warnings_util import simple_warning
+from .langdetect import language_code
 
 locale.setlocale(locale.LC_ALL, "")
+
+# Try to set LANG for gettext if not already set
+if not "LANG" in os.environ:
+    lang = language_code()
+    if lang is not None:
+        os.environ["LANG"] = lang
 
 # Set app name for SDL
 os.environ["SDL_APP_NAME"] = "WinColl"
