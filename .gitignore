@@ -94,5 +94,6 @@ ENV/
 # WinColl-specific files
 Saved,ffd
 *.tiled-session
+wincoll.icns
 \!WinColl/Level??,ffd
 po/wincoll.pot
