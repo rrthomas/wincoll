@@ -15,7 +15,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.13"
+          python-version: "3.12"
       - name: Install non-Python build dependencies
         run: sudo apt-get -y install gettext
       - name: Install build dependencies
@@ -40,7 +40,7 @@ jobs:
         uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.13"
+          python-version: "3.12"
       - name: Install non-Python build dependencies (Ubuntu)
         if: ${{ matrix.os == 'ubuntu-20.04' }}
         run: sudo apt-get -y install gettext
