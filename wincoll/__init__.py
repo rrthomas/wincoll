@@ -71,6 +71,8 @@ level_size = 50  # length of side of world in blocks
 block_pixels = 16  # size of (square) block sprites in pixels
 window_blocks = 15
 window_pixels = window_blocks * block_pixels
+window_scale = 2
+scaled_pixels = window_pixels * window_scale
 TEXT_COLOUR = (255, 255, 255)
 BACKGROUND_COLOUR = (0, 0, 255)
 
@@ -108,10 +110,11 @@ screen: pygame.Surface
 
 app_icon = load_image("levels/87.png")
 
+
 def init_screen(flags: int = pygame.SCALED) -> None:
     global screen
     pygame.display.set_icon(app_icon)
-    screen = pygame.display.set_mode((320, 256), flags)
+    screen = pygame.display.set_mode((640, 512), flags)
     reinit_screen()
 
 
@@ -134,13 +137,13 @@ class TilesetGids(Enum):
 
 
 def print_screen(pos: Tuple[int, int], msg: str, **kwargs: Any) -> None:
-    font_pixels = 8
+    font_pixels = 8 * window_scale
     with importlib_resources.as_file(importlib_resources.files()) as path:
         ptext.draw(  # type: ignore[no-untyped-call]
             msg,
             (pos[0] * font_pixels, pos[1] * font_pixels),
             fontname=str(path / "acorn-mode-1.ttf"),
-            fontsize=8,
+            fontsize=font_pixels,
             **kwargs,
         )
 
@@ -161,13 +164,18 @@ def handle_global_event(event: pygame.event.Event) -> None:
 FRAMES_PER_SECOND = 10
 
 
+def scale_surface(surface: pygame.Surface) -> pygame.Surface:
+    scaled_width = surface.get_width() * window_scale
+    scaled_height = surface.get_height() * window_scale
+    scaled_surface = pygame.Surface((scaled_width, scaled_height))
+    pygame.transform.scale(surface, (scaled_width, scaled_height), scaled_surface)
+    return scaled_surface
+
+
 class WincollGame:
     def __init__(self, level: int = 1) -> None:
-        self.game_surface = pygame.Surface((window_pixels, window_pixels)).convert()
-        self.window_pos = (
-            (screen.get_width() - window_pixels) // 2,
-            12,
-        )
+        self.game_surface = pygame.Surface((window_pixels, window_pixels))
+        self.window_pos = ((screen.get_width() - scaled_pixels) // 2, 12 * window_scale)
         self.quit = False
         self.dead = False
         self.falling = False
@@ -380,7 +388,7 @@ class WincollGame:
         pygame.time.wait(3000)
 
     def show_screen(self, surface: Optional[pygame.Surface] = None) -> None:
-        screen.blit(surface or self.game_surface, self.window_pos)
+        screen.blit(scale_surface(surface or self.game_surface), self.window_pos)
         pygame.display.flip()
         screen.fill(BACKGROUND_COLOUR)
         fade_background()
@@ -521,7 +529,7 @@ Avoid falling rocks!
     )
     while True:
         reinit_screen()
-        screen.blit(TITLE_IMAGE, (105, 20))
+        screen.blit(scale_surface(TITLE_IMAGE.convert()), (105 * window_scale, 20 * window_scale))
         print_screen((0, 14), instructions, color="grey")
         print_screen(
             (0, start_level_y),
