@@ -9,7 +9,7 @@ from pathlib import Path
 import pickle
 import warnings
 from warnings import warn
-from typing import NoReturn, Tuple, List, Optional, Union, Iterator
+from typing import Any, NoReturn, Tuple, List, Optional, Union, Iterator
 from itertools import chain
 import locale
 import gettext
@@ -133,9 +133,7 @@ class TilesetGids(Enum):
     WIN_PLACE = 18
 
 
-def print_screen(
-    pos: Tuple[int, int], msg: str, colour: Optional[Union[pygame.Color, str]] = None
-) -> None:
+def print_screen(pos: Tuple[int, int], msg: str, **kwargs: Any) -> None:
     font_pixels = 8
     with importlib_resources.as_file(importlib_resources.files()) as path:
         ptext.draw(  # type: ignore[no-untyped-call]
@@ -143,7 +141,7 @@ def print_screen(
             (pos[0] * font_pixels, pos[1] * font_pixels),
             fontname=str(path / "acorn-mode-1.ttf"),
             fontsize=8,
-            color=colour,
+            **kwargs,
         )
 
 
@@ -523,11 +521,10 @@ Avoid falling rocks!
     while True:
         reinit_screen()
         screen.blit(TITLE_IMAGE, (105, 20))
-        print_screen((0, 14), instructions, "grey")
+        print_screen((0, 14), instructions, color="grey")
         print_screen(
             (0, start_level_y),
             _("            Start level: {}").format(1 if level == 0 else level),
-            "white",
         )
         pygame.display.flip()
         key = get_key()
