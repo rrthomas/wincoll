@@ -426,6 +426,7 @@ class WincollGame:
                                 int(self.hero.position.x), int(self.hero.position.y)
                             ),
                         )
+                        self.show_status()
                         self.show_screen()
                         pygame.time.wait(1000)
                         self.dead = False
