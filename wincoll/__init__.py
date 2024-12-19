@@ -17,7 +17,7 @@ from datetime import datetime
 
 import importlib_resources
 from typing_extensions import Self
-from platformdirs import user_cache_dir
+from platformdirs import user_data_dir
 
 from .warnings_util import simple_warning
 from .langdetect import language_code
@@ -55,7 +55,7 @@ with importlib_resources.as_file(importlib_resources.files()) as path:
     cat = gettext.translation("wincoll", path / "locale", fallback=True)
     _ = cat.gettext
 
-CACHE_DIR = Path(user_cache_dir("wincoll"))
+CACHE_DIR = Path(user_data_dir("wincoll"))
 CACHE_DIR.mkdir(parents=True, exist_ok=True)
 SAVED_POSITION_FILE = CACHE_DIR / "saved_position.pkl"
 
