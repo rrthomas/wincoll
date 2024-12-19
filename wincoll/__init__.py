@@ -96,6 +96,7 @@ def load_image(filename: str) -> pygame.Surface:
         return pygame.image.load(path / filename)
 
 
+DIAMOND_IMAGE = load_image("diamond.png")
 SPLAT_IMAGE = load_image("splat.png")
 TITLE_IMAGE = load_image("title.png")
 
@@ -136,12 +137,18 @@ class TilesetGids(Enum):
     WIN_PLACE = 18
 
 
+font_pixels = 8 * window_scale
+
+
+def text_to_screen(pos: Tuple[int, int]) -> Tuple[int, int]:
+    return (pos[0] * font_pixels, pos[1] * font_pixels)
+
+
 def print_screen(pos: Tuple[int, int], msg: str, **kwargs: Any) -> None:
-    font_pixels = 8 * window_scale
     with importlib_resources.as_file(importlib_resources.files()) as path:
         ptext.draw(  # type: ignore[no-untyped-call]
             msg,
-            (pos[0] * font_pixels, pos[1] * font_pixels),
+            text_to_screen(pos),
             fontname=str(path / "acorn-mode-1.ttf"),
             fontsize=font_pixels,
             **kwargs,
@@ -394,8 +401,19 @@ class WincollGame:
         fade_background()
 
     def show_status(self) -> None:
-        print_screen((1, 0), _("Level: {}").format(self.level))
-        print_screen((23, 0), _("Diamonds: {}").format(self.diamonds))
+        print_screen(
+            (0, 0),
+            _("Level {}:").format(self.level)
+            + " "
+            + self.map_data.tmx.properties["Title"],
+            width=screen.get_width(),
+            align="center",
+            color="grey",
+        )
+        screen.blit(DIAMOND_IMAGE, (2 * font_pixels, int(1.5 * font_pixels)))
+        print_screen(
+            (0, 3), str(self.diamonds), width=self.window_pos[0], align="center"
+        )
 
     def run(self) -> None:
         clock = pygame.time.Clock()
