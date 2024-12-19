@@ -1075,16 +1075,12 @@ def getsurf(text, **kwargs):
         for span in spans:
             span.setdetails(options.antialias, options.gcolor, options.background)
             span.render()
-        # Now to blit the span Surfaces together onto a single Surface. As an optimization, when
-        # there is only one span Surface, just use that. (We can't use this optimization if there's
-        # a gradient color, because the background color still needs to be applied.)
+        # Now to blit the span Surfaces together onto a single Surface.
         if not spans:
             surf = pygame.Surface((0, 0)).convert_alpha()
-        elif len(spans) == 1 and options.gcolor is None:
-            surf = spans[0].surf
         else:
             font = spans[0].font
-            w = max(span.linewidth for span in spans)
+            w = max(options.width or 0, max(span.linewidth for span in spans))
             linesize = font.get_linesize() * options.lineheight
             parasize = font.get_linesize() * options.pspace
             for span in spans:
