@@ -554,7 +554,9 @@ Avoid falling rocks!
         print_screen((0, 14), instructions, color="grey")
         print_screen(
             (0, start_level_y),
-            _("            Start level: {}").format(1 if level == 0 else level),
+            _("Start level: {}/{}").format(1 if level == 0 else level, levels),
+            width=screen.get_width(),
+            align="center",
         )
         pygame.display.flip()
         key = get_key()
