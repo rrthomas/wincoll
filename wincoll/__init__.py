@@ -529,7 +529,10 @@ Avoid falling rocks!
     )
     while True:
         reinit_screen()
-        screen.blit(scale_surface(TITLE_IMAGE.convert()), (105 * window_scale, 20 * window_scale))
+        screen.blit(
+            scale_surface(TITLE_IMAGE.convert()),
+            (110 * window_scale, 20 * window_scale),
+        )
         print_screen((0, 14), instructions, color="grey")
         print_screen(
             (0, start_level_y),
