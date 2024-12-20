@@ -4,6 +4,7 @@
 import importlib.metadata
 import os
 import sys
+import argparse
 from enum import Enum
 from pathlib import Path
 import pickle
@@ -15,6 +16,7 @@ import locale
 import gettext
 from datetime import datetime
 
+import i18nparse  # type: ignore
 import importlib_resources
 from typing_extensions import Self
 from platformdirs import user_data_dir
@@ -29,15 +31,10 @@ if not "LANG" in os.environ:
     lang = language_code()
     if lang is not None:
         os.environ["LANG"] = lang
+i18nparse.activate()
 
 # Set app name for SDL
 os.environ["SDL_APP_NAME"] = "WinColl"
-
-# Internationalize argparse
-with importlib_resources.as_file(importlib_resources.files()) as path:
-    gettext.bindtextdomain("argparse", path / "locale")
-    gettext.textdomain("argparse")
-    import argparse
 
 # Import pygame, suppressing extra messages that it prints on startup.
 os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"

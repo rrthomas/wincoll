@@ -12,7 +12,6 @@ update-po:
 
 compile-po:
 	for po in po/*.po; do mo=wincoll/locale/$$(basename $${po%.po})/LC_MESSAGES/wincoll.mo; mkdir -p $$(dirname $$mo); msgfmt --output-file=$$mo $$po; done
-	for po in po-argparse/*.po; do mo=wincoll/locale/$$(basename $${po%.po})/LC_MESSAGES/argparse.mo; mkdir -p $$(dirname $$mo); msgfmt --output-file=$$mo $$po; done
 
 build:
 	$(MAKE) update-pot
