@@ -66,7 +66,7 @@ def die(code: int, msg: str) -> NoReturn:
 
 
 with importlib_resources.as_file(importlib_resources.files()) as path:
-    levels = len(list(Path(path / "levels").glob("Level??.tmx")))
+    levels = len(list(Path(path / "levels").glob("*.tmx")))
 level_size = 50  # length of side of world in blocks
 block_pixels = 16  # size of (square) block sprites in pixels
 window_blocks = 15
@@ -197,7 +197,7 @@ class WincollGame:
 
     def restart_level(self) -> None:
         with importlib_resources.as_file(importlib_resources.files()) as path:
-            filename = path / "levels" / f"Level{str(self.level).zfill(2)}.tmx"
+            filename = path / "levels" / f"{str(self.level).zfill(2)}.tmx"
         self.dead = False
 
         tmx_data = pytmx.load_pygame(filename)
