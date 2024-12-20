@@ -193,6 +193,7 @@ class WincollGame:
         self.hero: Win
         self.diamonds: int
         self.map_data: pyscroll.data.TiledMapData
+        self.joysticks: dict[int, pygame.joystick.JoystickType] = {}
 
     def restart_level(self) -> None:
         with importlib_resources.as_file(importlib_resources.files()) as path:
@@ -282,6 +283,28 @@ class WincollGame:
         self.group.center(self.hero.rect.center)
         self.group.draw(self.game_surface)
 
+    def handle_joysticks(self) -> None:
+        for event in pygame.event.get(pygame.JOYDEVICEADDED):
+            joy = pygame.joystick.Joystick(event.device_index)
+            self.joysticks[joy.get_instance_id()] = joy
+
+        for event in pygame.event.get(pygame.JOYDEVICEREMOVED):
+            del self.joysticks[event.instance_id]
+
+        for joystick in self.joysticks.values():
+            axes = joystick.get_numaxes()
+            if axes >= 2:  # Hopefully 0=L/R and 1=U/D
+                lr = joystick.get_axis(0)
+                if lr < -0.5:
+                    self.hero.velocity = pygame.Vector2(-1, 0)
+                elif lr > 0.5:
+                    self.hero.velocity = pygame.Vector2(1, 0)
+                ud = joystick.get_axis(1)
+                if ud < -0.5:
+                    self.hero.velocity = pygame.Vector2(0, -1)
+                elif ud > 0.5:
+                    self.hero.velocity = pygame.Vector2(0, 1)
+
     def handle_input(self) -> None:
         pressed = pygame.key.get_pressed()
         self.hero.velocity = pygame.Vector2(0, 0)
@@ -304,6 +327,7 @@ class WincollGame:
             self.restart_level()
         elif pressed[pygame.K_q]:
             self.quit = True
+        self.handle_joysticks()
 
     def process_move(self) -> None:
         newpos = self.hero.position + self.hero.velocity
@@ -595,6 +619,7 @@ def main(argv: List[str] = sys.argv[1:]) -> None:
     pygame.init()
     pygame.font.init()
     pygame.key.set_repeat()
+    pygame.joystick.init()
     pygame.display.set_caption("WinColl")
     init_screen()
 
