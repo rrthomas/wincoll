@@ -202,7 +202,7 @@ class WincollGame:
 
         tmx_data = pytmx.load_pygame(filename)
         self.map_data = pyscroll.data.TiledMapData(tmx_data)
-        self.map_blocks = self.map_data.tmx.get_layer_by_name("Tile Layer 1").data
+        self.map_blocks = self.map_data.tmx.layers[0].data
 
         # Dict mapping tileset GIDs to map gids
         map_gids = self.map_data.tmx.gidmap
