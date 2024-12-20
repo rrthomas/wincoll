@@ -109,7 +109,7 @@ SPLAT_SOUND: pygame.mixer.Sound
 
 screen: pygame.Surface
 
-app_icon = load_image("levels/87.png")
+app_icon = load_image("levels/Win.png")
 
 
 def init_screen(flags: int = pygame.SCALED) -> None:
@@ -465,7 +465,7 @@ class WincollGame:
 class Win(pygame.sprite.Sprite):  # pylint: disable=too-few-public-methods
     def __init__(self) -> None:
         pygame.sprite.Sprite.__init__(self)
-        self.image = load_image("levels/87.png")
+        self.image = load_image("levels/Win.png")
         self.velocity = pygame.Vector2(0, 0)
         self.position = pygame.Vector2(0, 0)
         self.rect = self.image.get_rect()

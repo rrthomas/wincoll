@@ -2,33 +2,33 @@
 <tileset version="1.8" tiledversion="1.8.2" name="WinColl" tilewidth="16" tileheight="16" tilecount="10" columns="0">
  <grid orientation="orthogonal" width="1" height="1"/>
  <tile id="9">
-  <image width="16" height="16" source="32.png"/>
+  <image width="16" height="16" source="Gap.png"/>
  </tile>
  <tile id="10">
-  <image width="16" height="16" source="35.png"/>
+  <image width="16" height="16" source="Brick.png"/>
  </tile>
  <tile id="11">
-  <image width="16" height="16" source="36.png"/>
+  <image width="16" height="16" source="Safe.png"/>
  </tile>
  <tile id="12">
-  <image width="16" height="16" source="42.png"/>
+  <image width="16" height="16" source="Diamond.png"/>
  </tile>
  <tile id="13">
-  <image width="16" height="16" source="43.png"/>
+  <image width="16" height="16" source="Blob.png"/>
  </tile>
  <tile id="14">
-  <image width="16" height="16" source="46.png"/>
+  <image width="16" height="16" source="Earth.png"/>
  </tile>
  <tile id="15">
-  <image width="16" height="16" source="64.png"/>
+  <image width="16" height="16" source="Rock.png"/>
  </tile>
  <tile id="16">
-  <image width="16" height="16" source="75.png"/>
+  <image width="16" height="16" source="Key.png"/>
  </tile>
  <tile id="17">
-  <image width="16" height="16" source="87.png"/>
+  <image width="16" height="16" source="Win.png"/>
  </tile>
  <tile id="18">
-  <image width="16" height="16" source="32.png"/>
+  <image width="16" height="16" source="Gap.png"/>
  </tile>
 </tileset>
