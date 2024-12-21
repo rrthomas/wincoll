@@ -157,12 +157,14 @@ def quit_game() -> NoReturn:
     sys.exit()
 
 
-def handle_global_event(event: pygame.event.Event) -> None:
-    if event.type == pygame.QUIT:
+def handle_quit_event() -> None:
+    if len(pygame.event.get(pygame.QUIT)) > 0:
         quit_game()
-    if event.type == pygame.KEYDOWN:
-        if event.key == pygame.K_F11:
-            pygame.display.toggle_fullscreen()
+
+
+def handle_global_keys(event: pygame.event.Event) -> None:
+    if event.key == pygame.K_F11:
+        pygame.display.toggle_fullscreen()
 
 
 FRAMES_PER_SECOND = 10
@@ -425,8 +427,9 @@ class WincollGame:
                     while not self.dead and self.diamonds > 0:
                         clock.tick(FRAMES_PER_SECOND)
                         self.hero.velocity = pygame.Vector2(0, 0)
-                        for event in pygame.event.get():
-                            handle_global_event(event)
+                        handle_quit_event()
+                        for event in pygame.event.get(pygame.KEYDOWN):
+                            handle_global_keys(event)
                         self.handle_input()
                         if self.quit:
                             self.quit = False
@@ -474,21 +477,21 @@ class Win(pygame.sprite.Sprite):  # pylint: disable=too-few-public-methods
 
 
 def clear_keys() -> None:
-    for event in pygame.event.get():
-        if event.type == pygame.KEYDOWN:
-            pass
-        handle_global_event(event)
+    for _event in pygame.event.get(pygame.KEYDOWN):
+        pass
 
 
 def get_key() -> int:
+    """Return first key press."""
     while True:
-        for event in pygame.event.get():
-            handle_global_event(event)
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    quit_game()
-                key: int = event.key
-                return key
+        handle_quit_event()
+        for event in pygame.event.get(pygame.KEYDOWN):
+            if event.key == pygame.K_ESCAPE:
+                quit_game()
+            else:
+                handle_global_keys(event)
+            key: int = event.key
+            return key
 
 
 DIGIT_KEYS = {
