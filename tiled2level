@@ -15,17 +15,26 @@ import pytmx
 parser = argparse.ArgumentParser(
     description="Convert Tiled levels to WinColl plain text WinColl format.",
 )
-parser.add_argument("-V", "--version", action="version",
-                    version="%(prog)s 0.1 (05 Dec 2024) by Reuben Thomas <rrt@sc3d.org>")
+parser.add_argument(
+    "-V",
+    "--version",
+    action="version",
+    version="%(prog)s 0.1 (05 Dec 2024) by Reuben Thomas <rrt@sc3d.org>",
+)
 parser.add_argument("tiled_file", metavar="TILED-MAP", help="Tiled map output file")
-parser.add_argument("wincoll_file", metavar="WINCOLL-LEVEL", help="plain text WinColl level file")
+parser.add_argument(
+    "wincoll_file", metavar="WINCOLL-LEVEL", help="plain text WinColl level file"
+)
 args = parser.parse_args()
+
 
 # Error messages
 def simple_warning(message, category, filename, lineno, file, line):  # type: ignore, pylint: disable=unused-argument, too-many-arguments, too-many-positional-arguments
     print(f"{parser.prog}: {message}", file=file or sys.stderr)
 
+
 warnings.showwarning = simple_warning  # type: ignore
+
 
 def die(code: int, msg: str) -> NoReturn:
     warn(msg)
@@ -36,15 +45,15 @@ def die(code: int, msg: str) -> NoReturn:
 tiled_map = pytmx.TiledMap(args.tiled_file)
 
 gid_to_char = {
-    "wincoll/levels/32.png": " ",
-    "wincoll/levels/35.png": "#",
-    "wincoll/levels/36.png": "$",
-    "wincoll/levels/42.png": "*",
-    "wincoll/levels/43.png": "+",
-    "wincoll/levels/46.png": ".",
-    "wincoll/levels/64.png": "@",
-    "wincoll/levels/75.png": "K",
-    "wincoll/levels/87.png": "W",
+    "wincoll/levels/Gap.png": " ",
+    "wincoll/levels/Brick.png": "#",
+    "wincoll/levels/Safe.png": "$",
+    "wincoll/levels/Diamond.png": "*",
+    "wincoll/levels/Blob.png": "+",
+    "wincoll/levels/Earth.png": ".",
+    "wincoll/levels/Rock.png": "@",
+    "wincoll/levels/Key.png": "K",
+    "wincoll/levels/Win.png": "W",
 }
 lines = []
 text = ""
@@ -53,8 +62,11 @@ for tile in tiled_map.get_layer_by_name("Tile Layer 1").tiles():
 
 # Convert tile string to lines and save it
 level_size = 50
-output = "\n".join(
-    [text[i:i + level_size] for i in range(0, len(text), level_size)],
-) + "\n"
+output = (
+    "\n".join(
+        [text[i : i + level_size] for i in range(0, len(text), level_size)],
+    )
+    + "\n"
+)
 with open(args.wincoll_file, "w", encoding="utf-8") as fh:
     fh.write(output)
