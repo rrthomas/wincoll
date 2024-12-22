@@ -41,9 +41,9 @@ os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
 with warnings.catch_warnings():
     warnings.simplefilter("ignore")
     import pygame
+    import pygame_gui
     import pyscroll  # type: ignore
     import pytmx  # type: ignore
-    from . import ptext
 
 
 VERSION = importlib.metadata.version("wincoll")
@@ -105,14 +105,20 @@ SPLAT_SOUND: pygame.mixer.Sound
 
 
 screen: pygame.Surface
+manager: pygame_gui.UIManager
 
 app_icon = load_image("levels/Win.png")
 
 
 def init_screen(flags: int = pygame.SCALED) -> None:
-    global screen
+    global screen, manager
     pygame.display.set_icon(app_icon)
     screen = pygame.display.set_mode((640, 512), flags)
+    with importlib_resources.as_file(importlib_resources.files()) as path:
+        manager = pygame_gui.UIManager(
+            (screen.get_width(), screen.get_height()),
+            theme_path=str(path / "style.json"),
+        )
     reinit_screen()
 
 
@@ -141,25 +147,9 @@ def text_to_screen(pos: Tuple[int, int]) -> Tuple[int, int]:
     return (pos[0] * font_pixels, pos[1] * font_pixels)
 
 
-def print_screen(pos: Tuple[int, int], msg: str, **kwargs: Any) -> None:
-    with importlib_resources.as_file(importlib_resources.files()) as path:
-        ptext.draw(  # type: ignore[no-untyped-call]
-            msg,
-            text_to_screen(pos),
-            fontname=str(path / "acorn-mode-1.ttf"),
-            fontsize=font_pixels,
-            **kwargs,
-        )
-
-
 def quit_game() -> NoReturn:
     pygame.quit()
     sys.exit()
-
-
-def handle_quit_event() -> None:
-    if len(pygame.event.get(pygame.QUIT)) > 0:
-        quit_game()
 
 
 def handle_global_keys(event: pygame.event.Event) -> None:
@@ -195,6 +185,8 @@ class WincollGame:
         self.diamonds: int
         self.map_data: pyscroll.data.TiledMapData
         self.joysticks: dict[int, pygame.joystick.JoystickType] = {}
+        self.diamonds_status: Optional[pygame_gui.elements.ui_text_box.UITextBox] = None
+        self.level_status: Optional[pygame_gui.elements.ui_text_box.UITextBox] = None
 
     def restart_level(self) -> None:
         with importlib_resources.as_file(importlib_resources.files()) as path:
@@ -285,13 +277,6 @@ class WincollGame:
         self.group.draw(self.game_surface)
 
     def handle_joysticks(self) -> None:
-        for event in pygame.event.get(pygame.JOYDEVICEADDED):
-            joy = pygame.joystick.Joystick(event.device_index)
-            self.joysticks[joy.get_instance_id()] = joy
-
-        for event in pygame.event.get(pygame.JOYDEVICEREMOVED):
-            del self.joysticks[event.instance_id]
-
         for joystick in self.joysticks.values():
             axes = joystick.get_numaxes()
             if axes >= 2:  # Hopefully 0=L/R and 1=U/D
@@ -422,23 +407,28 @@ class WincollGame:
 
     def show_screen(self, surface: Optional[pygame.Surface] = None) -> None:
         screen.blit(scale_surface(surface or self.game_surface), self.window_pos)
+        manager.draw_ui(screen)
         pygame.display.flip()
         screen.fill(BACKGROUND_COLOUR)
         fade_background()
 
     def show_status(self) -> None:
-        print_screen(
-            (0, 0),
-            _("Level {}:").format(self.level)
+        if self.level_status is not None:
+            self.level_status.kill()  # type: ignore
+        self.level_status = pygame_gui.elements.ui_text_box.UITextBox(
+            '<font color="#cccccc">'
+            + _("Level {}:").format(self.level)
             + " "
-            + self.map_data.tmx.properties["Title"],
-            width=screen.get_width(),
-            align="center",
-            color="grey",
+            + self.map_data.tmx.properties["Title"]
+            + "</font>",
+            pygame.Rect(0, 0, screen.get_width(), font_pixels),
         )
         screen.blit(DIAMOND_IMAGE, (2 * font_pixels, int(1.5 * font_pixels)))
-        print_screen(
-            (0, 3), str(self.diamonds), width=self.window_pos[0], align="center"
+        if self.diamonds_status is not None:
+            self.diamonds_status.kill()  # type: ignore
+        self.diamonds_status = pygame_gui.elements.ui_text_box.UITextBox(
+            str(self.diamonds),
+            pygame.Rect(0, 3 * font_pixels, self.window_pos[0], font_pixels),
         )
 
     def run(self) -> None:
@@ -453,6 +443,7 @@ class WincollGame:
                 subframe = 0
                 while not self.quit and not self.dead and self.diamonds > 0:
                     dt = clock.tick(FRAMES_PER_SECOND)
+                    manager.update(dt)
                     for event in pygame.event.get():
                         if event.type == pygame.QUIT:
                             quit_game()
@@ -463,6 +454,8 @@ class WincollGame:
                             self.joysticks[joy.get_instance_id()] = joy
                         elif event.type == pygame.JOYDEVICEREMOVED:
                             del self.joysticks[event.instance_id]
+                        else:
+                            manager.process_events(event)
                     if self.hero.velocity == pygame.Vector2(0, 0):
                         self.handle_input()
                         if self.hero.velocity != pygame.Vector2(0, 0):
@@ -494,15 +487,18 @@ class WincollGame:
             self.level += 1
         if self.level > levels:
             self.splurge(Win().image)
+        self.quit = False
+        self.diamonds_status.kill()  # type: ignore
+        self.level_status.kill()  # type: ignore
 
 
 class Win(pygame.sprite.Sprite):  # pylint: disable=too-few-public-methods
     def __init__(self) -> None:
         pygame.sprite.Sprite.__init__(self)
-        self.image = load_image("levels/Win.png")
+        self.image: pygame.Surface = load_image("levels/Win.png")
         self.velocity = pygame.Vector2(0, 0)
         self.position = pygame.Vector2(0, 0)
-        self.rect = self.image.get_rect()
+        self.rect: pygame.Rect = self.image.get_rect()
 
     def update(self, dt: float) -> None:
         self.position += self.velocity * dt
@@ -513,19 +509,6 @@ class Win(pygame.sprite.Sprite):  # pylint: disable=too-few-public-methods
 def clear_keys() -> None:
     for _event in pygame.event.get(pygame.KEYDOWN):
         pass
-
-
-def get_key() -> int:
-    """Return first key press."""
-    while True:
-        handle_quit_event()
-        for event in pygame.event.get(pygame.KEYDOWN):
-            if event.key == pygame.K_ESCAPE:
-                quit_game()
-            else:
-                handle_global_keys(event)
-            key: int = event.key
-            return key
 
 
 DIGIT_KEYS = {
@@ -559,52 +542,80 @@ def instructions() -> int:
     clock = pygame.time.Clock()
     instructions = _(
         """\
-Collect all the diamonds on each level.
+<font color="#cccccc">Collect all the diamonds on each level.
 Get a key to turn safes into diamonds.
 Avoid falling rocks!
 
-    Z/X - Left/Right   '/? - Up/Down
-     or use the cursor keys to move
-        S/L - Save/load position
-    R - Restart level  Q - Quit game
-        F11 - toggle full screen
+Z/X - Left/Right   '/? - Up/Down
+or use the cursor keys to move
+S/L - Save/load position
+R - Restart level  Q - Quit game
+F11 - toggle full screen
 
 
- (choose with movement keys and digits)
+(choose with movement keys and digits)
 
-      Press the space bar to play!
+Press the space bar to play!</font>
 """
     )
     instructions_y = 14
     start_level_y = (
         instructions_y + len(instructions.split("\n\n\n")[0].split("\n")) + 1
     )
-    while True:
+    play = False
+    while not play:
         reinit_screen()
         screen.blit(
             scale_surface(TITLE_IMAGE.convert()),
             (110 * window_scale, 20 * window_scale),
         )
-        print_screen((0, 14), instructions, color="grey")
-        print_screen(
-            (0, start_level_y),
-            _("Start level: {}/{}").format(1 if level == 0 else level, levels),
-            width=screen.get_width(),
-            align="center",
+        inst_box = pygame_gui.elements.ui_text_box.UITextBox(
+            instructions,
+            pygame.Rect(
+                0, instructions_y * font_pixels, screen.get_width(), screen.get_height()
+            ),
         )
+        level_box = pygame_gui.elements.ui_text_box.UITextBox(
+            f'<font color="#ffffff">Start level: {1 if level == 0 else level}/{levels}</font>',
+            pygame.Rect(
+                0, start_level_y * font_pixels, screen.get_width(), font_pixels
+            ),
+        )
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                quit_game()
+            elif event.type == pygame.KEYDOWN:
+                handle_global_keys(event)
+                if event.key == pygame.K_ESCAPE:
+                    quit_game()
+                elif event.key == pygame.K_SPACE:
+                    play = True
+                elif event.key in (
+                    pygame.K_z,
+                    pygame.K_LEFT,
+                    pygame.K_SLASH,
+                    pygame.K_DOWN,
+                ):
+                    level = max(1, level - 1)
+                elif event.key in (
+                    pygame.K_x,
+                    pygame.K_RIGHT,
+                    pygame.K_QUOTE,
+                    pygame.K_UP,
+                ):
+                    level = min(levels, level + 1)
+                elif event.key in DIGIT_KEYS:
+                    level = min(levels, level * 10 + DIGIT_KEYS[event.key])
+                else:
+                    level = 0
+            else:
+                manager.process_events(event)
+        dt = clock.tick(FRAMES_PER_SECOND)
+        manager.update(dt)
+        manager.draw_ui(screen)
         pygame.display.flip()
-        key = get_key()
-        clock.tick(FRAMES_PER_SECOND)
-        if key == pygame.K_SPACE:
-            break
-        if key in (pygame.K_z, pygame.K_LEFT, pygame.K_SLASH, pygame.K_DOWN):
-            level = max(1, level - 1)
-        elif key in (pygame.K_x, pygame.K_RIGHT, pygame.K_QUOTE, pygame.K_UP):
-            level = min(levels, level + 1)
-        elif key in DIGIT_KEYS:
-            level = min(levels, level * 10 + DIGIT_KEYS[key])
-        else:
-            level = 0
+        inst_box.kill()  # type: ignore
+        level_box.kill()  # type: ignore
     return max(min(level, levels), 1)
 
 

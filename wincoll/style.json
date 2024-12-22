@@ -1,0 +1,30 @@
+{
+    "defaults": {
+        "colours": {
+            "normal_border": "White",
+            "normal_bg": "Blue",
+            "normal_text": "White"
+        }
+    },
+
+    "text_box": {
+        "font": {
+            "name": "acorn",
+            "size": "16",
+            "regular_path": "wincoll/acorn-mode-1.ttf"
+        },
+        "colours": {
+            "dark_bg": "Blue",
+            "seleted_bg": "Blue"
+        },
+        "misc": {
+            "shape": "rectangle",
+            "shape_corner_radius": "0",
+            "border_width": "0",
+            "shadow_width": "0",
+            "padding": "0, 0",
+            "line_spacing": "1.0",
+            "text_horiz_alignment": "center"
+        }
+    }
+}

@@ -13,7 +13,7 @@ dependencies = [
     "i18nparse",
     "importlib-resources >= 5.10",
     "platformdirs",
-    "pygame >= 2.0.0",
+    "pygame_gui",
     "pyscroll",
     "pytmx",
     "typing_extensions",
@@ -47,14 +47,9 @@ wincoll = ["**/*.png", "**/*.wav", "**/*.tmx", "**/*.tsx", "**/*.ttf", "**/*.mo"
 exclude = ['^dist', '^build']
 strict = true
 
-[[tool.mypy.overrides]]
-module = "wincoll.ptext"
-ignore_errors = true
-
 [tool.pylint.main]
 # Use multiple processes to speed up Pylint: 0 = auto-detect.
 jobs = 0
-ignore-paths = ["wincoll/ptext.py"]
 
 [tool.pylint.MASTER]
 init-hook = 'import sys; sys.path.append(".")'
