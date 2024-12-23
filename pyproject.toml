@@ -75,6 +75,7 @@ disable = [
     "too-many-locals",
     "too-many-nested-blocks",
     "too-many-positional-arguments",
+    "too-many-statements",
 ]
 enable = [
     "useless-suppression",
