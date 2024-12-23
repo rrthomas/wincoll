@@ -167,7 +167,8 @@ def handle_global_keys(event: pygame.event.Event) -> None:
         pygame.display.toggle_fullscreen()
 
 
-FRAMES_PER_SECOND = 10
+FRAMES_PER_SECOND = 50
+SCROLL_FRAMES_PER_SECOND = 10
 
 
 def scale_surface(surface: pygame.Surface) -> pygame.Surface:
@@ -307,7 +308,6 @@ class WincollGame:
 
     def handle_input(self) -> None:
         pressed = pygame.key.get_pressed()
-        self.hero.velocity = pygame.Vector2(0, 0)
         if pressed[pygame.K_LEFT] or pressed[pygame.K_z]:
             self.hero.velocity = pygame.Vector2(-1, 0)
         elif pressed[pygame.K_RIGHT] or pressed[pygame.K_x]:
@@ -329,7 +329,7 @@ class WincollGame:
             self.quit = True
         self.handle_joysticks()
 
-    def process_move(self) -> None:
+    def process_move(self) -> bool:
         newpos = self.hero.position + self.hero.velocity
         block = self.get(newpos)
         if block in (self.gids[TilesetGids.GAP], self.gids[TilesetGids.EARTH]):
@@ -348,12 +348,15 @@ class WincollGame:
                 self.set(new_rockpos, self.gids[TilesetGids.ROCK])
             else:
                 self.hero.velocity = pygame.Vector2(0, 0)
+                return False
         else:
             self.hero.velocity = pygame.Vector2(0, 0)
+            return False
         self.set(self.hero.position, self.gids[TilesetGids.GAP])
         self.set(
             self.hero.position + self.hero.velocity, self.gids[TilesetGids.WIN_PLACE]
         )
+        return True
 
     def can_roll(self, pos: pygame.Vector2) -> bool:
         side_block = self.get(pos)
@@ -440,50 +443,57 @@ class WincollGame:
 
     def run(self) -> None:
         clock = pygame.time.Clock()
-
-        try:
-            while self.level <= levels:
-                self.start_level()
-                self.show_status()
-                self.show_screen()
-                while self.diamonds > 0:
-                    self.load_position()
-                    while not self.dead and self.diamonds > 0:
-                        clock.tick(FRAMES_PER_SECOND)
-                        self.hero.velocity = pygame.Vector2(0, 0)
-                        handle_quit_event()
-                        for event in pygame.event.get(pygame.KEYDOWN):
+        while not self.quit and self.level <= levels:
+            self.start_level()
+            self.show_status()
+            self.show_screen()
+            while not self.quit and self.diamonds > 0:
+                self.load_position()
+                subframes = 4  # FIXME: global constant
+                subframe = 0
+                while not self.quit and not self.dead and self.diamonds > 0:
+                    dt = clock.tick(FRAMES_PER_SECOND)
+                    for event in pygame.event.get():
+                        if event.type == pygame.QUIT:
+                            quit_game()
+                        elif event.type == pygame.KEYDOWN:
                             handle_global_keys(event)
+                        elif event.type == pygame.JOYDEVICEADDED:
+                            joy = pygame.joystick.Joystick(event.device_index)
+                            self.joysticks[joy.get_instance_id()] = joy
+                        elif event.type == pygame.JOYDEVICEREMOVED:
+                            del self.joysticks[event.instance_id]
+                    if self.hero.velocity == pygame.Vector2(0, 0):
                         self.handle_input()
-                        if self.quit:
-                            self.quit = False
-                            return
-                        self.process_move()
+                        if self.hero.velocity != pygame.Vector2(0, 0):
+                            if self.process_move():
+                                subframe = 0
+                    if subframe == subframes - 1:
                         self.rockfall()
-                        subframes = 4
-                        for _subframe in range(subframes):
-                            self.group.update(1 / subframes)
-                            self.draw()
-                            self.show_status()
-                            self.show_screen()
-                            pygame.time.wait(1000 // FRAMES_PER_SECOND // subframes)
-                    if self.dead:
-                        SLIDE_SOUND.stop()
-                        SPLAT_SOUND.play()
-                        self.game_surface.blit(
-                            SPLAT_IMAGE,
-                            self.game_to_screen(
-                                int(self.hero.position.x), int(self.hero.position.y)
-                            ),
-                        )
-                        self.show_status()
-                        self.show_screen()
-                        pygame.time.wait(1000)
-                        self.dead = False
-                self.level += 1
+                    self.group.update(1 / subframes)
+                    self.draw()
+                    self.show_status()
+                    self.show_screen()
+                    pygame.time.wait(1000 // SCROLL_FRAMES_PER_SECOND // subframes)
+                    subframe = (subframe + 1) % subframes
+                    if subframe == 0:
+                        self.hero.velocity = pygame.Vector2(0, 0)
+                SLIDE_SOUND.stop()
+                if self.dead:
+                    SPLAT_SOUND.play()
+                    self.game_surface.blit(
+                        SPLAT_IMAGE,
+                        self.game_to_screen(
+                            int(self.hero.position.x), int(self.hero.position.y)
+                        ),
+                    )
+                    self.show_status()
+                    self.show_screen()
+                    pygame.time.wait(1000)
+                    self.dead = False
+            self.level += 1
+        if self.level > levels:
             self.splurge(Win().image)
-        finally:
-            SLIDE_SOUND.stop()
 
 
 class Win(pygame.sprite.Sprite):  # pylint: disable=too-few-public-methods
