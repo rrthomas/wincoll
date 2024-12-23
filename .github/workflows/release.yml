@@ -31,7 +31,7 @@ jobs:
     strategy:
       matrix:
         # Use oldest available macOS for greatest compatibility of resulting binary.
-        os: [ubuntu-20.04, macos-13, windows-latest]
+        os: [ubuntu-20.04, macos-13, macos-latest, windows-latest]
     runs-on: ${{ matrix.os }}
     env:
       GH_TOKEN: ${{ github.token }}
@@ -44,9 +44,6 @@ jobs:
       - name: Install non-Python build dependencies (Ubuntu)
         if: ${{ matrix.os == 'ubuntu-20.04' }}
         run: sudo apt-get -y install gettext
-      - name: Install non-Python build dependencies (macOS)
-        if: ${{ matrix.os == 'macos-latest' }}
-        run: brew install gettext
       - name: Install non-Python build dependencies (Windows)
         if: ${{ matrix.os == 'windows-latest' }}
         run: |
@@ -64,7 +61,7 @@ jobs:
           pyinstaller --noconfirm --onefile --windowed --name wincoll-${{ runner.os }}-${{ runner.arch }} --add-data "wincoll/*.wav:wincoll/" --add-data "wincoll/*.png:wincoll/" --add-data "wincoll/*.ttf:wincoll/" --add-data "wincoll/levels:wincoll/levels" --add-data "wincoll/locale:wincoll/locale" wincoll/__main__.py
           ./dist/wincoll-${{ runner.os }}-${{ runner.arch }} --help
       - name: Build the executable (macOS)
-        if: ${{ matrix.os == 'macos-13' }}
+        if: ${{ matrix.os == 'macos-13' || matrix.os == 'macos-latest' }}
         run: |
           ./make-macos-icns ./wincoll/levels/Win.png wincoll.iconset
           pyi-makespec --windowed --name WinColl --icon wincoll.icns --add-data "wincoll/*.wav:wincoll/" --add-data "wincoll/*.png:wincoll/" --add-data "wincoll/*.ttf:wincoll/" --add-data "wincoll/levels:wincoll/levels" --add-data "wincoll/locale:wincoll/locale" wincoll/__main__.py
