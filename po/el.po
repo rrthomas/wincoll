@@ -15,9 +15,8 @@ msgstr ""
 "Generated-By: pygettext.py 1.5\n"
 
 #: wincoll/__init__.py:429
-#, fuzzy
 msgid "Level {}:"
-msgstr "Επίπεδο: {}"
+msgstr "Επίπεδο {}:"
 
 #: wincoll/__init__.py:551
 msgid ""
@@ -56,9 +55,8 @@ msgstr ""
 "          για να παίξετε!\n"
 
 #: wincoll/__init__.py:581
-#, fuzzy
 msgid "Start level: {}/{}"
-msgstr "           Επίπεδο αρχής: {}"
+msgstr "Επίπεδο αρχής: {}/{}"
 
 #: wincoll/__init__.py:605
 msgid "Collect all the diamonds while digging through earth dodging rocks."
