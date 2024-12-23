@@ -62,8 +62,13 @@ def die(code: int, msg: str) -> NoReturn:
     sys.exit(code)
 
 
-with importlib_resources.as_file(importlib_resources.files()) as path:
-    levels = len(list(Path(path / "levels").glob("*.tmx")))
+def get_level_title(filename: str) -> str:
+    tmx_data = pytmx.load_pygame(filename)
+    title = tmx_data.properties["Title"]
+    assert isinstance(title, str)
+    return title
+
+
 level_size = 50  # length of side of world in blocks
 block_pixels = 16  # size of (square) block sprites in pixels
 window_blocks = 15
@@ -72,6 +77,8 @@ window_scale = 2
 scaled_pixels = window_pixels * window_scale
 TEXT_COLOUR = (255, 255, 255)
 BACKGROUND_COLOUR = (0, 0, 255)
+levels = 0
+level_titles: List[str] = []
 
 
 def flash_background() -> None:
@@ -511,30 +518,6 @@ def clear_keys() -> None:
         pass
 
 
-DIGIT_KEYS = {
-    pygame.K_0: 0,
-    pygame.K_1: 1,
-    pygame.K_2: 2,
-    pygame.K_3: 3,
-    pygame.K_4: 4,
-    pygame.K_5: 5,
-    pygame.K_6: 6,
-    pygame.K_7: 7,
-    pygame.K_8: 8,
-    pygame.K_9: 9,
-    pygame.K_KP_0: 0,
-    pygame.K_KP_1: 1,
-    pygame.K_KP_2: 2,
-    pygame.K_KP_3: 3,
-    pygame.K_KP_4: 4,
-    pygame.K_KP_5: 5,
-    pygame.K_KP_6: 6,
-    pygame.K_KP_7: 7,
-    pygame.K_KP_8: 8,
-    pygame.K_KP_9: 9,
-}
-
-
 def instructions() -> int:
     """Show instructions and choose start level."""
     clear_keys()
@@ -604,8 +587,23 @@ Press the space bar to play!</font>
                     pygame.K_UP,
                 ):
                     level = min(levels, level + 1)
-                elif event.key in DIGIT_KEYS:
-                    level = min(levels, level * 10 + DIGIT_KEYS[event.key])
+                elif event.key == pygame.K_l:
+                    width = screen.get_width() * 0.75
+                    height = min(levels * 24 + 8, screen.get_height())
+                    pygame_gui.elements.ui_button.UIButton(
+                        pygame.Rect(0, 0, 100, font_pixels),
+                        "this?",
+                    )
+                    pygame_gui.elements.ui_selection_list.UISelectionList(
+                        pygame.Rect(
+                            (screen.get_width() - width) // 2,
+                            (screen.get_height() - height) // 2,
+                            width,
+                            height,
+                        ),
+                        level_titles,
+                        default_selection=level_titles[min(level, 1)],
+                    )
                 else:
                     level = 0
             else:
@@ -620,6 +618,8 @@ Press the space bar to play!</font>
 
 
 def main(argv: List[str] = sys.argv[1:]) -> None:
+    global levels, level_titles
+
     # Command-line arguments
     parser = argparse.ArgumentParser(
         description=_(
@@ -650,6 +650,11 @@ def main(argv: List[str] = sys.argv[1:]) -> None:
         SLIDE_SOUND = pygame.mixer.Sound(path / "Slide.wav")
         UNLOCK_SOUND = pygame.mixer.Sound(path / "Unlock.wav")
         SPLAT_SOUND = pygame.mixer.Sound(path / "Splat.wav")
+
+    with importlib_resources.as_file(importlib_resources.files()) as path:
+        level_files = list(Path(path / "levels").glob("*.tmx"))
+        level_titles = [get_level_title(str(file)) for file in level_files]
+        levels = len(level_files)
 
     try:
         while True:

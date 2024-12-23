@@ -11,11 +11,47 @@
         "font": {
             "name": "acorn",
             "size": "16",
-            "regular_path": "wincoll/acorn-mode-1.ttf"
+            "regular_resource": {
+                "package": "wincoll",
+                "resource": "acorn-mode-1.ttf"
+            }
         },
         "colours": {
             "dark_bg": "Blue",
             "seleted_bg": "Blue"
+        },
+        "misc": {
+            "shape": "rectangle",
+            "shape_corner_radius": "0",
+            "border_width": "0",
+            "shadow_width": "0",
+            "padding": "0, 0",
+            "line_spacing": "1.0",
+            "text_horiz_alignment": "center"
+        }
+    },
+
+    "selection_list": {
+        "misc": {
+            "text_horiz_alignment": "center",
+            "list_item_height": "24"
+        }
+    },
+
+    "selection_list.@selection_list_item": {
+        "font": {
+            "name": "acorn",
+            "size": "16"
+        },
+        "misc": {
+            "shape": "rectangle"
+        }
+    },
+
+    "button": {
+        "font": {
+            "name": "acorn",
+            "size": "16"
         },
         "misc": {
             "shape": "rectangle",
