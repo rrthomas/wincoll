@@ -316,16 +316,16 @@ class WincollGame:
             self.hero.velocity = pygame.Vector2(0, -1)
         elif pressed[pygame.K_DOWN] or pressed[pygame.K_SLASH]:
             self.hero.velocity = pygame.Vector2(0, 1)
-        elif pressed[pygame.K_l]:
+        if pressed[pygame.K_l]:
             flash_background()
             self.load_position()
         elif pressed[pygame.K_s]:
             flash_background()
             self.save_position()
-        elif pressed[pygame.K_r]:
+        if pressed[pygame.K_r]:
             flash_background()
             self.restart_level()
-        elif pressed[pygame.K_q]:
+        if pressed[pygame.K_q]:
             self.quit = True
         self.handle_joysticks()
 
