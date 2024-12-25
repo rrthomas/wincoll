@@ -527,19 +527,6 @@ def clear_keys() -> None:
         pass
 
 
-def get_key() -> int:
-    """Return first key press."""
-    while True:
-        handle_quit_event()
-        for event in pygame.event.get(pygame.KEYDOWN):
-            if event.key == pygame.K_ESCAPE:
-                quit_game()
-            else:
-                handle_global_keys(event)
-            key: int = event.key
-            return key
-
-
 DIGIT_KEYS = {
     pygame.K_0: 0,
     pygame.K_1: 1,
@@ -591,7 +578,8 @@ Avoid falling rocks!
     start_level_y = (
         instructions_y + len(instructions.split("\n\n\n")[0].split("\n")) + 1
     )
-    while True:
+    play = False
+    while not play:
         reinit_screen()
         screen.blit(
             scale_surface(TITLE_IMAGE.convert()),
@@ -605,18 +593,22 @@ Avoid falling rocks!
             align="center",
         )
         pygame.display.flip()
-        key = get_key()
+        handle_quit_event()
+        for event in pygame.event.get(pygame.KEYDOWN):
+            if event.key == pygame.K_ESCAPE:
+                quit_game()
+            if event.key == pygame.K_SPACE:
+                play = True
+            if event.key in (pygame.K_z, pygame.K_LEFT, pygame.K_SLASH, pygame.K_DOWN):
+                level = max(1, level - 1)
+            elif event.key in (pygame.K_x, pygame.K_RIGHT, pygame.K_QUOTE, pygame.K_UP):
+                level = min(levels, level + 1)
+            elif event.key in DIGIT_KEYS:
+                level = min(levels, level * 10 + DIGIT_KEYS[event.key])
+            else:
+                level = 0
+            handle_global_keys(event)
         clock.tick(FRAMES_PER_SECOND)
-        if key == pygame.K_SPACE:
-            break
-        if key in (pygame.K_z, pygame.K_LEFT, pygame.K_SLASH, pygame.K_DOWN):
-            level = max(1, level - 1)
-        elif key in (pygame.K_x, pygame.K_RIGHT, pygame.K_QUOTE, pygame.K_UP):
-            level = min(levels, level + 1)
-        elif key in DIGIT_KEYS:
-            level = min(levels, level * 10 + DIGIT_KEYS[key])
-        else:
-            level = 0
     return max(min(level, levels), 1)
 
 
