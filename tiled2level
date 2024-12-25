@@ -19,7 +19,7 @@ parser.add_argument(
     "-V",
     "--version",
     action="version",
-    version="%(prog)s 0.1 (05 Dec 2024) by Reuben Thomas <rrt@sc3d.org>",
+    version="%(prog)s 0.33 (21 Dec 2024) by Reuben Thomas <rrt@sc3d.org>",
 )
 parser.add_argument("tiled_file", metavar="TILED-MAP", help="Tiled map output file")
 parser.add_argument(

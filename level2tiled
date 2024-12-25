@@ -16,7 +16,7 @@ parser = argparse.ArgumentParser(
     description="Convert plain text WinColl levels to Tiled .tmx format.",
 )
 parser.add_argument("-V", "--version", action="version",
-                    version="%(prog)s 0.1 (04 Dec 2024) by Reuben Thomas <rrt@sc3d.org>")
+                    version="%(prog)s 0.2 (07 Dec 2024) by Reuben Thomas <rrt@sc3d.org>")
 parser.add_argument("wincoll_file", metavar="WINCOLL-LEVEL", help="plain text WinColl level file")
 parser.add_argument("tiled_file", metavar="TILED-MAP", help="Tiled map output file")
 args = parser.parse_args()
