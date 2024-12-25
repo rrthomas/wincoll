@@ -597,9 +597,9 @@ Avoid falling rocks!
         for event in pygame.event.get(pygame.KEYDOWN):
             if event.key == pygame.K_ESCAPE:
                 quit_game()
-            if event.key == pygame.K_SPACE:
+            elif event.key == pygame.K_SPACE:
                 play = True
-            if event.key in (pygame.K_z, pygame.K_LEFT, pygame.K_SLASH, pygame.K_DOWN):
+            elif event.key in (pygame.K_z, pygame.K_LEFT, pygame.K_SLASH, pygame.K_DOWN):
                 level = max(1, level - 1)
             elif event.key in (pygame.K_x, pygame.K_RIGHT, pygame.K_QUOTE, pygame.K_UP):
                 level = min(levels, level + 1)
