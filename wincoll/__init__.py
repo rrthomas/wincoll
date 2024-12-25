@@ -502,7 +502,8 @@ class WincollGame:
                     self.show_screen()
                     pygame.time.wait(1000)
                     self.dead = False
-            self.level += 1
+            if self.diamonds == 0:
+                self.level += 1
         if self.level > levels:
             self.splurge(Win().image)
 
