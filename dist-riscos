@@ -8,7 +8,7 @@ import subprocess
 subprocess.check_call(["rm", "--force", "!WinColl/Level*,ffd"])
 
 # Convert levels
-for l in Path("wincoll/levels").glob("Level??.tmx"):
+for l in Path("wincoll/levels").glob("*.tmx"):
     subprocess.check_call(["./tiled2level", l, Path("!WinColl") / f"{l.stem},ffd"])
 
 # Build Zip
