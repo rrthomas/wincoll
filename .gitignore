@@ -95,5 +95,5 @@ ENV/
 Saved,ffd
 *.tiled-session
 wincoll.icns
-\!WinColl/Level??,ffd
+\!WinColl/??,ffd
 po/wincoll.pot
