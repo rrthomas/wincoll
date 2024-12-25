@@ -12,4 +12,5 @@ for l in Path("wincoll/levels").glob("*.tmx"):
     subprocess.check_call(["./tiled2level", l, Path("!WinColl") / f"{l.stem},ffd"])
 
 # Build Zip
+subprocess.check_call(["mkdir", "-p", "dist"])
 subprocess.check_call(["zip", "--recurse-paths", "dist/wincoll-riscos.zip", "!WinColl"])
