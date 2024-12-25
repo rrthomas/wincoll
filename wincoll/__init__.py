@@ -346,9 +346,9 @@ class WincollGame:
         ):
             return True
         if block == self.gids[TilesetGids.ROCK]:
-            new_rockpos = self.hero.position + (self.hero.velocity * 2)
+            new_rockpos = self.hero.position + velocity * 2
             return (
-                self.hero.velocity.y == 0
+                velocity.y == 0
                 and self.get(new_rockpos) == self.gids[TilesetGids.GAP]
             )
         return False
