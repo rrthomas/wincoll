@@ -65,24 +65,26 @@ provide a simpler way to edit and play new levels soon.)
 
 The level files are in the `wincoll/levels` subdirectory of the project, and
 are [Tiled](https://www.mapeditor.org/) level editor files, so you will need
-to install Tiled to edit them.
+to install Tiled to edit them or create new levels.
 
 Having saved an edited level you can install the Python package with
 `pip install .` or run it directly with `PYTHONPATH=. python -m wincoll`.
 
 Some notes about level design:
 
++ A set of levels is numbered according to the lexical order of their file
+  names.
 + The supplied levels have a brick wall all the way around. This is
   conventional but not necessary: there’s an imaginary brick wall around the
   outside of the level already.
-+ Levels need exactly one start position (represented by placing the Win
-  character).
-+ No other checks are done to make sure a level is possible to complete; for
++ Levels need exactly one start position, given by placing the Win
+  character.
++ No checks are done to make sure a level is possible to complete; for
   example, you can place diamonds surrounded by bricks, or have safes but no
   key.
-
-The files are named `Level??.tmx` where the question marks represent two
-decimal digits.
++ A complete level set requires a Tiled tileset and corresponding graphics.
+  You can simply copy the tileset file `WinColl.tsx` and PNG graphics from
+  `wincoll/levels`.
 
 I welcome [pull requests](https://github.com/rrthomas/wincoll/pulls) for new
 levels.

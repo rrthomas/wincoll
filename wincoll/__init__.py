@@ -10,18 +10,22 @@ from pathlib import Path
 import pickle
 import warnings
 from warnings import warn
-from typing import Any, NoReturn, Tuple, List, Optional, Union, Iterator
+from typing import Any, NoReturn, Tuple, List, Optional, Union, Iterator, ContextManager
 from itertools import chain
 import locale
 import gettext
 from datetime import datetime
+import contextlib
+import zipfile
+from tempfile import TemporaryDirectory
+import atexit
 
 import i18nparse  # type: ignore
 import importlib_resources
 from typing_extensions import Self
 from platformdirs import user_data_dir
 
-from .warnings_util import simple_warning
+from .warnings_util import simple_warning, die
 from .langdetect import language_code
 
 locale.setlocale(locale.LC_ALL, "")
@@ -58,14 +62,8 @@ CACHE_DIR.mkdir(parents=True, exist_ok=True)
 SAVED_POSITION_FILE = CACHE_DIR / "saved_position.pkl"
 
 
-def die(code: int, msg: str) -> NoReturn:
-    warn(msg)
-    sys.exit(code)
-
-
-with importlib_resources.as_file(importlib_resources.files()) as path:
-    levels_files = sorted(list(Path(path / "levels").glob("*.tmx")))
-levels = len(levels_files)
+levels: int
+levels_files: List[Path]
 level_size = 50  # length of side of world in blocks
 block_pixels = 16  # size of (square) block sprites in pixels
 window_blocks = 15
@@ -631,6 +629,11 @@ def main(argv: List[str] = sys.argv[1:]) -> None:
         ),
     )
     parser.add_argument(
+        "--levels",
+        metavar="DIRECTORY",
+        help=_("a directory of levels to use instead of the built-in ones"),
+    )
+    parser.add_argument(
         "-V",
         "--version",
         action="version",
@@ -639,7 +642,34 @@ def main(argv: List[str] = sys.argv[1:]) -> None:
         ),
     )
     warnings.showwarning = simple_warning(parser.prog)
-    parser.parse_args(argv)
+    args = parser.parse_args(argv)
+
+    global levels, levels_files
+    try:
+        if args.levels is not None:
+            levels_path: Path
+            if zipfile.is_zipfile(args.levels):
+                tmpdir = TemporaryDirectory()  # pylint: disable=consider-using-with
+                levels_path = Path(tmpdir.name)
+                with zipfile.ZipFile(args.levels) as z:
+                    z.extractall(levels_path)
+                atexit.register(lambda tmpdir: tmpdir.cleanup(), tmpdir)
+            else:
+                levels_path = Path(args.levels)
+        else:
+            ctx = importlib_resources.as_file(
+                importlib_resources.files("wincoll.levels")
+            )
+            levels_path = ctx.__enter__()
+            atexit.register(lambda ctx: ctx.__exit__(None, None, None), ctx)
+        levels_files = sorted([
+            item for item in levels_path.iterdir() if item.suffix == ".tmx"
+        ])
+    except IOError as err:
+        die(_("Error reading levels: {}").format(err.strerror))
+    levels = len(levels_files)
+    if levels == 0:
+        die(_("Could not find any levels"))
 
     pygame.init()
     pygame.mouse.set_visible(False)
