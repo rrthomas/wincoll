@@ -565,7 +565,7 @@ Get a key to turn safes into diamonds.
 Avoid falling rocks!
 
     Z/X - Left/Right   '/? - Up/Down
-     or use the cursor keys to move
+     or use the arrow keys to move
         S/L - Save/load position
     R - Restart level  Q - Quit game
         F11 - toggle full screen
