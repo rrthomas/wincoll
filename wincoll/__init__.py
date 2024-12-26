@@ -348,8 +348,7 @@ class WincollGame:
         if block == self.gids[TilesetGids.ROCK]:
             new_rockpos = self.hero.position + velocity * 2
             return (
-                velocity.y == 0
-                and self.get(new_rockpos) == self.gids[TilesetGids.GAP]
+                velocity.y == 0 and self.get(new_rockpos) == self.gids[TilesetGids.GAP]
             )
         return False
 
@@ -556,8 +555,11 @@ def instructions() -> int:
     clear_keys()
     level = 0
     clock = pygame.time.Clock()
-    instructions = _(
-        """\
+    # fmt: off
+    # TRANSLATORS: Please keep this text wrapped to 40 characters. The font
+    # used in-game is lacking many glyphs, so please test it with your
+    # language and let me know if I need to add glyphs.
+    instructions = _("""\
 Collect all the diamonds on each level.
 Get a key to turn safes into diamonds.
 Avoid falling rocks!
@@ -574,6 +576,7 @@ Avoid falling rocks!
       Press the space bar to play!
 """
     )
+    # fmt: on
     instructions_y = 14
     start_level_y = (
         instructions_y + len(instructions.split("\n\n\n")[0].split("\n")) + 1
@@ -599,7 +602,12 @@ Avoid falling rocks!
                 quit_game()
             elif event.key == pygame.K_SPACE:
                 play = True
-            elif event.key in (pygame.K_z, pygame.K_LEFT, pygame.K_SLASH, pygame.K_DOWN):
+            elif event.key in (
+                pygame.K_z,
+                pygame.K_LEFT,
+                pygame.K_SLASH,
+                pygame.K_DOWN,
+            ):
                 level = max(1, level - 1)
             elif event.key in (pygame.K_x, pygame.K_RIGHT, pygame.K_QUOTE, pygame.K_UP):
                 level = min(levels, level + 1)

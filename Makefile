@@ -5,7 +5,7 @@ po/wincoll.pot: po/wincoll.pot.in
 
 update-pot:
 	$(MAKE) po/wincoll.pot
-	find wincoll -name "*.py" | xargs xgettext --from-code=utf-8 --default-domain=wincoll --output=po/wincoll.pot
+	find wincoll -name "*.py" | xargs xgettext --add-comments=TRANSLATORS --from-code=utf-8 --default-domain=wincoll --output=po/wincoll.pot.in
 
 update-po:
 	for po in po/*.po; do msgmerge --update $$po po/wincoll.pot; done
