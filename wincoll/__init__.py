@@ -631,6 +631,7 @@ def main(argv: List[str] = sys.argv[1:]) -> None:
     parser.parse_args(argv)
 
     pygame.init()
+    pygame.mouse.set_visible(False)
     pygame.font.init()
     pygame.key.set_repeat()
     pygame.joystick.init()
