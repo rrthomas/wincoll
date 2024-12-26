@@ -284,7 +284,7 @@ class WincollGame:
         self.group.center(self.hero.rect.center)
         self.group.draw(self.game_surface)
 
-    def handle_joysticks(self) -> None:
+    def handle_joysticks(self) -> Tuple[int, int]:
         for event in pygame.event.get(pygame.JOYDEVICEADDED):
             joy = pygame.joystick.Joystick(event.device_index)
             self.joysticks[joy.get_instance_id()] = joy
@@ -292,19 +292,21 @@ class WincollGame:
         for event in pygame.event.get(pygame.JOYDEVICEREMOVED):
             del self.joysticks[event.instance_id]
 
+        dx, dy = (0, 0)
         for joystick in self.joysticks.values():
             axes = joystick.get_numaxes()
             if axes >= 2:  # Hopefully 0=L/R and 1=U/D
                 lr = joystick.get_axis(0)
                 if lr < -0.5:
-                    self.hero.velocity = Vector2(-1, 0)
+                    dx = -1
                 elif lr > 0.5:
-                    self.hero.velocity = Vector2(1, 0)
+                    dx = 1
                 ud = joystick.get_axis(1)
                 if ud < -0.5:
-                    self.hero.velocity = Vector2(0, -1)
+                    dy = -1
                 elif ud > 0.5:
-                    self.hero.velocity = Vector2(0, 1)
+                    dy = 1
+        return (dx, dy)
 
     def handle_input(self) -> None:
         pressed = pygame.key.get_pressed()
@@ -317,6 +319,9 @@ class WincollGame:
             dy -= 1
         if pressed[pygame.K_DOWN] or pressed[pygame.K_SLASH]:
             dy += 1
+        (jdx, jdy) = self.handle_joysticks()
+        if (jdx, jdy) != (0, 0):
+            (dx, dy) = (jdx, jdy)
         if dx != 0 and self.can_move(Vector2(dx, 0)):
             self.hero.velocity = Vector2(dx, 0)
         elif dy != 0 and self.can_move(Vector2(0, dy)):
@@ -332,7 +337,6 @@ class WincollGame:
             self.restart_level()
         if pressed[pygame.K_q]:
             self.quit = True
-        self.handle_joysticks()
 
     def can_move(self, velocity: Vector2) -> bool:
         newpos = self.hero.position + velocity
