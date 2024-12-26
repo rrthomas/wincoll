@@ -104,6 +104,7 @@ SLIDE_SOUND: pygame.mixer.Sound
 UNLOCK_SOUND: pygame.mixer.Sound
 SPLAT_SOUND: pygame.mixer.Sound
 
+DEFAULT_VOLUME = 0.6
 
 screen: pygame.Surface
 
@@ -649,9 +650,13 @@ def main(argv: List[str] = sys.argv[1:]) -> None:
     global COLLECT_SOUND, SLIDE_SOUND, UNLOCK_SOUND, SPLAT_SOUND
     with importlib_resources.as_file(importlib_resources.files()) as path:
         COLLECT_SOUND = pygame.mixer.Sound(path / "Collect.wav")
+        COLLECT_SOUND.set_volume(DEFAULT_VOLUME)
         SLIDE_SOUND = pygame.mixer.Sound(path / "Slide.wav")
+        SLIDE_SOUND.set_volume(DEFAULT_VOLUME)
         UNLOCK_SOUND = pygame.mixer.Sound(path / "Unlock.wav")
+        UNLOCK_SOUND.set_volume(DEFAULT_VOLUME)
         SPLAT_SOUND = pygame.mixer.Sound(path / "Splat.wav")
+        SPLAT_SOUND.set_volume(DEFAULT_VOLUME)
 
     try:
         while True:
