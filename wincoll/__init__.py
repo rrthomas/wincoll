@@ -64,7 +64,8 @@ def die(code: int, msg: str) -> NoReturn:
 
 
 with importlib_resources.as_file(importlib_resources.files()) as path:
-    levels = len(list(Path(path / "levels").glob("*.tmx")))
+    levels_files = sorted(list(Path(path / "levels").glob("*.tmx")))
+levels = len(levels_files)
 level_size = 50  # length of side of world in blocks
 block_pixels = 16  # size of (square) block sprites in pixels
 window_blocks = 15
@@ -199,11 +200,8 @@ class WincollGame:
         self.joysticks: dict[int, pygame.joystick.JoystickType] = {}
 
     def restart_level(self) -> None:
-        with importlib_resources.as_file(importlib_resources.files()) as path:
-            filename = path / "levels" / f"{str(self.level).zfill(2)}.tmx"
         self.dead = False
-
-        tmx_data = pytmx.load_pygame(filename)
+        tmx_data = pytmx.load_pygame(levels_files[self.level - 1])
         self.map_data = pyscroll.data.TiledMapData(tmx_data)
         self.map_blocks = self.map_data.tmx.layers[0].data
 
