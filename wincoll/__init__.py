@@ -132,7 +132,6 @@ class TilesetGids(Enum):
     ROCK = 15
     KEY = 16
     WIN = 17
-    WIN_PLACE = 18
 
 
 font_pixels = 8 * window_scale
@@ -268,7 +267,7 @@ class WincollGame:
                     self.diamonds += 1
                 elif block == self.gids[TilesetGids.WIN]:
                     self.hero.position = Vector2(col, row)
-                    self.set(self.hero.position, self.gids[TilesetGids.WIN_PLACE])
+                    self.set(self.hero.position, self.gids[TilesetGids.GAP])
 
     def unlock(self) -> None:
         """Turn safes into diamonds"""
@@ -364,10 +363,7 @@ class WincollGame:
         elif block == self.gids[TilesetGids.ROCK]:
             new_rockpos = self.hero.position + (self.hero.velocity * 2)
             self.set(new_rockpos, self.gids[TilesetGids.ROCK])
-        self.set(self.hero.position, self.gids[TilesetGids.GAP])
-        self.set(
-            self.hero.position + self.hero.velocity, self.gids[TilesetGids.WIN_PLACE]
-        )
+        self.set(self.hero.position + self.hero.velocity, self.gids[TilesetGids.GAP])
 
     def can_roll(self, pos: Vector2) -> bool:
         side_block = self.get(pos)
@@ -382,7 +378,7 @@ class WincollGame:
 
         def fall(oldpos: Vector2, newpos: Vector2) -> None:
             block_below = self.get(newpos + Vector2(0, 1))
-            if block_below == self.gids[TilesetGids.WIN_PLACE]:
+            if block_below == self.gids[TilesetGids.WIN]:
                 self.dead = True
             self.set(oldpos, self.gids[TilesetGids.GAP])
             self.set(newpos, self.gids[TilesetGids.ROCK])
@@ -479,9 +475,12 @@ class WincollGame:
                         if self.hero.velocity != Vector2(0, 0):
                             self.do_move()
                             subframe = 0
-                    if subframe == subframes - 1:
-                        self.rockfall()
                     self.group.update(1 / subframes)
+                    if subframe == subframes - 1:
+                        # Put Win into the map data and run physics.
+                        self.set(self.hero.position, self.gids[TilesetGids.WIN])
+                        self.rockfall()
+                        self.set(self.hero.position, self.gids[TilesetGids.GAP])
                     self.draw()
                     self.show_status()
                     self.show_screen()
