@@ -49,10 +49,9 @@ for tile in tiled_map.get_layer_by_name("Tile Layer 1").tiles():
     text += gid_to_char[tile[2][0]]
 
 # Convert tile string to lines and save it
-level_size = 50
 output = (
     "\n".join(
-        [text[i : i + level_size] for i in range(0, len(text), level_size)],
+        [text[i : i + tiled_map.width] for i in range(0, len(text), tiled_map.width)],
     )
     + "\n"
 )
