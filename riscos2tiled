@@ -8,50 +8,84 @@
 # dependencies = ["tmxlib"]
 # ///
 
-import math
 import argparse
+import re
+from pathlib import Path
 from typing import List
 
 import tmxlib as tmx
 
 # Command-line arguments
 parser = argparse.ArgumentParser(
-    description="Convert plain text WinColl levels to Tiled .tmx format.",
+    description="Convert plain text Mr Matt levels to Tiled .tmx format.",
 )
-parser.add_argument("-V", "--version", action="version",
-                    version="%(prog)s 0.2 (07 Dec 2024) by Reuben Thomas <rrt@sc3d.org>")
-parser.add_argument("wincoll_file", metavar="WINCOLL-LEVEL", help="plain text WinColl level file")
-parser.add_argument("tiled_file", metavar="TILED-MAP", help="Tiled map output file")
+parser.add_argument(
+    "-V",
+    "--version",
+    action="version",
+    version="%(prog)s 0.1 (27 Dec 2024) by Reuben Thomas <rrt@sc3d.org>",
+)
+parser.add_argument(
+    "mrmatt_file", metavar="MR-MATT-LEVEL", help="plain text MrMatt level file"
+)
+parser.add_argument(
+    "tiled_directory", metavar="DIRECTORY", help="directory in which to put Tiled files"
+)
 args = parser.parse_args()
 
-# Read the input and convert tile encoding
+
+# Read the input
+map_width = 31
+map_height = 18
+
+with open(args.mrmatt_file, "r", encoding="utf-8") as fh:
+    input_lines = fh.read().splitlines()
+pack_title = input_lines[0]
+pack_filename = re.sub(r"^(\*+)", lambda m: str(len(m.group(1))), pack_title) + ".txt"
+pack_author = input_lines[1]
+check_line = input_lines[2]
+
+
+# Convert tile encoding
 def convert(row: List[str]) -> List[int]:
     char_to_num = {
-        " ": 10,
-        "#": 11,
-        "$": 12,
-        "*": 13,
-        "+": 14,
-        ".": 15,
-        "@": 16,
-        "K": 17,
-        "W": 18,
+        " ": 1,
+        "-": 2,
+        "#": 3,
+        "*": 4,
+        "+": 5,
+        "=": 8,
+        "!": 9,
+        "H": 10,
     }
     return list(map(lambda c: char_to_num[c], row))
 
-wincoll_data = []
-with open(args.wincoll_file, "r", encoding="utf-8") as fh:
-    for line in fh.readlines():
-        wincoll_data += convert(list(line.strip("\n")))
 
+line = 3
+levels = []
+level_titles = []
+while True:
+    level_title = input_lines[line]
+    if level_title == "END":
+        break
+    level_titles.append(level_title)
+    line += 1
+    levels.append([])
+    for i in range(line, line + map_height):
+        levels[-1] += convert(list(input_lines[i]))
+    line += map_height
+    assert (input_lines[line]) == "OK"
+    line += 1
 
-# Construct the output map and save it
-tilesize = 16
-mapsize = int(math.sqrt(len(wincoll_data)))
-tilemap = tmx.Map((mapsize, mapsize), (tilesize, tilesize))
-tilemap.tilesets = [
-    tmx.ImageTileset("WinColl", (tilesize, tilesize), 1, source="WinColl.tsx")]
-tilemap.layers = [
-    tmx.layer.TileLayer(tilemap, "Tile Layer 1", data=wincoll_data),
+# Construct the output maps and save them
+tilesize = 32
+for i, level in enumerate(levels):
+    tilemap = tmx.Map((map_width, map_height), (tilesize, tilesize))
+    tilemap.properties['Title'] = level_titles[i]
+    tilemap.tilesets = [
+        tmx.ImageTileset("MrMatt", (tilesize, tilesize), 1, source="MrMatt.tsx")
     ]
-tilemap.save(args.tiled_file)
+    tilemap.layers = [
+        tmx.layer.TileLayer(tilemap, "Tile Layer 1", data=level),
+    ]
+    tilemap.save(Path(args.tiled_directory) / f"{level_titles[i]}.tmx")

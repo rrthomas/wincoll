@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<map version="1.0" orientation="orthogonal" width="31" height="18" tilewidth="32" tileheight="32">
+  <properties>
+    <property name="Title" value="Akihabara"/>
+  </properties>
+  <tileset source="MrMatt.tsx" firstgid="1"/>
+  <layer name="Tile Layer 1" width="31" height="18">
+    <data compression="zlib" encoding="base64">eJyllUsOwzAIRC0HNr3/gdtKtjSizIDdxSgSODzzS3yM8Xw0Qb5sFuxz2dBvYHPwzeCP8nVmx3mCGNsStgVffO9UGXtLxX/gWclIPCtinNzbiTq5ZPOg7uXkvS3scdZvjM/YWdw5+Ewgu5OnYlvBZnW7Zduf7GqOuzPNesXs6O+cUbuR5dCd2WqHVU3jmRs2xrMLdtynjP0SbD9kT8FGX9XPuPORrb5rit3ZVfadm+O3H1lt2L3YHFTzHXNT7Oxf1tnhTr2qfxarXZYfxuuy1aypHWJ78LW9AdSNBlo=</data>
+  </layer>
+</map>

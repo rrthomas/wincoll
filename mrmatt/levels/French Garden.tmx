@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<map version="1.0" orientation="orthogonal" width="31" height="18" tilewidth="32" tileheight="32">
+  <properties>
+    <property name="Title" value="French Garden"/>
+  </properties>
+  <tileset source="MrMatt.tsx" firstgid="1"/>
+  <layer name="Tile Layer 1" width="31" height="18">
+    <data compression="zlib" encoding="base64">eJzllUsKwCAMRMXPpvc/cF0oDGG0E2tx0cWgpKTPmI8phHBV5ap0QLGxS9ujcpO1v1Eh7NG5cJ1JvbtI2MhBMduqFPZq7uwdZPLdstm5em6U2Ed+1p+xPetTTXj+s+KLNfsnNtbUCTbOoh1stbd31NxKP3t6TWErM7sQXytP/pG9I247U2YzhsXNaojZe5y4qmfHvcrDPXtzVXnq6wvdgJcF1A==</data>
+  </layer>
+</map>

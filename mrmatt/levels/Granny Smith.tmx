@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<map version="1.0" orientation="orthogonal" width="31" height="18" tilewidth="32" tileheight="32">
+  <properties>
+    <property name="Title" value="Granny Smith"/>
+  </properties>
+  <tileset source="MrMatt.tsx" firstgid="1"/>
+  <layer name="Tile Layer 1" width="31" height="18">
+    <data compression="zlib" encoding="base64">eJzllMEOwCAIQ53IZf//wfPgEkcKUrfbDg0JM5YHuFZKaV06Yh3RSo3QGU/s+Vuy6Y0YNGBDeQGe1RHbC8RgGaU864vksSjIV+BvOWVo5bvDP9fizTXyYfij2tAMMowMv9d/ryfZ+aKeZPca5ZnZom86RZT37sl6o93Iskbnst72/dsd9pii2tg3tdr1uf+Z3cz6M2+M+Vew/5bVfHfue8M/6+g6R2Tn+gXTH3UBkbwG0Q==</data>
+  </layer>
+</map>
