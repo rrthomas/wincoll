@@ -599,7 +599,7 @@ Avoid falling rocks!
         pygame.display.flip()
         handle_quit_event()
         for event in pygame.event.get(pygame.KEYDOWN):
-            if event.key == pygame.K_ESCAPE:
+            if event.key == pygame.K_q:
                 quit_game()
             elif event.key == pygame.K_SPACE:
                 play = True
