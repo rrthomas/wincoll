@@ -8,11 +8,7 @@
 # dependencies = ["pytmx"]
 # ///
 
-import sys
 import argparse
-import warnings
-from warnings import warn
-from typing import NoReturn
 
 import pytmx
 
@@ -24,26 +20,13 @@ parser.add_argument(
     "-V",
     "--version",
     action="version",
-    version="%(prog)s 0.33 (21 Dec 2024) by Reuben Thomas <rrt@sc3d.org>",
+    version="%(prog)s 0.34 (27 Dec 2024) by Reuben Thomas <rrt@sc3d.org>",
 )
 parser.add_argument("tiled_file", metavar="TILED-MAP", help="Tiled map output file")
 parser.add_argument(
     "wincoll_file", metavar="WINCOLL-LEVEL", help="plain text WinColl level file"
 )
 args = parser.parse_args()
-
-
-# Error messages
-def simple_warning(message, category, filename, lineno, file, line):  # type: ignore, pylint: disable=unused-argument, too-many-arguments, too-many-positional-arguments
-    print(f"{parser.prog}: {message}", file=file or sys.stderr)
-
-
-warnings.showwarning = simple_warning  # type: ignore
-
-
-def die(code: int, msg: str) -> NoReturn:
-    warn(msg)
-    sys.exit(code)
 
 
 # Read the input and convert tile GIDs to text
