@@ -191,7 +191,7 @@ class WincollGame:
         self.gids: dict[TilesetGids, int]
         self.map_layer: pyscroll.BufferedRenderer
         self.group: pyscroll.PyscrollGroup
-        self.hero: Win
+        self.hero: Hero
         self.diamonds: int
         self.map_data: pyscroll.data.TiledMapData
         self.joysticks: dict[int, pygame.joystick.JoystickType] = {}
@@ -210,7 +210,7 @@ class WincollGame:
         self.map_layer = pyscroll.BufferedRenderer(self.map_data, (w, h))
         self.group = pyscroll.PyscrollGroup(map_layer=self.map_layer)
 
-        self.hero = Win()
+        self.hero = Hero()
         self.hero.position = Vector2(0, 0)
         self.group.add(self.hero)
         self.diamonds = 0
@@ -504,10 +504,10 @@ class WincollGame:
             if self.diamonds == 0:
                 self.level += 1
         if self.level > levels:
-            self.splurge(Win().image)
+            self.splurge(Hero().image)
 
 
-class Win(pygame.sprite.Sprite):  # pylint: disable=too-few-public-methods
+class Hero(pygame.sprite.Sprite):  # pylint: disable=too-few-public-methods
     def __init__(self) -> None:
         pygame.sprite.Sprite.__init__(self)
         self.image = load_image("levels/Win.png")
