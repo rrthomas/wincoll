@@ -66,9 +66,9 @@ with importlib_resources.as_file(importlib_resources.files()) as path:
     cat = gettext.translation("wincoll", path / "locale", fallback=True)
     _ = cat.gettext
 
-CACHE_DIR = Path(user_data_dir("wincoll"))
-CACHE_DIR.mkdir(parents=True, exist_ok=True)
-SAVED_POSITION_FILE = CACHE_DIR / "saved_position.pkl"
+DATA_DIR = Path(user_data_dir("wincoll"))
+DATA_DIR.mkdir(parents=True, exist_ok=True)
+SAVED_POSITION_FILE = DATA_DIR / "saved_position.pkl"
 
 
 levels: int
