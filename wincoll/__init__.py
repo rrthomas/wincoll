@@ -66,10 +66,13 @@ levels: int
 levels_files: List[Path]
 (level_width, level_height) = (50, 50)  # dimensions of world in blocks
 block_pixels = 16  # size of (square) block sprites in pixels
-window_blocks = 15
-window_pixels = window_blocks * block_pixels
+(window_width, window_height) = (15, 15)
+(window_pixel_width, window_pixel_height) = (
+    window_width * block_pixels,
+    window_height * block_pixels,
+)
 window_scale = 2
-scaled_pixels = window_pixels * window_scale
+window_scaled_width = window_pixel_width * window_scale
 TEXT_COLOUR = (255, 255, 255)
 BACKGROUND_COLOUR = (0, 0, 255)
 
@@ -179,8 +182,11 @@ def scale_surface(surface: pygame.Surface) -> pygame.Surface:
 
 class WincollGame:
     def __init__(self, level: int = 1) -> None:
-        self.game_surface = pygame.Surface((window_pixels, window_pixels))
-        self.window_pos = ((screen.get_width() - scaled_pixels) // 2, 12 * window_scale)
+        self.game_surface = pygame.Surface((window_pixel_width, window_pixel_height))
+        self.window_pos = (
+            (screen.get_width() - window_scaled_width) // 2,
+            12 * window_scale,
+        )
         self.quit = False
         self.dead = False
         self.falling = False
@@ -205,11 +211,12 @@ class WincollGame:
         self.gids = {}
         for i in map_gids:
             gid = map_gids[i][0][0]
-            tile = Tile(self.map_data.tmx.get_tile_properties_by_gid(gid)['type'])
+            tile = Tile(self.map_data.tmx.get_tile_properties_by_gid(gid)["type"])
             self.gids[tile] = gid
 
-        w, h = window_blocks * block_pixels, window_blocks * block_pixels
-        self.map_layer = pyscroll.BufferedRenderer(self.map_data, (w, h))
+        self.map_layer = pyscroll.BufferedRenderer(
+            self.map_data, (window_pixel_width, window_pixel_height)
+        )
         self.group = pyscroll.PyscrollGroup(map_layer=self.map_layer)
 
         self.hero = Hero()
@@ -230,7 +237,7 @@ class WincollGame:
         block = self.map_blocks[y][x]
         if block == 0:  # Missing tiles are gaps
             block = Tile.GAP
-        return Tile(self.map_data.tmx.get_tile_properties(x, y, 0)['type'])
+        return Tile(self.map_data.tmx.get_tile_properties(x, y, 0)["type"])
 
     def set(self, pos: Vector2, tile: Tile) -> None:
         self.map_blocks[int(pos.y)][int(pos.x)] = self.gids[tile]
@@ -346,9 +353,7 @@ class WincollGame:
             return True
         if block == Tile.ROCK:
             new_rockpos = self.hero.position + velocity * 2
-            return (
-                velocity.y == 0 and self.get(new_rockpos) == Tile.GAP
-            )
+            return velocity.y == 0 and self.get(new_rockpos) == Tile.GAP
         return False
 
     def do_move(self) -> None:
@@ -367,10 +372,7 @@ class WincollGame:
     def can_roll(self, pos: Vector2) -> bool:
         side_block = self.get(pos)
         side_below_block = self.get(pos + Vector2(0, 1))
-        return (
-            side_block == Tile.GAP
-            and side_below_block == Tile.GAP
-        )
+        return side_block == Tile.GAP and side_below_block == Tile.GAP
 
     def rockfall(self) -> None:
         new_fall = False
@@ -419,7 +421,7 @@ class WincollGame:
 
     def splurge(self, sprite: pygame.Surface) -> None:
         """Fill the game area with one sprite."""
-        surface = pygame.Surface((window_pixels, window_pixels)).convert()
+        surface = pygame.Surface((window_pixel_width, window_pixel_height)).convert()
         for x in range(level_width):
             for y in range(level_height):
                 surface.blit(sprite, self.game_to_screen(x, y))
@@ -659,9 +661,9 @@ def main(argv: List[str] = sys.argv[1:]) -> None:
             )
             levels_path = ctx.__enter__()
             atexit.register(lambda ctx: ctx.__exit__(None, None, None), ctx)
-        levels_files = sorted([
-            item for item in levels_path.iterdir() if item.suffix == ".tmx"
-        ])
+        levels_files = sorted(
+            [item for item in levels_path.iterdir() if item.suffix == ".tmx"]
+        )
     except IOError as err:
         die(_("Error reading levels: {}").format(err.strerror))
     levels = len(levels_files)
