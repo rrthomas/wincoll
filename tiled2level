@@ -45,7 +45,7 @@ gid_to_char = {
 }
 lines = []
 text = ""
-for tile in tiled_map.get_layer_by_name("Tile Layer 1").tiles():
+for tile in tiled_map.layers[0].tiles():
     text += gid_to_char[tile[2][0]]
 
 # Convert tile string to lines and save it
