@@ -166,8 +166,7 @@ def handle_global_keys(event: pygame.event.Event) -> None:
         pygame.display.toggle_fullscreen()
 
 
-FRAMES_PER_SECOND = 50
-SCROLL_FRAMES_PER_SECOND = 10
+FRAMES_PER_SECOND = 30
 
 
 def scale_surface(surface: pygame.Surface) -> pygame.Surface:
@@ -484,7 +483,6 @@ class WincollGame:
                     self.draw()
                     self.show_status()
                     self.show_screen()
-                    pygame.time.wait(1000 // SCROLL_FRAMES_PER_SECOND // subframes)
                     subframe = (subframe + 1) % subframes
                     if subframe == 0:
                         self.hero.velocity = Vector2(0, 0)
