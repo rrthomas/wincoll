@@ -16,7 +16,6 @@ dependencies = [
     "pygame >= 2.0.0",
     "pyscroll",
     "pytmx",
-    "typing_extensions",
 ]
 classifiers = [
     "Environment :: X11 Applications",

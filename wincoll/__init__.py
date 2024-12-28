@@ -10,7 +10,17 @@ from pathlib import Path
 import pickle
 import warnings
 from warnings import warn
-from typing import Any, NoReturn, Tuple, List, Optional, Union, Iterator, ContextManager
+from typing import (
+    Self,
+    Any,
+    NoReturn,
+    Tuple,
+    List,
+    Optional,
+    Union,
+    Iterator,
+    ContextManager,
+)
 from itertools import chain
 import locale
 import gettext
@@ -22,7 +32,6 @@ import atexit
 
 import i18nparse  # type: ignore
 import importlib_resources
-from typing_extensions import Self
 from platformdirs import user_data_dir
 
 from .warnings_util import simple_warning, die
