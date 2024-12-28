@@ -259,23 +259,22 @@ class WincollGame:
     def survey(self) -> None:
         """Count diamonds on level and find start position."""
         self.diamonds = 0
-        for row, blocks in enumerate(self.map_blocks):
-            for col, block in enumerate(blocks):
-                if block in (
-                    self.gids[Tile.DIAMOND],
-                    self.gids[Tile.SAFE],
-                ):
+        for x in range(level_size):
+            for y in range(level_size):
+                block = self.get(Vector2(x, y))
+                if block in (Tile.DIAMOND, Tile.SAFE):
                     self.diamonds += 1
-                elif block == self.gids[Tile.WIN]:
-                    self.hero.position = Vector2(col, row)
+                elif block == Tile.WIN:
+                    self.hero.position = Vector2(x, y)
                     self.set(self.hero.position, Tile.GAP)
 
     def unlock(self) -> None:
         """Turn safes into diamonds"""
-        for row, blocks in enumerate(self.map_blocks):
-            for col, block in enumerate(blocks):
-                if block == self.gids[Tile.SAFE]:
-                    self.set(Vector2(col, row), Tile.DIAMOND)
+        for x in range(level_size):
+            for y in range(level_size):
+                block = self.get(Vector2(x, y))
+                if block == Tile.SAFE:
+                    self.set(Vector2(x, y), Tile.DIAMOND)
         UNLOCK_SOUND.play()
 
     def draw(self) -> None:
