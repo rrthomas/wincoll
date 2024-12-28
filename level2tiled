@@ -8,6 +8,7 @@
 # dependencies = ["tmxlib"]
 # ///
 
+import math
 import argparse
 from typing import List
 
@@ -46,7 +47,7 @@ with open(args.wincoll_file, "r", encoding="utf-8") as fh:
 
 # Construct the output map and save it
 tilesize = 16
-mapsize = 50
+mapsize = int(math.sqrt(len(wincoll_data)))
 tilemap = tmx.Map((mapsize, mapsize), (tilesize, tilesize))
 tilemap.tilesets = [
     tmx.ImageTileset("WinColl", (tilesize, tilesize), 1, source="WinColl.tsx")]
