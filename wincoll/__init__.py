@@ -64,7 +64,7 @@ SAVED_POSITION_FILE = CACHE_DIR / "saved_position.pkl"
 
 levels: int
 levels_files: List[Path]
-level_size = 50  # length of side of world in blocks
+(level_width, level_height) = (50, 50)  # dimensions of world in blocks
 block_pixels = 16  # size of (square) block sprites in pixels
 window_blocks = 15
 window_pixels = window_blocks * block_pixels
@@ -225,7 +225,7 @@ class WincollGame:
     def get(self, pos: Vector2) -> Tile:
         # Anything outside the map is a brick
         x, y = int(pos.x), int(pos.y)
-        if not ((0 <= x < level_size) and (0 <= y < level_size)):
+        if not ((0 <= x < level_width) and (0 <= y < level_height)):
             return Tile.BRICK
         block = self.map_blocks[y][x]
         if block == 0:  # Missing tiles are gaps
@@ -258,8 +258,8 @@ class WincollGame:
     def survey(self) -> None:
         """Count diamonds on level and find start position."""
         self.diamonds = 0
-        for x in range(level_size):
-            for y in range(level_size):
+        for x in range(level_width):
+            for y in range(level_height):
                 block = self.get(Vector2(x, y))
                 if block in (Tile.DIAMOND, Tile.SAFE):
                     self.diamonds += 1
@@ -269,8 +269,8 @@ class WincollGame:
 
     def unlock(self) -> None:
         """Turn safes into diamonds"""
-        for x in range(level_size):
-            for y in range(level_size):
+        for x in range(level_width):
+            for y in range(level_height):
                 block = self.get(Vector2(x, y))
                 if block == Tile.SAFE:
                     self.set(Vector2(x, y), Tile.DIAMOND)
@@ -420,9 +420,9 @@ class WincollGame:
     def splurge(self, sprite: pygame.Surface) -> None:
         """Fill the game area with one sprite."""
         surface = pygame.Surface((window_pixels, window_pixels)).convert()
-        for row in range(level_size):
-            for col in range(level_size):
-                surface.blit(sprite, self.game_to_screen(col, row))
+        for x in range(level_width):
+            for y in range(level_height):
+                surface.blit(sprite, self.game_to_screen(x, y))
         self.show_screen(surface)
         pygame.time.wait(3000)
 
