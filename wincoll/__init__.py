@@ -5,7 +5,7 @@ import importlib.metadata
 import os
 import sys
 import argparse
-from enum import Enum
+from enum import StrEnum, auto
 from pathlib import Path
 import pickle
 import warnings
@@ -121,17 +121,16 @@ def reinit_screen() -> None:
     screen.fill(BACKGROUND_COLOUR)
 
 
-# FIXME: get the GIDs from the tileset
-class TilesetGids(Enum):
-    GAP = 9
-    BRICK = 10
-    SAFE = 11
-    DIAMOND = 12
-    BLOB = 13
-    EARTH = 14
-    ROCK = 15
-    KEY = 16
-    WIN = 17
+class Tile(StrEnum):
+    GAP = auto()
+    BRICK = auto()
+    SAFE = auto()
+    DIAMOND = auto()
+    BLOB = auto()
+    EARTH = auto()
+    ROCK = auto()
+    KEY = auto()
+    WIN = auto()
 
 
 font_pixels = 8 * window_scale
@@ -188,7 +187,7 @@ class WincollGame:
         self.falling = False
         self.level = level
         self.map_blocks: pytmx.TiledTileLayer
-        self.gids: dict[TilesetGids, int]
+        self.gids: dict[Tile, int]
         self.map_layer: pyscroll.BufferedRenderer
         self.group: pyscroll.PyscrollGroup
         self.hero: Hero
@@ -204,7 +203,11 @@ class WincollGame:
 
         # Dict mapping tileset GIDs to map gids
         map_gids = self.map_data.tmx.gidmap
-        self.gids = {i: map_gids[i.value + 1][0][0] for i in TilesetGids}
+        self.gids = {}
+        for i in map_gids:
+            gid = map_gids[i][0][0]
+            tile = Tile(self.map_data.tmx.get_tile_properties_by_gid(gid)['type'])
+            self.gids[tile] = gid
 
         w, h = window_blocks * block_pixels, window_blocks * block_pixels
         self.map_layer = pyscroll.BufferedRenderer(self.map_data, (w, h))
@@ -220,18 +223,18 @@ class WincollGame:
         self.restart_level()
         self.save_position()
 
-    def get(self, pos: Vector2) -> int:
+    def get(self, pos: Vector2) -> Tile:
         # Anything outside the map is a brick
         x, y = int(pos.x), int(pos.y)
         if not ((0 <= x < level_size) and (0 <= y < level_size)):
-            return self.gids[TilesetGids.BRICK]
+            return Tile.BRICK
         block = self.map_blocks[y][x]
         if block == 0:  # Missing tiles are gaps
-            block = self.gids[TilesetGids.GAP]
-        return block  # type: ignore[no-any-return]
+            block = Tile.GAP
+        return Tile(self.map_data.tmx.get_tile_properties(x, y, 0)['type'])
 
-    def set(self, pos: Vector2, gid: int) -> None:
-        self.map_blocks[int(pos.y)][int(pos.x)] = gid
+    def set(self, pos: Vector2, tile: Tile) -> None:
+        self.map_blocks[int(pos.y)][int(pos.x)] = self.gids[tile]
         # Update map
         # FIXME: We invoke protected methods and access protected members.
         ml = self.map_layer
@@ -242,17 +245,15 @@ class WincollGame:
         self.map_layer._flush_tile_queue(self.map_layer._buffer)
 
     def save_position(self) -> None:
-        self.set(self.hero.position, self.gids[TilesetGids.WIN])
+        self.set(self.hero.position, Tile.WIN)
         with open(SAVED_POSITION_FILE, "wb") as fh:
             pickle.dump(self.map_blocks, fh)
 
     def load_position(self) -> None:
         if SAVED_POSITION_FILE.exists():
             with open(SAVED_POSITION_FILE, "rb") as fh:
-                map_blocks = pickle.load(fh)
-            for row, blocks in enumerate(map_blocks):
-                for col, block in enumerate(blocks):
-                    self.set(Vector2(col, row), block)
+                self.map_blocks = pickle.load(fh)
+            self.map_data.tmx.layers[0].data = self.map_blocks
             self.survey()
 
     def survey(self) -> None:
@@ -261,20 +262,20 @@ class WincollGame:
         for row, blocks in enumerate(self.map_blocks):
             for col, block in enumerate(blocks):
                 if block in (
-                    self.gids[TilesetGids.DIAMOND],
-                    self.gids[TilesetGids.SAFE],
+                    self.gids[Tile.DIAMOND],
+                    self.gids[Tile.SAFE],
                 ):
                     self.diamonds += 1
-                elif block == self.gids[TilesetGids.WIN]:
+                elif block == self.gids[Tile.WIN]:
                     self.hero.position = Vector2(col, row)
-                    self.set(self.hero.position, self.gids[TilesetGids.GAP])
+                    self.set(self.hero.position, Tile.GAP)
 
     def unlock(self) -> None:
         """Turn safes into diamonds"""
         for row, blocks in enumerate(self.map_blocks):
             for col, block in enumerate(blocks):
-                if block == self.gids[TilesetGids.SAFE]:
-                    self.set(Vector2(col, row), self.gids[TilesetGids.DIAMOND])
+                if block == self.gids[Tile.SAFE]:
+                    self.set(Vector2(col, row), Tile.DIAMOND)
         UNLOCK_SOUND.play()
 
     def draw(self) -> None:
@@ -339,38 +340,38 @@ class WincollGame:
         newpos = self.hero.position + velocity
         block = self.get(newpos)
         if block in (
-            self.gids[TilesetGids.GAP],
-            self.gids[TilesetGids.EARTH],
-            self.gids[TilesetGids.DIAMOND],
-            self.gids[TilesetGids.KEY],
+            Tile.GAP,
+            Tile.EARTH,
+            Tile.DIAMOND,
+            Tile.KEY,
         ):
             return True
-        if block == self.gids[TilesetGids.ROCK]:
+        if block == Tile.ROCK:
             new_rockpos = self.hero.position + velocity * 2
             return (
-                velocity.y == 0 and self.get(new_rockpos) == self.gids[TilesetGids.GAP]
+                velocity.y == 0 and self.get(new_rockpos) == Tile.GAP
             )
         return False
 
     def do_move(self) -> None:
         newpos = self.hero.position + self.hero.velocity
         block = self.get(newpos)
-        if block == self.gids[TilesetGids.DIAMOND]:
+        if block == Tile.DIAMOND:
             COLLECT_SOUND.play()
             self.diamonds -= 1
-        elif block == self.gids[TilesetGids.KEY]:
+        elif block == Tile.KEY:
             self.unlock()
-        elif block == self.gids[TilesetGids.ROCK]:
+        elif block == Tile.ROCK:
             new_rockpos = self.hero.position + (self.hero.velocity * 2)
-            self.set(new_rockpos, self.gids[TilesetGids.ROCK])
-        self.set(self.hero.position + self.hero.velocity, self.gids[TilesetGids.GAP])
+            self.set(new_rockpos, Tile.ROCK)
+        self.set(self.hero.position + self.hero.velocity, Tile.GAP)
 
     def can_roll(self, pos: Vector2) -> bool:
         side_block = self.get(pos)
         side_below_block = self.get(pos + Vector2(0, 1))
         return (
-            side_block == self.gids[TilesetGids.GAP]
-            and side_below_block == self.gids[TilesetGids.GAP]
+            side_block == Tile.GAP
+            and side_below_block == Tile.GAP
         )
 
     def rockfall(self) -> None:
@@ -378,10 +379,10 @@ class WincollGame:
 
         def fall(oldpos: Vector2, newpos: Vector2) -> None:
             block_below = self.get(newpos + Vector2(0, 1))
-            if block_below == self.gids[TilesetGids.WIN]:
+            if block_below == Tile.WIN:
                 self.dead = True
-            self.set(oldpos, self.gids[TilesetGids.GAP])
-            self.set(newpos, self.gids[TilesetGids.ROCK])
+            self.set(oldpos, Tile.GAP)
+            self.set(newpos, Tile.ROCK)
             nonlocal new_fall
             if self.falling is False:
                 self.falling = True
@@ -390,17 +391,17 @@ class WincollGame:
 
         for row, blocks in reversed(list(enumerate(self.map_blocks))):
             for col, block in enumerate(blocks):
-                if block == self.gids[TilesetGids.ROCK]:
+                if block == self.gids[Tile.ROCK]:
                     pos = Vector2(col, row)
                     pos_below = pos + Vector2(0, 1)
                     block_below = self.get(pos_below)
-                    if block_below == self.gids[TilesetGids.GAP]:
+                    if block_below == Tile.GAP:
                         fall(pos, pos_below)
                     elif block_below in (
-                        self.gids[TilesetGids.ROCK],
-                        self.gids[TilesetGids.KEY],
-                        self.gids[TilesetGids.DIAMOND],
-                        self.gids[TilesetGids.BLOB],
+                        Tile.ROCK,
+                        Tile.KEY,
+                        Tile.DIAMOND,
+                        Tile.BLOB,
                     ):
                         pos_left = pos + Vector2(-1, 0)
                         if self.can_roll(pos_left):
@@ -478,9 +479,9 @@ class WincollGame:
                     self.group.update(1 / subframes)
                     if subframe == subframes - 1:
                         # Put Win into the map data and run physics.
-                        self.set(self.hero.position, self.gids[TilesetGids.WIN])
+                        self.set(self.hero.position, Tile.WIN)
                         self.rockfall()
-                        self.set(self.hero.position, self.gids[TilesetGids.GAP])
+                        self.set(self.hero.position, Tile.GAP)
                     self.draw()
                     self.show_status()
                     self.show_screen()
