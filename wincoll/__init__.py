@@ -84,6 +84,7 @@ window_scale = 2
 window_scaled_width = window_pixel_width * window_scale
 TEXT_COLOUR = (255, 255, 255)
 BACKGROUND_COLOUR = (0, 0, 255)
+window_pos: Tuple[int, int]
 
 
 def flash_background() -> None:
@@ -98,6 +99,13 @@ def fade_background() -> None:
         max(BACKGROUND_COLOUR[0] - 10, 0),
         255,
     )
+
+
+def show_screen(surface: pygame.Surface) -> None:
+    screen.blit(scale_surface(surface), window_pos)
+    pygame.display.flip()
+    screen.fill(BACKGROUND_COLOUR)
+    fade_background()
 
 
 def load_image(filename: str) -> pygame.Surface:
@@ -123,9 +131,10 @@ app_icon = load_image("levels/Win.png")
 
 
 def init_screen(flags: int = pygame.SCALED) -> None:
-    global screen
+    global screen, window_pos
     pygame.display.set_icon(app_icon)
     screen = pygame.display.set_mode((640, 512), flags)
+    window_pos = ((screen.get_width() - window_scaled_width) // 2, 12 * window_scale)
     reinit_screen()
 
 
@@ -192,10 +201,6 @@ def scale_surface(surface: pygame.Surface) -> pygame.Surface:
 class WincollGame:
     def __init__(self, level: int = 1) -> None:
         self.game_surface = pygame.Surface((window_pixel_width, window_pixel_height))
-        self.window_pos = (
-            (screen.get_width() - window_scaled_width) // 2,
-            12 * window_scale,
-        )
         self.quit = False
         self.dead = False
         self.falling = False
@@ -430,18 +435,11 @@ class WincollGame:
 
     def splurge(self, sprite: pygame.Surface) -> None:
         """Fill the game area with one sprite."""
-        surface = pygame.Surface((window_pixel_width, window_pixel_height)).convert()
         for x in range(level_width):
             for y in range(level_height):
-                surface.blit(sprite, self.game_to_screen(x, y))
-        self.show_screen(surface)
+                self.game_surface.blit(sprite, self.game_to_screen(x, y))
+        show_screen(self.game_surface)
         pygame.time.wait(3000)
-
-    def show_screen(self, surface: Optional[pygame.Surface] = None) -> None:
-        screen.blit(scale_surface(surface or self.game_surface), self.window_pos)
-        pygame.display.flip()
-        screen.fill(BACKGROUND_COLOUR)
-        fade_background()
 
     def show_status(self) -> None:
         print_screen(
@@ -454,16 +452,14 @@ class WincollGame:
             color="grey",
         )
         screen.blit(DIAMOND_IMAGE, (2 * font_pixels, int(1.5 * font_pixels)))
-        print_screen(
-            (0, 3), str(self.diamonds), width=self.window_pos[0], align="center"
-        )
+        print_screen((0, 3), str(self.diamonds), width=window_pos[0], align="center")
 
     def run(self) -> None:
         clock = pygame.time.Clock()
         while not self.quit and self.level <= levels:
             self.start_level()
             self.show_status()
-            self.show_screen()
+            show_screen(self.game_surface)
             while not self.quit and self.diamonds > 0:
                 self.load_position()
                 subframes = 4  # FIXME: global constant
@@ -493,7 +489,7 @@ class WincollGame:
                         self.set(self.hero.position, Tile.GAP)
                     self.draw()
                     self.show_status()
-                    self.show_screen()
+                    show_screen(self.game_surface)
                     subframe = (subframe + 1) % subframes
                     if subframe == 0:
                         self.hero.velocity = Vector2(0, 0)
@@ -507,7 +503,7 @@ class WincollGame:
                         ),
                     )
                     self.show_status()
-                    self.show_screen()
+                    show_screen(self.game_surface)
                     pygame.time.wait(1000)
                     self.dead = False
             if self.diamonds == 0:
