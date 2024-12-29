@@ -7,7 +7,7 @@ import re
 import sys
 import argparse
 import warnings
-from typing import List
+from typing import List, Callable
 import locale
 import gettext
 from datetime import datetime
@@ -45,56 +45,62 @@ with warnings.catch_warnings():
 
 VERSION = importlib.metadata.version("wincoll")
 
-
-# Internationalise all modules that need it.
-with importlib_resources.as_file(importlib_resources.files()) as path:
-    cat = gettext.translation("wincoll", path / "locale", fallback=True)
-    _ = cat.gettext
-    game_module._ = cat.gettext
-    instructions_module._ = cat.gettext
-    app_icon = pygame.image.load(path / "levels/Win.png")
-    TITLE_IMAGE = pygame.image.load(path / "title.png")
+# Placeholder for gettext
+_: Callable[[str], str] = lambda _: _
 
 
 def main(argv: List[str] = sys.argv[1:]) -> None:
-    # Command-line arguments
-    parser = argparse.ArgumentParser(
-        description=_(
-            "Collect all the diamonds while digging through earth dodging rocks."
-        ),
-    )
-    parser.add_argument(
-        "--levels",
-        metavar="DIRECTORY",
-        help=_("a directory of levels to use instead of the built-in ones"),
-    )
-    parser.add_argument(
-        "-V",
-        "--version",
-        action="version",
-        version=_("%(prog)s {} ({}) by Reuben Thomas <rrt@sc3d.org>").format(
-            VERSION, datetime(2024, 12, 16).strftime("%d %b %Y")
-        ),
-    )
-    warnings.showwarning = simple_warning(parser.prog)
-    args = parser.parse_args(argv)
+    global _
 
-    init_levels(args.levels)
+    with importlib_resources.as_file(importlib_resources.files()) as path:
+        # Internationalise all modules that need it.
+        cat = gettext.translation("wincoll", path / "locale", fallback=True)
+        _ = cat.gettext
+        game_module._ = cat.gettext
+        instructions_module._ = cat.gettext
 
-    pygame.init()
-    pygame.display.set_icon(app_icon)
-    pygame.mouse.set_visible(False)
-    pygame.font.init()
-    pygame.key.set_repeat()
-    pygame.joystick.init()
-    pygame.display.set_caption("WinColl")
-    screen = Screen()
-    game = WincollGame(screen)
-    init_assets()
+        # Load assets.
+        app_icon = pygame.image.load(path / "levels/Win.png")
+        title_image = pygame.image.load(path / "title.png")
+
+        # Command-line arguments
+        parser = argparse.ArgumentParser(
+            description=_(
+                "Collect all the diamonds while digging through earth dodging rocks."
+            ),
+        )
+        parser.add_argument(
+            "--levels",
+            metavar="DIRECTORY",
+            help=_("a directory of levels to use instead of the built-in ones"),
+        )
+        parser.add_argument(
+            "-V",
+            "--version",
+            action="version",
+            version=_("%(prog)s {} ({}) by Reuben Thomas <rrt@sc3d.org>").format(
+                VERSION, datetime(2024, 12, 16).strftime("%d %b %Y")
+            ),
+        )
+        warnings.showwarning = simple_warning(parser.prog)
+        args = parser.parse_args(argv)
+
+        init_levels(args.levels or str(path / "levels"))
+
+        pygame.init()
+        pygame.display.set_icon(app_icon)
+        pygame.mouse.set_visible(False)
+        pygame.font.init()
+        pygame.key.set_repeat()
+        pygame.joystick.init()
+        pygame.display.set_caption("WinColl")
+        screen = Screen(str(path / "acorn-mode-1.ttf"))
+        game = WincollGame(screen)
+        init_assets(path)
 
     try:
         while True:
-            level = instructions(screen, TITLE_IMAGE.convert())
+            level = instructions(screen, title_image.convert())
             game.run(level)
     except KeyboardInterrupt:
         quit_game()

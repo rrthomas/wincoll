@@ -5,8 +5,6 @@ import os
 import warnings
 from typing import Any, Tuple
 
-import importlib_resources
-
 
 # Import pygame, suppressing extra messages that it prints on startup.
 os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
@@ -17,17 +15,16 @@ with warnings.catch_warnings():
 
 
 class Screen:
-    def __init__(self) -> None:
+    def __init__(self, fontname: str) -> None:
         self.window_scale = 2
         self.text_colour = (255, 255, 255)
         self.background_colour = (0, 0, 255)
         self.font_pixels = 8 * self.window_scale
         self._screen = pygame.display.set_mode((640, 512), pygame.SCALED)
         self.reinit_screen()
-        with importlib_resources.as_file(importlib_resources.files()) as path:
-            self.fontname = str(path / "acorn-mode-1.ttf")
-            # Force ptext to cache the font
-            self.print_screen((0, 0), "")
+        self.fontname = fontname
+        # Force ptext to cache the font
+        self.print_screen((0, 0), "")
 
     def screen(self) -> pygame.Surface:
         return self._screen

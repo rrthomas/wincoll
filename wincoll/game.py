@@ -6,13 +6,12 @@ from pathlib import Path
 import pickle
 import warnings
 from itertools import chain
-from typing import List, Tuple, Optional, Callable
+from typing import List, Tuple, Callable
 from enum import StrEnum, auto
 import zipfile
 from tempfile import TemporaryDirectory
 import atexit
 
-import importlib_resources
 from platformdirs import user_data_dir
 
 from .warnings_util import die
@@ -80,42 +79,34 @@ SPLAT_SOUND: pygame.mixer.Sound
 DEFAULT_VOLUME = 0.6
 
 
-def init_assets() -> None:
+def init_assets(path: Path) -> None:
     global DIAMOND_IMAGE, WIN_IMAGE, SPLAT_IMAGE
     global COLLECT_SOUND, SLIDE_SOUND, UNLOCK_SOUND, SPLAT_SOUND
-    with importlib_resources.as_file(importlib_resources.files()) as path:
-        DIAMOND_IMAGE = pygame.image.load(path / "diamond.png")
-        WIN_IMAGE = pygame.image.load(path / "levels/Win.png")
-        SPLAT_IMAGE = pygame.image.load(path / "splat.png")
-        COLLECT_SOUND = pygame.mixer.Sound(path / "Collect.wav")
-        COLLECT_SOUND.set_volume(DEFAULT_VOLUME)
-        SLIDE_SOUND = pygame.mixer.Sound(path / "Slide.wav")
-        SLIDE_SOUND.set_volume(DEFAULT_VOLUME)
-        UNLOCK_SOUND = pygame.mixer.Sound(path / "Unlock.wav")
-        UNLOCK_SOUND.set_volume(DEFAULT_VOLUME)
-        SPLAT_SOUND = pygame.mixer.Sound(path / "Splat.wav")
-        SPLAT_SOUND.set_volume(DEFAULT_VOLUME)
+    DIAMOND_IMAGE = pygame.image.load(path / "diamond.png")
+    WIN_IMAGE = pygame.image.load(path / "levels/Win.png")
+    SPLAT_IMAGE = pygame.image.load(path / "splat.png")
+    COLLECT_SOUND = pygame.mixer.Sound(path / "Collect.wav")
+    COLLECT_SOUND.set_volume(DEFAULT_VOLUME)
+    SLIDE_SOUND = pygame.mixer.Sound(path / "Slide.wav")
+    SLIDE_SOUND.set_volume(DEFAULT_VOLUME)
+    UNLOCK_SOUND = pygame.mixer.Sound(path / "Unlock.wav")
+    UNLOCK_SOUND.set_volume(DEFAULT_VOLUME)
+    SPLAT_SOUND = pygame.mixer.Sound(path / "Splat.wav")
+    SPLAT_SOUND.set_volume(DEFAULT_VOLUME)
 
 
-def init_levels(levels_arg: Optional[str]) -> None:
+def init_levels(levels_arg: str) -> None:
     global _levels, levels_files
     try:
-        if levels_arg is not None:
-            levels_path: Path
-            if zipfile.is_zipfile(levels_arg):
-                tmpdir = TemporaryDirectory()  # pylint: disable=consider-using-with
-                levels_path = Path(tmpdir.name)
-                with zipfile.ZipFile(levels_arg) as z:
-                    z.extractall(levels_path)
-                atexit.register(lambda tmpdir: tmpdir.cleanup(), tmpdir)
-            else:
-                levels_path = Path(levels_arg)
+        levels_path: Path
+        if zipfile.is_zipfile(levels_arg):
+            tmpdir = TemporaryDirectory()  # pylint: disable=consider-using-with
+            levels_path = Path(tmpdir.name)
+            with zipfile.ZipFile(levels_arg) as z:
+                z.extractall(levels_path)
+            atexit.register(lambda tmpdir: tmpdir.cleanup(), tmpdir)
         else:
-            ctx = importlib_resources.as_file(
-                importlib_resources.files("wincoll.levels")
-            )
-            levels_path = ctx.__enter__()
-            atexit.register(lambda ctx: ctx.__exit__(None, None, None), ctx)
+            levels_path = Path(levels_arg)
         levels_files = sorted(
             [item for item in levels_path.iterdir() if item.suffix == ".tmx"]
         )
