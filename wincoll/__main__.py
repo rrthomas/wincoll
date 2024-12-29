@@ -18,8 +18,8 @@ import importlib_resources
 from .warnings_util import simple_warning
 from .langdetect import language_code
 from .event import quit_game
-from .screen import init_screen
-from .game import WincollGame, init_assets, init_levels, window_scaled_width
+from .screen import Screen
+from .game import WincollGame, init_assets, init_levels
 from .instructions import instructions
 
 locale.setlocale(locale.LC_ALL, "")
@@ -79,14 +79,14 @@ def main(argv: List[str] = sys.argv[1:]) -> None:
     pygame.key.set_repeat()
     pygame.joystick.init()
     pygame.display.set_caption("WinColl")
-    init_screen(window_scaled_width)
+    screen = Screen()
+    game = WincollGame(screen)
     init_assets()
 
     try:
         while True:
-            level = instructions()
-            game = WincollGame(level)
-            game.run()
+            level = instructions(screen)
+            game.run(level)
     except KeyboardInterrupt:
         quit_game()
 

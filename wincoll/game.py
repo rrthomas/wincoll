@@ -18,15 +18,7 @@ from platformdirs import user_data_dir
 
 from .warnings_util import die
 from .event import quit_game, handle_global_keys
-from .screen import (
-    flash_background,
-    screen,
-    show_screen,
-    print_screen,
-    font_pixels,
-    window_pos,
-    window_scale,
-)
+from .screen import Screen
 
 
 with importlib_resources.as_file(importlib_resources.files()) as path:
@@ -78,7 +70,6 @@ block_pixels = 16  # size of (square) block sprites in pixels
     window_width * block_pixels,
     window_height * block_pixels,
 )
-window_scaled_width = window_pixel_width * window_scale
 
 DIAMOND_IMAGE: pygame.Surface
 WIN_IMAGE: pygame.Surface
@@ -139,12 +130,18 @@ def init_levels(levels_arg: Optional[str]) -> None:
 
 
 class WincollGame:
-    def __init__(self, level: int = 1) -> None:
+    def __init__(self, screen: Screen) -> None:
+        self.screen = screen
+        self.window_scaled_width = window_pixel_width * self.screen.window_scale
+        self._window_pos = (
+            (screen.screen().get_width() - self.window_scaled_width) // 2,
+            12 * self.screen.window_scale,
+        )
         self.game_surface = pygame.Surface((window_pixel_width, window_pixel_height))
         self.quit = False
         self.dead = False
         self.falling = False
-        self.level = level
+        self.level = 1
         self.map_blocks: pytmx.TiledTileLayer
         self.gids: dict[Tile, int]
         self.map_layer: pyscroll.BufferedRenderer
@@ -153,6 +150,9 @@ class WincollGame:
         self.diamonds: int
         self.map_data: pyscroll.data.TiledMapData
         self.joysticks: dict[int, pygame.joystick.JoystickType] = {}
+
+    def window_pos(self) -> Tuple[int, int]:
+        return self._window_pos
 
     def restart_level(self) -> None:
         self.dead = False
@@ -284,13 +284,13 @@ class WincollGame:
         elif dy != 0 and self.can_move(Vector2(0, dy)):
             self.hero.velocity = Vector2(0, dy)
         if pressed[pygame.K_l]:
-            flash_background()
+            self.screen.flash_background()
             self.load_position()
         elif pressed[pygame.K_s]:
-            flash_background()
+            self.screen.flash_background()
             self.save_position()
         if pressed[pygame.K_r]:
-            flash_background()
+            self.screen.flash_background()
             self.restart_level()
         if pressed[pygame.K_q]:
             self.quit = True
@@ -378,28 +378,44 @@ class WincollGame:
         for x in range(level_width):
             for y in range(level_height):
                 self.game_surface.blit(sprite, self.game_to_screen(x, y))
-        show_screen(self.game_surface)
+        self.screen.screen().blit(
+            self.screen.scale_surface(self.game_surface), self._window_pos
+        )
+        self.screen.show_screen()
         pygame.time.wait(3000)
 
     def show_status(self) -> None:
-        print_screen(
+        self.screen.print_screen(
             (0, 0),
             _("Level {}:").format(self.level)
             + " "
             + self.map_data.tmx.properties["Title"],
-            width=screen().get_width(),
+            width=self.screen.screen().get_width(),
             align="center",
             color="grey",
         )
-        screen().blit(DIAMOND_IMAGE, (2 * font_pixels, int(1.5 * font_pixels)))
-        print_screen((0, 3), str(self.diamonds), width=window_pos()[0], align="center")
+        self.screen.screen().blit(
+            DIAMOND_IMAGE,
+            (2 * self.screen.font_pixels, int(1.5 * self.screen.font_pixels)),
+        )
+        self.screen.print_screen(
+            (0, 3),
+            str(self.diamonds),
+            width=self.window_pos()[0],
+            align="center",
+        )
 
-    def run(self) -> None:
+    def run(self, level: int) -> None:
+        self.quit = False
+        self.level = level
         clock = pygame.time.Clock()
         while not self.quit and self.level <= _levels:
             self.start_level()
             self.show_status()
-            show_screen(self.game_surface)
+            self.screen.screen().blit(
+                self.screen.scale_surface(self.game_surface), self._window_pos
+            )
+            self.screen.show_screen()
             while not self.quit and self.diamonds > 0:
                 self.load_position()
                 subframes = 4  # FIXME: global constant
@@ -429,7 +445,10 @@ class WincollGame:
                         self.set(self.hero.position, Tile.GAP)
                     self.draw()
                     self.show_status()
-                    show_screen(self.game_surface)
+                    self.screen.screen().blit(
+                        self.screen.scale_surface(self.game_surface), self._window_pos
+                    )
+                    self.screen.show_screen()
                     subframe = (subframe + 1) % subframes
                     if subframe == 0:
                         self.hero.velocity = Vector2(0, 0)
@@ -443,7 +462,10 @@ class WincollGame:
                         ),
                     )
                     self.show_status()
-                    show_screen(self.game_surface)
+                    self.screen.screen().blit(
+                        self.screen.scale_surface(self.game_surface), self._window_pos
+                    )
+                    self.screen.show_screen()
                     pygame.time.wait(1000)
                     self.dead = False
             if self.diamonds == 0:

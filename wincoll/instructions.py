@@ -8,7 +8,7 @@ import warnings
 import importlib_resources
 
 from .game import num_levels
-from .screen import screen, reinit_screen, scale_surface, print_screen, window_scale
+from .screen import Screen
 from .event import handle_quit_event, quit_game, handle_global_keys
 
 # Import pygame, suppressing extra messages that it prints on startup.
@@ -55,7 +55,7 @@ DIGIT_KEYS = {
 }
 
 
-def instructions() -> int:
+def instructions(screen: Screen) -> int:
     """Show instructions and choose start level."""
     clear_keys()
     level = 0
@@ -88,16 +88,16 @@ Avoid falling rocks!
     )
     play = False
     while not play:
-        reinit_screen()
-        screen().blit(
-            scale_surface(TITLE_IMAGE.convert()),
-            (110 * window_scale, 20 * window_scale),
+        screen.reinit_screen()
+        screen.screen().blit(
+            screen.scale_surface(TITLE_IMAGE.convert()),
+            (110 * screen.window_scale, 20 * screen.window_scale),
         )
-        print_screen((0, 14), instructions, color="grey")
-        print_screen(
+        screen.print_screen((0, 14), instructions, color="grey")
+        screen.print_screen(
             (0, start_level_y),
             _("Start level: {}/{}").format(1 if level == 0 else level, num_levels()),
-            width=screen().get_width(),
+            width=screen.screen().get_width(),
             align="center",
         )
         pygame.display.flip()
