@@ -154,6 +154,13 @@ class WincollGame:
     def window_pos(self) -> Tuple[int, int]:
         return self._window_pos
 
+    def init_renderer(self) -> None:
+        self.map_layer = pyscroll.BufferedRenderer(
+            self.map_data, (window_pixel_width, window_pixel_height)
+        )
+        self.group = pyscroll.PyscrollGroup(map_layer=self.map_layer)
+        self.group.add(self.hero)
+
     def restart_level(self) -> None:
         self.dead = False
         tmx_data = pytmx.load_pygame(levels_files[self.level - 1])
@@ -168,14 +175,10 @@ class WincollGame:
             tile = Tile(self.map_data.tmx.get_tile_properties_by_gid(gid)["type"])
             self.gids[tile] = gid
 
-        self.map_layer = pyscroll.BufferedRenderer(
-            self.map_data, (window_pixel_width, window_pixel_height)
-        )
-        self.group = pyscroll.PyscrollGroup(map_layer=self.map_layer)
-
         self.hero = Hero()
         self.hero.position = Vector2(0, 0)
-        self.group.add(self.hero)
+
+        self.init_renderer()
         self.diamonds = 0
         self.survey()
 
@@ -214,6 +217,7 @@ class WincollGame:
             with open(SAVED_POSITION_FILE, "rb") as fh:
                 self.map_blocks = pickle.load(fh)
             self.map_data.tmx.layers[0].data = self.map_blocks
+            self.init_renderer()
             self.survey()
 
     def survey(self) -> None:
