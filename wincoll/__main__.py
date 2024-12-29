@@ -46,6 +46,7 @@ VERSION = importlib.metadata.version("wincoll")
 with importlib_resources.as_file(importlib_resources.files()) as path:
     cat = gettext.translation("wincoll", path / "locale", fallback=True)
     _ = cat.gettext
+    app_icon = pygame.image.load(path / "levels/Win.png")
 
 
 def main(argv: List[str] = sys.argv[1:]) -> None:
@@ -74,6 +75,7 @@ def main(argv: List[str] = sys.argv[1:]) -> None:
     init_levels(args.levels)
 
     pygame.init()
+    pygame.display.set_icon(app_icon)
     pygame.mouse.set_visible(False)
     pygame.font.init()
     pygame.key.set_repeat()

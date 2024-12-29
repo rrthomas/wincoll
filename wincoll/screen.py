@@ -16,13 +16,8 @@ with warnings.catch_warnings():
     from . import ptext
 
 
-with importlib_resources.as_file(importlib_resources.files()) as path:
-    app_icon = pygame.image.load(path / "levels/Win.png")
-
-
 class Screen:
     def __init__(self) -> None:
-        pygame.display.set_icon(app_icon)
         self.window_scale = 2
         self.text_colour = (255, 255, 255)
         self.background_colour = (0, 0, 255)
