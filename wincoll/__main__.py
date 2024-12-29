@@ -95,7 +95,7 @@ def main(argv: List[str] = sys.argv[1:]) -> None:
         pygame.joystick.init()
         pygame.display.set_caption("WinColl")
         screen = Screen((640, 512), str(path / "acorn-mode-1.ttf"), 2)
-        game = Game(screen)
+        game = Game(screen, (50, 50), (15, 15), 16) # FIXME: read dimensions from Tiled files
         game.window_pos = (
             (screen.surface.get_width() - game.window_scaled_width) // 2,
             12 * game.screen.window_scale,

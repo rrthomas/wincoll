@@ -111,13 +111,17 @@ def init_levels(levels_arg: str) -> None:
 
 
 class Game:
-    def __init__(self, screen: Screen) -> None:
-        (self.level_width, self.level_height) = (
-            50,
-            50,
-        )  # dimensions of world in blocks
-        self.block_pixels = 16  # size of (square) block sprites in pixels
-        (self.window_width, self.window_height) = (15, 15)
+    def __init__(
+        self,
+        screen: Screen,
+        level_size: Tuple[int, int],
+        window_size: Tuple[int, int],
+        block_pixels: int,
+    ) -> None:
+        # dimensions of level in blocks
+        (self.level_width, self.level_height) = level_size
+        self.block_pixels = block_pixels  # size of (square) block sprites in pixels
+        (self.window_width, self.window_height) = window_size
         (self.window_pixel_width, self.window_pixel_height) = (
             self.window_width * self.block_pixels,
             self.window_height * self.block_pixels,
