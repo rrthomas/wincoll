@@ -59,13 +59,6 @@ def num_levels() -> int:
 
 
 levels_files: List[Path]
-(level_width, level_height) = (50, 50)  # dimensions of world in blocks
-block_pixels = 16  # size of (square) block sprites in pixels
-(window_width, window_height) = (15, 15)
-(window_pixel_width, window_pixel_height) = (
-    window_width * block_pixels,
-    window_height * block_pixels,
-)
 
 DIAMOND_IMAGE: pygame.Surface
 WIN_IMAGE: pygame.Surface
@@ -119,13 +112,22 @@ def init_levels(levels_arg: str) -> None:
 
 class Game:
     def __init__(self, screen: Screen) -> None:
-        self.screen = screen
-        self.window_scaled_width = window_pixel_width * self.screen.window_scale
-        self.window_pos = (
-            (screen.surface.get_width() - self.window_scaled_width) // 2,
-            12 * self.screen.window_scale,
+        (self.level_width, self.level_height) = (
+            50,
+            50,
+        )  # dimensions of world in blocks
+        self.block_pixels = 16  # size of (square) block sprites in pixels
+        (self.window_width, self.window_height) = (15, 15)
+        (self.window_pixel_width, self.window_pixel_height) = (
+            self.window_width * self.block_pixels,
+            self.window_height * self.block_pixels,
         )
-        self.game_surface = pygame.Surface((window_pixel_width, window_pixel_height))
+        self.screen = screen
+        self.window_scaled_width = self.window_pixel_width * self.screen.window_scale
+        self.window_pos = (0, 0)
+        self.game_surface = pygame.Surface(
+            (self.window_pixel_width, self.window_pixel_height)
+        )
         self.quit = False
         self.dead = False
         self.falling = False
@@ -141,7 +143,7 @@ class Game:
 
     def init_renderer(self) -> None:
         self.map_layer = pyscroll.BufferedRenderer(
-            self.map_data, (window_pixel_width, window_pixel_height)
+            self.map_data, (self.window_pixel_width, self.window_pixel_height)
         )
         self.group = pyscroll.PyscrollGroup(map_layer=self.map_layer)
         self.group.add(self.hero)
@@ -160,7 +162,7 @@ class Game:
             tile = Tile(self.map_data.tmx.get_tile_properties_by_gid(gid)["type"])
             self.gids[tile] = gid
 
-        self.hero = Hero()
+        self.hero = Hero(self.block_pixels)
         self.hero.position = Vector2(0, 0)
 
         self.init_renderer()
@@ -174,7 +176,7 @@ class Game:
     def get(self, pos: Vector2) -> Tile:
         # Anything outside the map is a brick
         x, y = int(pos.x), int(pos.y)
-        if not ((0 <= x < level_width) and (0 <= y < level_height)):
+        if not ((0 <= x < self.level_width) and (0 <= y < self.level_height)):
             return Tile.BRICK
         block = self.map_blocks[y][x]
         if block == 0:  # Missing tiles are gaps
@@ -208,8 +210,8 @@ class Game:
     def survey(self) -> None:
         """Count diamonds on level and find start position."""
         self.diamonds = 0
-        for x in range(level_width):
-            for y in range(level_height):
+        for x in range(self.level_width):
+            for y in range(self.level_height):
                 block = self.get(Vector2(x, y))
                 if block in (Tile.DIAMOND, Tile.SAFE):
                     self.diamonds += 1
@@ -219,8 +221,8 @@ class Game:
 
     def unlock(self) -> None:
         """Turn safes into diamonds"""
-        for x in range(level_width):
-            for y in range(level_height):
+        for x in range(self.level_width):
+            for y in range(self.level_height):
                 block = self.get(Vector2(x, y))
                 if block == Tile.SAFE:
                     self.set(Vector2(x, y), Tile.DIAMOND)
@@ -360,12 +362,12 @@ class Game:
 
     def game_to_screen(self, x: int, y: int) -> Tuple[int, int]:
         origin = self.map_layer.get_center_offset()
-        return (origin[0] + x * block_pixels, origin[1] + y * block_pixels)
+        return (origin[0] + x * self.block_pixels, origin[1] + y * self.block_pixels)
 
     def splurge(self, sprite: pygame.Surface) -> None:
         """Fill the game area with one sprite."""
-        for x in range(level_width):
-            for y in range(level_height):
+        for x in range(self.level_width):
+            for y in range(self.level_height):
                 self.game_surface.blit(sprite, self.game_to_screen(x, y))
         self.screen.surface.blit(
             self.screen.scale_surface(self.game_surface), self.window_pos
@@ -460,18 +462,19 @@ class Game:
             if self.diamonds == 0:
                 self.level += 1
         if self.level > _levels:
-            self.splurge(Hero().image)
+            self.splurge(Hero(self.block_pixels).image)
 
 
 class Hero(pygame.sprite.Sprite):  # pylint: disable=too-few-public-methods
-    def __init__(self) -> None:
+    def __init__(self, block_pixels: int) -> None:
         pygame.sprite.Sprite.__init__(self)
         self.image = WIN_IMAGE
         self.velocity = Vector2(0, 0)
         self.position = Vector2(0, 0)
         self.rect = self.image.get_rect()
+        self.block_pixels = block_pixels
 
     def update(self, dt: float) -> None:
         self.position += self.velocity * dt
-        screen_pos = self.position * block_pixels
+        screen_pos = self.position * self.block_pixels
         self.rect.topleft = (int(screen_pos.x), int(screen_pos.y))
