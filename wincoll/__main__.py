@@ -19,10 +19,8 @@ from .warnings_util import simple_warning
 from .langdetect import language_code
 from .event import quit_game
 from .screen import Screen
-from .game import Game, init_assets, init_levels
+from .game import Game, init_assets
 from . import game as game_module
-from .instructions import instructions
-from . import instructions as instructions_module
 
 locale.setlocale(locale.LC_ALL, "")
 
@@ -57,7 +55,6 @@ def main(argv: List[str] = sys.argv[1:]) -> None:
         cat = gettext.translation("wincoll", path / "locale", fallback=True)
         _ = cat.gettext
         game_module._ = cat.gettext
-        instructions_module._ = cat.gettext
 
         # Load assets.
         app_icon = pygame.image.load(path / "levels/Win.png")
@@ -85,8 +82,6 @@ def main(argv: List[str] = sys.argv[1:]) -> None:
         warnings.showwarning = simple_warning(parser.prog)
         args = parser.parse_args(argv)
 
-        init_levels(args.levels or str(path / "levels"))
-
         pygame.init()
         pygame.display.set_icon(app_icon)
         pygame.mouse.set_visible(False)
@@ -95,7 +90,8 @@ def main(argv: List[str] = sys.argv[1:]) -> None:
         pygame.joystick.init()
         pygame.display.set_caption("WinColl")
         screen = Screen((640, 512), str(path / "acorn-mode-1.ttf"), 2)
-        game = Game(screen, (50, 50), (15, 15), 16) # FIXME: read dimensions from Tiled files
+        # FIXME: read dimensions from Tiled files
+        game = Game(screen, (50, 50), (15, 15), 16, args.levels or str(path / "levels"))
         game.window_pos = (
             (screen.surface.get_width() - game.window_scaled_width) // 2,
             12 * game.screen.window_scale,
@@ -104,7 +100,7 @@ def main(argv: List[str] = sys.argv[1:]) -> None:
 
     try:
         while True:
-            level = instructions(screen, title_image.convert())
+            level = game.instructions(title_image.convert())
             game.run(level)
     except KeyboardInterrupt:
         quit_game()

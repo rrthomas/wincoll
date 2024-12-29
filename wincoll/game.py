@@ -6,7 +6,7 @@ from pathlib import Path
 import pickle
 import warnings
 from itertools import chain
-from typing import List, Tuple, Callable
+from typing import Tuple, Callable
 from enum import StrEnum, auto
 import zipfile
 from tempfile import TemporaryDirectory
@@ -15,7 +15,7 @@ import atexit
 from platformdirs import user_data_dir
 
 from .warnings_util import die
-from .event import quit_game, handle_global_keys
+from .event import quit_game, handle_global_keys, handle_quit_event
 from .screen import Screen
 
 
@@ -51,14 +51,35 @@ class Tile(StrEnum):
 
 FRAMES_PER_SECOND = 30
 
-_levels: int
+
+def clear_keys() -> None:
+    for _event in pygame.event.get(pygame.KEYDOWN):
+        pass
 
 
-def num_levels() -> int:
-    return _levels
+DIGIT_KEYS = {
+    pygame.K_0: 0,
+    pygame.K_1: 1,
+    pygame.K_2: 2,
+    pygame.K_3: 3,
+    pygame.K_4: 4,
+    pygame.K_5: 5,
+    pygame.K_6: 6,
+    pygame.K_7: 7,
+    pygame.K_8: 8,
+    pygame.K_9: 9,
+    pygame.K_KP_0: 0,
+    pygame.K_KP_1: 1,
+    pygame.K_KP_2: 2,
+    pygame.K_KP_3: 3,
+    pygame.K_KP_4: 4,
+    pygame.K_KP_5: 5,
+    pygame.K_KP_6: 6,
+    pygame.K_KP_7: 7,
+    pygame.K_KP_8: 8,
+    pygame.K_KP_9: 9,
+}
 
-
-levels_files: List[Path]
 
 DIAMOND_IMAGE: pygame.Surface
 WIN_IMAGE: pygame.Surface
@@ -88,28 +109,6 @@ def init_assets(path: Path) -> None:
     SPLAT_SOUND.set_volume(DEFAULT_VOLUME)
 
 
-def init_levels(levels_arg: str) -> None:
-    global _levels, levels_files
-    try:
-        levels_path: Path
-        if zipfile.is_zipfile(levels_arg):
-            tmpdir = TemporaryDirectory()  # pylint: disable=consider-using-with
-            levels_path = Path(tmpdir.name)
-            with zipfile.ZipFile(levels_arg) as z:
-                z.extractall(levels_path)
-            atexit.register(lambda tmpdir: tmpdir.cleanup(), tmpdir)
-        else:
-            levels_path = Path(levels_arg)
-        levels_files = sorted(
-            [item for item in levels_path.iterdir() if item.suffix == ".tmx"]
-        )
-    except IOError as err:
-        die(_("Error reading levels: {}").format(err.strerror))
-    _levels = len(levels_files)
-    if _levels == 0:
-        die(_("Could not find any levels"))
-
-
 class Game:
     def __init__(
         self,
@@ -117,6 +116,7 @@ class Game:
         level_size: Tuple[int, int],
         window_size: Tuple[int, int],
         block_pixels: int,
+        levels_arg: str,
     ) -> None:
         # dimensions of level in blocks
         (self.level_width, self.level_height) = level_size
@@ -145,6 +145,27 @@ class Game:
         self.map_data: pyscroll.data.TiledMapData
         self.joysticks: dict[int, pygame.joystick.JoystickType] = {}
 
+        # Load levels
+        try:
+            levels_path: Path
+            if zipfile.is_zipfile(levels_arg):
+                tmpdir = TemporaryDirectory()  # pylint: disable=consider-using-with
+                levels_path = Path(tmpdir.name)
+                with zipfile.ZipFile(levels_arg) as z:
+                    z.extractall(levels_path)
+                atexit.register(lambda tmpdir: tmpdir.cleanup(), tmpdir)
+            else:
+                levels_path = Path(levels_arg)
+            self.levels_files = sorted(
+                [item for item in levels_path.iterdir() if item.suffix == ".tmx"]
+            )
+        except IOError as err:
+            die(_("Error reading levels: {}").format(err.strerror))
+        self.levels = len(self.levels_files)
+        if self.levels == 0:
+            die(_("Could not find any levels"))
+
+
     def init_renderer(self) -> None:
         self.map_layer = pyscroll.BufferedRenderer(
             self.map_data, (self.window_pixel_width, self.window_pixel_height)
@@ -154,7 +175,7 @@ class Game:
 
     def restart_level(self) -> None:
         self.dead = False
-        tmx_data = pytmx.load_pygame(levels_files[self.level - 1])
+        tmx_data = pytmx.load_pygame(self.levels_files[self.level - 1])
         self.map_data = pyscroll.data.TiledMapData(tmx_data)
         self.map_blocks = self.map_data.tmx.layers[0].data
 
@@ -404,7 +425,7 @@ class Game:
         self.quit = False
         self.level = level
         clock = pygame.time.Clock()
-        while not self.quit and self.level <= _levels:
+        while not self.quit and self.level <= self.levels:
             self.start_level()
             self.show_status()
             self.screen.surface.blit(
@@ -465,8 +486,80 @@ class Game:
                     self.dead = False
             if self.diamonds == 0:
                 self.level += 1
-        if self.level > _levels:
+        if self.level > self.levels:
             self.splurge(Hero(self.block_pixels).image)
+
+
+    def instructions(self, title_image: pygame.Surface) -> int:
+        """Show instructions and choose start level."""
+        clear_keys()
+        level = 0
+        clock = pygame.time.Clock()
+        # fmt: off
+        # TRANSLATORS: Please keep this text wrapped to 40 characters. The font
+        # used in-game is lacking many glyphs, so please test it with your
+        # language and let me know if I need to add glyphs.
+        instructions = _("""\
+Collect all the diamonds on each level.
+Get a key to turn safes into diamonds.
+Avoid falling rocks!
+
+    Z/X - Left/Right   '/? - Up/Down
+    or use the arrow keys to move
+        S/L - Save/load position
+    R - Restart level  Q - Quit game
+        F11 - toggle full screen
+
+
+(choose with movement keys and digits)
+
+    Press the space bar to play!
+"""
+        )
+        # fmt: on
+        instructions_y = 14
+        start_level_y = (
+            instructions_y
+            + len(instructions.split("\n\n\n", maxsplit=1)[0].split("\n"))
+            + 1
+        )
+        play = False
+        while not play:
+            self.screen.reinit_screen()
+            self.screen.surface.blit(
+                self.screen.scale_surface(title_image),
+                (110 * self.screen.window_scale, 20 * self.screen.window_scale),
+            )
+            self.screen.print_screen((0, 14), instructions, color="grey")
+            self.screen.print_screen(
+                (0, start_level_y),
+                _("Start level: {}/{}").format(1 if level == 0 else level, self.levels),
+                width=self.screen.surface.get_width(),
+                align="center",
+            )
+            pygame.display.flip()
+            handle_quit_event()
+            for event in pygame.event.get(pygame.KEYDOWN):
+                if event.key == pygame.K_q:
+                    quit_game()
+                elif event.key == pygame.K_SPACE:
+                    play = True
+                elif event.key in (
+                    pygame.K_z,
+                    pygame.K_LEFT,
+                    pygame.K_SLASH,
+                    pygame.K_DOWN,
+                ):
+                    level = max(1, level - 1)
+                elif event.key in (pygame.K_x, pygame.K_RIGHT, pygame.K_QUOTE, pygame.K_UP):
+                    level = min(self.levels, level + 1)
+                elif event.key in DIGIT_KEYS:
+                    level = min(self.levels, level * 10 + DIGIT_KEYS[event.key])
+                else:
+                    level = 0
+                handle_global_keys(event)
+            clock.tick(FRAMES_PER_SECOND)
+        return max(min(level, self.levels), 1)
 
 
 class Hero(pygame.sprite.Sprite):  # pylint: disable=too-few-public-methods
