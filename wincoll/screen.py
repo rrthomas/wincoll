@@ -29,6 +29,10 @@ class Screen:
         self.font_pixels = 8 * self.window_scale
         self._screen = pygame.display.set_mode((640, 512), pygame.SCALED)
         self.reinit_screen()
+        with importlib_resources.as_file(importlib_resources.files()) as path:
+            self.fontname = str(path / "acorn-mode-1.ttf")
+            # Force ptext to cache the font
+            self.print_screen((0, 0), "")
 
     def screen(self) -> pygame.Surface:
         return self._screen
@@ -62,11 +66,10 @@ class Screen:
         return (pos[0] * self.font_pixels, pos[1] * self.font_pixels)
 
     def print_screen(self, pos: Tuple[int, int], msg: str, **kwargs: Any) -> None:
-        with importlib_resources.as_file(importlib_resources.files()) as path:
-            ptext.draw(  # type: ignore[no-untyped-call]
-                msg,
-                self.text_to_screen(pos),
-                fontname=str(path / "acorn-mode-1.ttf"),
-                fontsize=self.font_pixels,
-                **kwargs,
-            )
+        ptext.draw(  # type: ignore[no-untyped-call]
+            msg,
+            self.text_to_screen(pos),
+            fontname=self.fontname,
+            fontsize=self.font_pixels,
+            **kwargs,
+        )
