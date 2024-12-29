@@ -111,21 +111,9 @@ def init_assets(path: Path) -> None:
 
 class Game:
     def __init__(
-        self,
-        screen: Screen,
-        level_size: Tuple[int, int],
-        window_size: Tuple[int, int],
-        block_pixels: int,
-        levels_arg: str,
+        self, screen: Screen, window_size: Tuple[int, int], levels_arg: str
     ) -> None:
-        # dimensions of level in blocks
-        (self.level_width, self.level_height) = level_size
-        self.block_pixels = block_pixels  # size of (square) block sprites in pixels
-        (self.window_width, self.window_height) = window_size
-        (self.window_pixel_width, self.window_pixel_height) = (
-            self.window_width * self.block_pixels,
-            self.window_height * self.block_pixels,
-        )
+        (self.window_pixel_width, self.window_pixel_height) = window_size
         self.screen = screen
         self.window_scaled_width = self.window_pixel_width * self.screen.window_scale
         self.window_pos = (0, 0)
@@ -136,6 +124,9 @@ class Game:
         self.dead = False
         self.falling = False
         self.level = 1
+        self.level_width: int
+        self.level_height: int
+        self.block_pixels: int
         self.map_blocks: pytmx.TiledTileLayer
         self.gids: dict[Tile, int]
         self.map_layer: pyscroll.BufferedRenderer
@@ -165,7 +156,6 @@ class Game:
         if self.levels == 0:
             die(_("Could not find any levels"))
 
-
     def init_renderer(self) -> None:
         self.map_layer = pyscroll.BufferedRenderer(
             self.map_data, (self.window_pixel_width, self.window_pixel_height)
@@ -178,6 +168,11 @@ class Game:
         tmx_data = pytmx.load_pygame(self.levels_files[self.level - 1])
         self.map_data = pyscroll.data.TiledMapData(tmx_data)
         self.map_blocks = self.map_data.tmx.layers[0].data
+        # FIXME: The level dimensions should be per-level, not class properties.
+        (self.level_width, self.level_height) = self.map_data.map_size
+        # FIXME: Report error if tiles are not square
+        assert self.map_data.tile_size[0] == self.map_data.tile_size[1]
+        self.block_pixels = self.map_data.tile_size[0]
 
         # Dict mapping tileset GIDs to map gids
         map_gids = self.map_data.tmx.gidmap
@@ -489,7 +484,6 @@ class Game:
         if self.level > self.levels:
             self.splurge(Hero(self.block_pixels).image)
 
-
     def instructions(self, title_image: pygame.Surface) -> int:
         """Show instructions and choose start level."""
         clear_keys()
@@ -551,7 +545,12 @@ Avoid falling rocks!
                     pygame.K_DOWN,
                 ):
                     level = max(1, level - 1)
-                elif event.key in (pygame.K_x, pygame.K_RIGHT, pygame.K_QUOTE, pygame.K_UP):
+                elif event.key in (
+                    pygame.K_x,
+                    pygame.K_RIGHT,
+                    pygame.K_QUOTE,
+                    pygame.K_UP,
+                ):
                     level = min(self.levels, level + 1)
                 elif event.key in DIGIT_KEYS:
                     level = min(self.levels, level * 10 + DIGIT_KEYS[event.key])
