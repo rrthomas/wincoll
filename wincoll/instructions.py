@@ -5,8 +5,6 @@ import os
 import warnings
 from typing import Callable
 
-import importlib_resources
-
 from .game import num_levels
 from .screen import Screen
 from .event import handle_quit_event, quit_game, handle_global_keys
@@ -20,9 +18,6 @@ os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
 with warnings.catch_warnings():
     warnings.simplefilter("ignore")
     import pygame
-
-with importlib_resources.as_file(importlib_resources.files()) as path:
-    TITLE_IMAGE = pygame.image.load(path / "title.png")
 
 
 FRAMES_PER_SECOND = 30
@@ -57,7 +52,7 @@ DIGIT_KEYS = {
 }
 
 
-def instructions(screen: Screen) -> int:
+def instructions(screen: Screen, title_image: pygame.Surface) -> int:
     """Show instructions and choose start level."""
     clear_keys()
     level = 0
@@ -92,7 +87,7 @@ Avoid falling rocks!
     while not play:
         screen.reinit_screen()
         screen.screen().blit(
-            screen.scale_surface(TITLE_IMAGE.convert()),
+            screen.scale_surface(title_image),
             (110 * screen.window_scale, 20 * screen.window_scale),
         )
         screen.print_screen((0, 14), instructions, color="grey")

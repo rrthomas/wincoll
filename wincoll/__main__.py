@@ -53,6 +53,7 @@ with importlib_resources.as_file(importlib_resources.files()) as path:
     game_module._ = cat.gettext
     instructions_module._ = cat.gettext
     app_icon = pygame.image.load(path / "levels/Win.png")
+    TITLE_IMAGE = pygame.image.load(path / "title.png")
 
 
 def main(argv: List[str] = sys.argv[1:]) -> None:
@@ -93,7 +94,7 @@ def main(argv: List[str] = sys.argv[1:]) -> None:
 
     try:
         while True:
-            level = instructions(screen)
+            level = instructions(screen, TITLE_IMAGE.convert())
             game.run(level)
     except KeyboardInterrupt:
         quit_game()
