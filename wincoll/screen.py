@@ -20,17 +20,14 @@ class Screen:
         self.text_colour = (255, 255, 255)
         self.background_colour = (0, 0, 255)
         self.font_pixels = 8 * self.window_scale
-        self._screen = pygame.display.set_mode(screen_size, pygame.SCALED)
+        self.surface = pygame.display.set_mode(screen_size, pygame.SCALED)
         self.reinit_screen()
         self.fontname = fontname
         # Force ptext to cache the font
         self.print_screen((0, 0), "")
 
-    def screen(self) -> pygame.Surface:
-        return self._screen
-
     def reinit_screen(self) -> None:
-        self._screen.fill(self.background_colour)
+        self.surface.fill(self.background_colour)
 
     def flash_background(self) -> None:
         self.background_colour = (160, 160, 255)
@@ -51,7 +48,7 @@ class Screen:
 
     def show_screen(self) -> None:
         pygame.display.flip()
-        self._screen.fill(self.background_colour)
+        self.surface.fill(self.background_colour)
         self.fade_background()
 
     def text_to_screen(self, pos: Tuple[int, int]) -> Tuple[int, int]:

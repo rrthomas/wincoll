@@ -81,12 +81,14 @@ Avoid falling rocks!
     # fmt: on
     instructions_y = 14
     start_level_y = (
-        instructions_y + len(instructions.split("\n\n\n", maxsplit=1)[0].split("\n")) + 1
+        instructions_y
+        + len(instructions.split("\n\n\n", maxsplit=1)[0].split("\n"))
+        + 1
     )
     play = False
     while not play:
         screen.reinit_screen()
-        screen.screen().blit(
+        screen.surface.blit(
             screen.scale_surface(title_image),
             (110 * screen.window_scale, 20 * screen.window_scale),
         )
@@ -94,7 +96,7 @@ Avoid falling rocks!
         screen.print_screen(
             (0, start_level_y),
             _("Start level: {}/{}").format(1 if level == 0 else level, num_levels()),
-            width=screen.screen().get_width(),
+            width=screen.surface.get_width(),
             align="center",
         )
         pygame.display.flip()

@@ -122,7 +122,7 @@ class WincollGame:
         self.screen = screen
         self.window_scaled_width = window_pixel_width * self.screen.window_scale
         self._window_pos = (
-            (screen.screen().get_width() - self.window_scaled_width) // 2,
+            (screen.surface.get_width() - self.window_scaled_width) // 2,
             12 * self.screen.window_scale,
         )
         self.game_surface = pygame.Surface((window_pixel_width, window_pixel_height))
@@ -370,7 +370,7 @@ class WincollGame:
         for x in range(level_width):
             for y in range(level_height):
                 self.game_surface.blit(sprite, self.game_to_screen(x, y))
-        self.screen.screen().blit(
+        self.screen.surface.blit(
             self.screen.scale_surface(self.game_surface), self._window_pos
         )
         self.screen.show_screen()
@@ -382,11 +382,11 @@ class WincollGame:
             _("Level {}:").format(self.level)
             + " "
             + self.map_data.tmx.properties["Title"],
-            width=self.screen.screen().get_width(),
+            width=self.screen.surface.get_width(),
             align="center",
             color="grey",
         )
-        self.screen.screen().blit(
+        self.screen.surface.blit(
             DIAMOND_IMAGE,
             (2 * self.screen.font_pixels, int(1.5 * self.screen.font_pixels)),
         )
@@ -404,7 +404,7 @@ class WincollGame:
         while not self.quit and self.level <= _levels:
             self.start_level()
             self.show_status()
-            self.screen.screen().blit(
+            self.screen.surface.blit(
                 self.screen.scale_surface(self.game_surface), self._window_pos
             )
             self.screen.show_screen()
@@ -437,7 +437,7 @@ class WincollGame:
                         self.set(self.hero.position, Tile.GAP)
                     self.draw()
                     self.show_status()
-                    self.screen.screen().blit(
+                    self.screen.surface.blit(
                         self.screen.scale_surface(self.game_surface), self._window_pos
                     )
                     self.screen.show_screen()
@@ -454,7 +454,7 @@ class WincollGame:
                         ),
                     )
                     self.show_status()
-                    self.screen.screen().blit(
+                    self.screen.surface.blit(
                         self.screen.scale_surface(self.game_surface), self._window_pos
                     )
                     self.screen.show_screen()
