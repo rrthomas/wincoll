@@ -15,8 +15,8 @@ with warnings.catch_warnings():
 
 
 class Screen:
-    def __init__(self, screen_size: Tuple[int, int], fontname: str) -> None:
-        self.window_scale = 2
+    def __init__(self, screen_size: Tuple[int, int], fontname: str, window_scale: int=1) -> None:
+        self.window_scale = window_scale
         self.text_colour = (255, 255, 255)
         self.background_colour = (0, 0, 255)
         self.font_pixels = 8 * self.window_scale
