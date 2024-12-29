@@ -6,12 +6,11 @@ from pathlib import Path
 import pickle
 import warnings
 from itertools import chain
-from typing import List, Tuple, Optional
+from typing import List, Tuple, Optional, Callable
 from enum import StrEnum, auto
 import zipfile
 from tempfile import TemporaryDirectory
 import atexit
-import gettext
 
 import importlib_resources
 from platformdirs import user_data_dir
@@ -21,10 +20,8 @@ from .event import quit_game, handle_global_keys
 from .screen import Screen
 
 
-with importlib_resources.as_file(importlib_resources.files()) as path:
-    cat = gettext.translation("wincoll", path / "locale", fallback=True)
-    _ = cat.gettext
-
+# Placeholder for gettext
+_: Callable[[str], str] = lambda _: _
 
 # Import pygame, suppressing extra messages that it prints on startup.
 os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"

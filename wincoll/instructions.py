@@ -2,14 +2,18 @@
 # Released under the GPL version 3, or (at your option) any later version.
 
 import os
-import gettext
 import warnings
+from typing import Callable
 
 import importlib_resources
 
 from .game import num_levels
 from .screen import Screen
 from .event import handle_quit_event, quit_game, handle_global_keys
+
+
+# Placeholder for gettext
+_: Callable[[str], str] = lambda _: _
 
 # Import pygame, suppressing extra messages that it prints on startup.
 os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
@@ -18,8 +22,6 @@ with warnings.catch_warnings():
     import pygame
 
 with importlib_resources.as_file(importlib_resources.files()) as path:
-    cat = gettext.translation("wincoll", path / "locale", fallback=True)
-    _ = cat.gettext
     TITLE_IMAGE = pygame.image.load(path / "title.png")
 
 

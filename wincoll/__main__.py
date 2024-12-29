@@ -20,7 +20,9 @@ from .langdetect import language_code
 from .event import quit_game
 from .screen import Screen
 from .game import WincollGame, init_assets, init_levels
+from . import game as game_module
 from .instructions import instructions
+from . import instructions as instructions_module
 
 locale.setlocale(locale.LC_ALL, "")
 
@@ -43,9 +45,13 @@ with warnings.catch_warnings():
 
 VERSION = importlib.metadata.version("wincoll")
 
+
+# Internationalise all modules that need it.
 with importlib_resources.as_file(importlib_resources.files()) as path:
     cat = gettext.translation("wincoll", path / "locale", fallback=True)
     _ = cat.gettext
+    game_module._ = cat.gettext
+    instructions_module._ = cat.gettext
     app_icon = pygame.image.load(path / "levels/Win.png")
 
 
