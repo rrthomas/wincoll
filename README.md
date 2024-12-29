@@ -90,6 +90,13 @@ I welcome [pull requests](https://github.com/rrthomas/wincoll/pulls) for new
 levels.
 
 
+## Improving WinColl
+
+WinColl as a game is finished by design. However, I am evolving the code to support other similar games. Usability improvements are always welcome; for example, the ability to rebind keys would be welcome.
+
+Some levels useful for testing are in `test-levels`.
+
+
 ## Copyright and Disclaimer
 
 WinColl is distributed under the GNU Public License version 3, or, at your
