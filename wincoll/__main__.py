@@ -94,7 +94,7 @@ def main(argv: List[str] = sys.argv[1:]) -> None:
         pygame.key.set_repeat()
         pygame.joystick.init()
         pygame.display.set_caption("WinColl")
-        screen = Screen(str(path / "acorn-mode-1.ttf"))
+        screen = Screen((640, 512), str(path / "acorn-mode-1.ttf"))
         game = WincollGame(screen)
         init_assets(path)
 

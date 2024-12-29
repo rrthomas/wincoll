@@ -15,12 +15,12 @@ with warnings.catch_warnings():
 
 
 class Screen:
-    def __init__(self, fontname: str) -> None:
+    def __init__(self, screen_size: Tuple[int, int], fontname: str) -> None:
         self.window_scale = 2
         self.text_colour = (255, 255, 255)
         self.background_colour = (0, 0, 255)
         self.font_pixels = 8 * self.window_scale
-        self._screen = pygame.display.set_mode((640, 512), pygame.SCALED)
+        self._screen = pygame.display.set_mode(screen_size, pygame.SCALED)
         self.reinit_screen()
         self.fontname = fontname
         # Force ptext to cache the font
