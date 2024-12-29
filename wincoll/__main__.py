@@ -19,7 +19,7 @@ from .warnings_util import simple_warning
 from .langdetect import language_code
 from .event import quit_game
 from .screen import Screen
-from .game import WincollGame, init_assets, init_levels
+from .game import Game, init_assets, init_levels
 from . import game as game_module
 from .instructions import instructions
 from . import instructions as instructions_module
@@ -95,7 +95,7 @@ def main(argv: List[str] = sys.argv[1:]) -> None:
         pygame.joystick.init()
         pygame.display.set_caption("WinColl")
         screen = Screen((640, 512), str(path / "acorn-mode-1.ttf"))
-        game = WincollGame(screen)
+        game = Game(screen)
         init_assets(path)
 
     try:

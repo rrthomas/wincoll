@@ -117,7 +117,7 @@ def init_levels(levels_arg: str) -> None:
         die(_("Could not find any levels"))
 
 
-class WincollGame:
+class Game:
     def __init__(self, screen: Screen) -> None:
         self.screen = screen
         self.window_scaled_width = window_pixel_width * self.screen.window_scale
