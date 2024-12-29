@@ -86,7 +86,7 @@ Avoid falling rocks!
     # fmt: on
     instructions_y = 14
     start_level_y = (
-        instructions_y + len(instructions.split("\n\n\n")[0].split("\n")) + 1
+        instructions_y + len(instructions.split("\n\n\n", maxsplit=1)[0].split("\n")) + 1
     )
     play = False
     while not play:
