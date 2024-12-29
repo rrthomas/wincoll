@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-26 15:19+0000\n"
+"POT-Creation-Date: 2024-12-29 17:13+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,21 +17,42 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: wincoll/__init__.py:442
+#: wincoll/__main__.py:56
+msgid "Collect all the diamonds while digging through earth dodging rocks."
+msgstr ""
+
+#: wincoll/__main__.py:62
+msgid "a directory of levels to use instead of the built-in ones"
+msgstr ""
+
+#: wincoll/__main__.py:68
+#, python-format
+msgid "%(prog)s {} ({}) by Reuben Thomas <rrt@sc3d.org>"
+msgstr ""
+
+#: wincoll/game.py:126
+msgid "Error reading levels: {}"
+msgstr ""
+
+#: wincoll/game.py:129
+msgid "Could not find any levels"
+msgstr ""
+
+#: wincoll/game.py:394
 msgid "Level {}:"
 msgstr ""
 
 #. TRANSLATORS: Please keep this text wrapped to 40 characters. The font
 #. used in-game is lacking many glyphs, so please test it with your
 #. language and let me know if I need to add glyphs.
-#: wincoll/__init__.py:562
+#: wincoll/instructions.py:67
 msgid ""
 "Collect all the diamonds on each level.\n"
 "Get a key to turn safes into diamonds.\n"
 "Avoid falling rocks!\n"
 "\n"
 "    Z/X - Left/Right   '/? - Up/Down\n"
-"     or use the cursor keys to move\n"
+"     or use the arrow keys to move\n"
 "        S/L - Save/load position\n"
 "    R - Restart level  Q - Quit game\n"
 "        F11 - toggle full screen\n"
@@ -42,15 +63,6 @@ msgid ""
 "      Press the space bar to play!\n"
 msgstr ""
 
-#: wincoll/__init__.py:594
+#: wincoll/instructions.py:99
 msgid "Start level: {}/{}"
-msgstr ""
-
-#: wincoll/__init__.py:627
-msgid "Collect all the diamonds while digging through earth dodging rocks."
-msgstr ""
-
-#: wincoll/__init__.py:634
-#, python-format
-msgid "%(prog)s {} ({}) by Reuben Thomas <rrt@sc3d.org>"
 msgstr ""
