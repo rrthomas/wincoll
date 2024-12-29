@@ -121,7 +121,7 @@ class Game:
     def __init__(self, screen: Screen) -> None:
         self.screen = screen
         self.window_scaled_width = window_pixel_width * self.screen.window_scale
-        self._window_pos = (
+        self.window_pos = (
             (screen.surface.get_width() - self.window_scaled_width) // 2,
             12 * self.screen.window_scale,
         )
@@ -138,9 +138,6 @@ class Game:
         self.diamonds: int
         self.map_data: pyscroll.data.TiledMapData
         self.joysticks: dict[int, pygame.joystick.JoystickType] = {}
-
-    def window_pos(self) -> Tuple[int, int]:
-        return self._window_pos
 
     def init_renderer(self) -> None:
         self.map_layer = pyscroll.BufferedRenderer(
@@ -371,7 +368,7 @@ class Game:
             for y in range(level_height):
                 self.game_surface.blit(sprite, self.game_to_screen(x, y))
         self.screen.surface.blit(
-            self.screen.scale_surface(self.game_surface), self._window_pos
+            self.screen.scale_surface(self.game_surface), self.window_pos
         )
         self.screen.show_screen()
         pygame.time.wait(3000)
@@ -393,7 +390,7 @@ class Game:
         self.screen.print_screen(
             (0, 3),
             str(self.diamonds),
-            width=self.window_pos()[0],
+            width=self.window_pos[0],
             align="center",
         )
 
@@ -405,7 +402,7 @@ class Game:
             self.start_level()
             self.show_status()
             self.screen.surface.blit(
-                self.screen.scale_surface(self.game_surface), self._window_pos
+                self.screen.scale_surface(self.game_surface), self.window_pos
             )
             self.screen.show_screen()
             while not self.quit and self.diamonds > 0:
@@ -438,7 +435,7 @@ class Game:
                     self.draw()
                     self.show_status()
                     self.screen.surface.blit(
-                        self.screen.scale_surface(self.game_surface), self._window_pos
+                        self.screen.scale_surface(self.game_surface), self.window_pos
                     )
                     self.screen.show_screen()
                     subframe = (subframe + 1) % subframes
@@ -455,7 +452,7 @@ class Game:
                     )
                     self.show_status()
                     self.screen.surface.blit(
-                        self.screen.scale_surface(self.game_surface), self._window_pos
+                        self.screen.scale_surface(self.game_surface), self.window_pos
                     )
                     self.screen.show_screen()
                     pygame.time.wait(1000)
