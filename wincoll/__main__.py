@@ -19,7 +19,8 @@ from .warnings_util import simple_warning
 from .langdetect import language_code
 from .event import quit_game
 from .screen import Screen
-from .game import Game, init_assets
+from .wincoll_game import WincollGame, init_assets
+from . import wincoll_game as wincoll_game_module
 from . import game as game_module
 
 locale.setlocale(locale.LC_ALL, "")
@@ -55,6 +56,7 @@ def main(argv: List[str] = sys.argv[1:]) -> None:
         cat = gettext.translation("wincoll", path / "locale", fallback=True)
         _ = cat.gettext
         game_module._ = cat.gettext
+        wincoll_game_module._ = cat.gettext
 
         # Load assets.
         app_icon = pygame.image.load(path / "levels/Win.png")
@@ -90,16 +92,40 @@ def main(argv: List[str] = sys.argv[1:]) -> None:
         pygame.joystick.init()
         pygame.display.set_caption("WinColl")
         screen = Screen((640, 512), str(path / "acorn-mode-1.ttf"), 2)
-        game = Game(screen, (240, 240), args.levels or str(path / "levels"))
+        init_assets(path)
+        game = WincollGame(screen, (240, 240), args.levels or str(path / "levels"))
         game.window_pos = (
             (screen.surface.get_width() - game.window_scaled_width) // 2,
             12 * game.screen.window_scale,
         )
-        init_assets(path)
 
     try:
         while True:
-            level = game.instructions(title_image.convert())
+            level = game.instructions(
+                title_image.convert(),
+                # fmt: off
+# TRANSLATORS: Please keep this text wrapped to 40 characters. The font
+# used in-game is lacking many glyphs, so please test it with your
+# language and let me know if I need to add glyphs.
+                _("""\
+Collect all the diamonds on each level.
+Get a key to turn safes into diamonds.
+Avoid falling rocks!
+
+    Z/X - Left/Right   '/? - Up/Down
+    or use the arrow keys to move
+        S/L - Save/load position
+    R - Restart level  Q - Quit game
+        F11 - toggle full screen
+
+
+(choose with movement keys and digits)
+
+    Press the space bar to play!
+"""
+                ),
+                # fmt: on
+            )
             game.run(level)
     except KeyboardInterrupt:
         quit_game()
