@@ -30,7 +30,8 @@ jobs:
     needs: source-release
     strategy:
       matrix:
-        # Use oldest available macOS for greatest compatibility of resulting binary.
+        # Use oldest available macOS and Ubuntu for greatest compatibility
+        # of resulting binary.
         os: [ubuntu-20.04, macos-13, macos-latest, windows-latest]
     runs-on: ${{ matrix.os }}
     env:
