@@ -138,10 +138,11 @@ class WincollGame(Game):
                 SLIDE_SOUND.play(-1)
             new_fall = True
 
-        for row, blocks in reversed(list(enumerate(self.map_blocks))):
-            for col, block in enumerate(blocks):
-                if block == self.gids[Tile.ROCK]:
-                    pos = Vector2(col, row)
+        for x in range(self.level_width):
+            for y in range(self.level_height - 1, 0, -1):
+                block = self.get(Vector2(x, y))
+                if block == Tile.ROCK:
+                    pos = Vector2(x, y)
                     pos_below = pos + Vector2(0, 1)
                     block_below = self.get(pos_below)
                     if block_below == Tile.EMPTY:
