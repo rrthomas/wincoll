@@ -12,7 +12,6 @@ import pickle
 import types
 import warnings
 import zipfile
-from datetime import datetime
 from itertools import chain
 from pathlib import Path
 from tempfile import TemporaryDirectory
@@ -509,7 +508,9 @@ class Hero(pygame.sprite.Sprite):  # pylint: disable=too-few-public-methods
         self.rect.topleft = (int(screen_pos.x), int(screen_pos.y))
 
 
-def app_main(argv: List[str], app_game_module: types.ModuleType, game_class: type[Game]) -> None:
+def app_main(
+    argv: List[str], app_game_module: types.ModuleType, game_class: type[Game]
+) -> None:
     global _
 
     with importlib_resources.as_file(importlib_resources.files()) as path:
@@ -535,11 +536,7 @@ def app_main(argv: List[str], app_game_module: types.ModuleType, game_class: typ
             "-V",
             "--version",
             action="version",
-            version=_("%(prog)s {} ({}) by {}").format(
-                VERSION,
-                datetime(2024, 12, 16).strftime("%d %b %Y"), # FIXME: put date in pyproject.toml
-                metadata["Author-email"],
-            ),
+            version=_("%(prog)s {} by {}").format(VERSION, metadata["Author-email"]),
         )
         warnings.showwarning = simple_warning(parser.prog)
         args = parser.parse_args(argv)
