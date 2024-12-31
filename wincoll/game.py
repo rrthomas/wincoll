@@ -109,13 +109,13 @@ class Game:
         self.level_width: int
         self.level_height: int
         self.block_pixels: int
-        self.map_blocks: pytmx.TiledTileLayer
-        self.gids: dict[Tile, int]
-        self.map_layer: pyscroll.BufferedRenderer
-        self.group: pyscroll.PyscrollGroup
+        self._map_blocks: pytmx.TiledTileLayer
+        self._gids: dict[Tile, int]
+        self._map_layer: pyscroll.BufferedRenderer
+        self._group: pyscroll.PyscrollGroup
         self.hero: Hero
         self.map_data: pyscroll.data.TiledMapData
-        self.joysticks: dict[int, pygame.joystick.JoystickType] = {}
+        self._joysticks: dict[int, pygame.joystick.JoystickType] = {}
 
         # Load levels
         try:
@@ -138,17 +138,17 @@ class Game:
             die(_("Could not find any levels"))
 
     def init_renderer(self) -> None:
-        self.map_layer = pyscroll.BufferedRenderer(
+        self._map_layer = pyscroll.BufferedRenderer(
             self.map_data, (self.window_pixel_width, self.window_pixel_height)
         )
-        self.group = pyscroll.PyscrollGroup(map_layer=self.map_layer)
-        self.group.add(self.hero)
+        self._group = pyscroll.PyscrollGroup(map_layer=self._map_layer)
+        self._group.add(self.hero)
 
     def restart_level(self) -> None:
         self.dead = False
         tmx_data = pytmx.load_pygame(self.levels_files[self.level - 1])
         self.map_data = pyscroll.data.TiledMapData(tmx_data)
-        self.map_blocks = self.map_data.tmx.layers[0].data
+        self._map_blocks = self.map_data.tmx.layers[0].data
         # FIXME: The level dimensions should be per-level, not class properties.
         (self.level_width, self.level_height) = self.map_data.map_size
         # FIXME: Report error if tiles are not square
@@ -157,11 +157,11 @@ class Game:
 
         # Dict mapping tileset GIDs to map gids
         map_gids = self.map_data.tmx.gidmap
-        self.gids = {}
+        self._gids = {}
         for i in map_gids:
             gid = map_gids[i][0][0]
             tile = Tile(self.map_data.tmx.get_tile_properties_by_gid(gid)["type"])
-            self.gids[tile] = gid
+            self._gids[tile] = gid
 
         self.hero = Hero(self.hero_image)
         self.hero.position = Vector2(0, 0)
@@ -178,49 +178,49 @@ class Game:
         x, y = int(pos.x), int(pos.y)
         if not ((0 <= x < self.level_width) and (0 <= y < self.level_height)):
             return Tile.BRICK
-        block = self.map_blocks[y][x]
+        block = self._map_blocks[y][x]
         if block == 0:  # Missing tiles are gaps
             block = Tile.EMPTY
         return Tile(self.map_data.tmx.get_tile_properties(x, y, 0)["type"])
 
     def set(self, pos: Vector2, tile: Tile) -> None:
-        self.map_blocks[int(pos.y)][int(pos.x)] = self.gids[tile]
+        self._map_blocks[int(pos.y)][int(pos.x)] = self._gids[tile]
         # Update map
         # FIXME: We invoke protected methods and access protected members.
-        ml = self.map_layer
+        ml = self._map_layer
         rect = (int(pos.x), int(pos.y), 1, 1)
         # pylint: disable-next=protected-access
         ml._tile_queue = chain(ml._tile_queue, ml.data.get_tile_images_by_rect(rect))
         # pylint: disable-next=protected-access
-        self.map_layer._flush_tile_queue(self.map_layer._buffer)
+        self._map_layer._flush_tile_queue(self._map_layer._buffer)
 
     def save_position(self) -> None:
         self.set(self.hero.position, Tile.HERO)
         with open(SAVED_POSITION_FILE, "wb") as fh:
-            pickle.dump(self.map_blocks, fh)
+            pickle.dump(self._map_blocks, fh)
 
     def load_position(self) -> None:
         if SAVED_POSITION_FILE.exists():
             with open(SAVED_POSITION_FILE, "rb") as fh:
-                self.map_blocks = pickle.load(fh)
-            self.map_data.tmx.layers[0].data = self.map_blocks
+                self._map_blocks = pickle.load(fh)
+            self.map_data.tmx.layers[0].data = self._map_blocks
             self.init_renderer()
             self.init_physics()
 
     def draw(self) -> None:
-        self.group.center(self.hero.rect.center)
-        self.group.draw(self.game_surface)
+        self._group.center(self.hero.rect.center)
+        self._group.draw(self.game_surface)
 
     def handle_joysticks(self) -> Tuple[int, int]:
         for event in pygame.event.get(pygame.JOYDEVICEADDED):
             joy = pygame.joystick.Joystick(event.device_index)
-            self.joysticks[joy.get_instance_id()] = joy
+            self._joysticks[joy.get_instance_id()] = joy
 
         for event in pygame.event.get(pygame.JOYDEVICEREMOVED):
-            del self.joysticks[event.instance_id]
+            del self._joysticks[event.instance_id]
 
         dx, dy = (0, 0)
-        for joystick in self.joysticks.values():
+        for joystick in self._joysticks.values():
             axes = joystick.get_numaxes()
             if axes >= 2:  # Hopefully 0=L/R and 1=U/D
                 lr = joystick.get_axis(0)
@@ -266,7 +266,7 @@ class Game:
             self.quit = True
 
     def game_to_screen(self, x: int, y: int) -> Tuple[int, int]:
-        origin = self.map_layer.get_center_offset()
+        origin = self._map_layer.get_center_offset()
         return (origin[0] + x * self.block_pixels, origin[1] + y * self.block_pixels)
 
     def splurge(self, sprite: pygame.Surface) -> None:
@@ -358,15 +358,15 @@ class Game:
                             handle_global_keys(event)
                         elif event.type == pygame.JOYDEVICEADDED:
                             joy = pygame.joystick.Joystick(event.device_index)
-                            self.joysticks[joy.get_instance_id()] = joy
+                            self._joysticks[joy.get_instance_id()] = joy
                         elif event.type == pygame.JOYDEVICEREMOVED:
-                            del self.joysticks[event.instance_id]
+                            del self._joysticks[event.instance_id]
                     if self.hero.velocity == Vector2(0, 0):
                         self.handle_input()
                         if self.hero.velocity != Vector2(0, 0):
                             self.do_move()
                             subframe = 0
-                    self.group.update(1 / subframes)
+                    self._group.update(1 / subframes)
                     if subframe == subframes - 1:
                         self.do_physics()
                     self.draw()
