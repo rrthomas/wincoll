@@ -165,7 +165,9 @@ class Game:
             self.max_window_size[1],
         )
         self.window_scaled_width = self.window_pixel_width * self.screen.window_scale
-        self.game_surface = pygame.Surface((self.window_pixel_width, self.window_pixel_height))
+        self.game_surface = pygame.Surface(
+            (self.window_pixel_width, self.window_pixel_height)
+        )
 
         # Dict mapping tileset GIDs to map gids
         map_gids = self.map_data.tmx.gidmap
@@ -418,7 +420,9 @@ class Game:
 
     def can_move(self, velocity: Vector2) -> bool:
         newpos = self.hero.position + velocity
-        return (0, 0) <= (newpos.x, newpos.y) < (self.level_width, self.level_height)
+        return (0 <= newpos.x < self.level_width) and (
+            0 <= newpos.y < self.level_height
+        )
 
     def do_move(self) -> None:
         pass
