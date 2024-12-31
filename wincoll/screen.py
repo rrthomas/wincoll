@@ -5,17 +5,19 @@ import os
 import warnings
 from typing import Any, Tuple
 
-
 # Import pygame, suppressing extra messages that it prints on startup.
 os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
 with warnings.catch_warnings():
     warnings.simplefilter("ignore")
     import pygame
+
     from . import ptext
 
 
 class Screen:
-    def __init__(self, screen_size: Tuple[int, int], fontname: str, window_scale: int=1) -> None:
+    def __init__(
+        self, screen_size: Tuple[int, int], fontname: str, window_scale: int = 1
+    ) -> None:
         self.window_scale = window_scale
         self.text_colour = (255, 255, 255)
         self.background_colour = (0, 0, 255)

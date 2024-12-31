@@ -3,15 +3,14 @@
 # mypy: disable-error-code=attr-defined
 
 import os
-from pathlib import Path
 import warnings
+from pathlib import Path
 from typing import Callable, Tuple
 
 from aenum import extend_enum  # type: ignore
 
+from .game import DEFAULT_VOLUME, Game, Tile
 from .screen import Screen
-from .game import Game, Tile, DEFAULT_VOLUME
-
 
 # Placeholder for gettext
 _: Callable[[str], str] = lambda _: _
@@ -24,30 +23,11 @@ with warnings.catch_warnings():
     from pygame import Vector2
 
 
-WIN_IMAGE: pygame.Surface
 DIAMOND_IMAGE: pygame.Surface
-SPLAT_IMAGE: pygame.Surface
 
 COLLECT_SOUND: pygame.mixer.Sound
 SLIDE_SOUND: pygame.mixer.Sound
 UNLOCK_SOUND: pygame.mixer.Sound
-SPLAT_SOUND: pygame.mixer.Sound
-
-
-def init_assets(path: Path) -> None:
-    global WIN_IMAGE, DIAMOND_IMAGE, SPLAT_IMAGE
-    global COLLECT_SOUND, SLIDE_SOUND, UNLOCK_SOUND, SPLAT_SOUND
-    WIN_IMAGE = pygame.image.load(path / "levels/Win.png")
-    DIAMOND_IMAGE = pygame.image.load(path / "diamond.png")
-    SPLAT_IMAGE = pygame.image.load(path / "splat.png")
-    COLLECT_SOUND = pygame.mixer.Sound(path / "Collect.wav")
-    COLLECT_SOUND.set_volume(DEFAULT_VOLUME)
-    SLIDE_SOUND = pygame.mixer.Sound(path / "Slide.wav")
-    SLIDE_SOUND.set_volume(DEFAULT_VOLUME)
-    UNLOCK_SOUND = pygame.mixer.Sound(path / "Unlock.wav")
-    UNLOCK_SOUND.set_volume(DEFAULT_VOLUME)
-    SPLAT_SOUND = pygame.mixer.Sound(path / "Splat.wav")
-    SPLAT_SOUND.set_volume(DEFAULT_VOLUME)
 
 
 for name in ("SAFE", "DIAMOND", "BLOB", "EARTH", "ROCK", "KEY"):
@@ -60,12 +40,64 @@ class WincollGame(Game):
         screen: Screen,
         window_size: Tuple[int, int],
         levels_arg: str,
+        hero_image: pygame.Surface,
+        die_image: pygame.Surface,
+        die_sound: pygame.mixer.Sound,
     ) -> None:
         super().__init__(
-            screen, window_size, levels_arg, WIN_IMAGE, SPLAT_IMAGE, SPLAT_SOUND
+            screen, window_size, levels_arg, hero_image, die_image, die_sound
         )
         self.falling = False
         self.diamonds: int
+
+    @staticmethod
+    def description() -> str:
+        return _("Collect all the diamonds while digging through earth dodging rocks.")
+
+    @staticmethod
+    def instructions() -> str:
+        # fmt: off
+# TRANSLATORS: Please keep this text wrapped to 40 characters. The font
+# used in-game is lacking many glyphs, so please test it with your
+# language and let me know if I need to add glyphs.
+        return _("""\
+Collect all the diamonds on each level.
+Get a key to turn safes into diamonds.
+Avoid falling rocks!
+
+    Z/X - Left/Right   '/? - Up/Down
+     or use the arrow keys to move
+        S/L - Save/load position
+    R - Restart level  Q - Quit game
+        F11 - toggle full screen
+
+
+ (choose with movement keys and digits)
+
+      Press the space bar to play!
+"""
+        # fmt: on
+        )
+
+    @staticmethod
+    def screen_size() -> Tuple[int, int]:
+        return (640, 512)
+
+    @staticmethod
+    def window_size() -> Tuple[int, int]:
+        return (240, 240)
+
+    @staticmethod
+    def init_assets(path: Path) -> None:
+        global DIAMOND_IMAGE
+        global COLLECT_SOUND, SLIDE_SOUND, UNLOCK_SOUND
+        DIAMOND_IMAGE = pygame.image.load(path / "diamond.png")
+        COLLECT_SOUND = pygame.mixer.Sound(path / "Collect.wav")
+        COLLECT_SOUND.set_volume(DEFAULT_VOLUME)
+        SLIDE_SOUND = pygame.mixer.Sound(path / "Slide.wav")
+        SLIDE_SOUND.set_volume(DEFAULT_VOLUME)
+        UNLOCK_SOUND = pygame.mixer.Sound(path / "Unlock.wav")
+        UNLOCK_SOUND.set_volume(DEFAULT_VOLUME)
 
     def init_physics(self) -> None:
         """Count diamonds on level and find start position."""

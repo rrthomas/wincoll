@@ -1,21 +1,31 @@
 # © Reuben Thomas <rrt@sc3d.org> 2024
 # Released under the GPL version 3, or (at your option) any later version.
 
-import os
-from pathlib import Path
-import pickle
-import warnings
-from itertools import chain
-from typing import Tuple, Callable, TYPE_CHECKING
-import zipfile
-from tempfile import TemporaryDirectory
+import argparse
 import atexit
+import gettext
+import importlib
+import importlib.metadata
+import locale
+import os
+import pickle
+import types
+import warnings
+import zipfile
+from datetime import datetime
+from itertools import chain
+from pathlib import Path
+from tempfile import TemporaryDirectory
+from typing import TYPE_CHECKING, Callable, List, Tuple
 
+import i18nparse  # type: ignore
+import importlib_resources
 from platformdirs import user_data_dir
 
-from .warnings_util import die
-from .event import quit_game, handle_global_keys, handle_quit_event
+from .event import handle_global_keys, handle_quit_event, quit_game
+from .langdetect import language_code
 from .screen import Screen
+from .warnings_util import die, simple_warning
 
 # Fix type checking for aenum
 if TYPE_CHECKING:
@@ -23,6 +33,27 @@ if TYPE_CHECKING:
 else:
     from aenum import Enum
 
+# Import pygame, suppressing extra messages that it prints on startup.
+os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
+with warnings.catch_warnings():
+    warnings.simplefilter("ignore")
+    import pygame
+
+
+locale.setlocale(locale.LC_ALL, "")
+
+metadata = importlib.metadata.metadata(__package__)
+VERSION = importlib.metadata.version(__package__)
+
+# Try to set LANG for gettext if not already set
+if not "LANG" in os.environ:
+    lang = language_code()
+    if lang is not None:
+        os.environ["LANG"] = lang
+i18nparse.activate()
+
+# Set app name for SDL
+os.environ["SDL_APP_NAME"] = metadata["Name"]
 
 # Placeholder for gettext
 _: Callable[[str], str] = lambda _: _
@@ -32,9 +63,9 @@ os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
 with warnings.catch_warnings():
     warnings.simplefilter("ignore")
     import pygame
-    from pygame import Vector2
     import pyscroll  # type: ignore
     import pytmx  # type: ignore
+    from pygame import Vector2
 
 
 DATA_DIR = Path(user_data_dir("wincoll"))
@@ -138,6 +169,26 @@ class Game:
         self.levels = len(self.levels_files)
         if self.levels == 0:
             die(_("Could not find any levels"))
+
+    @staticmethod
+    def description() -> str:
+        return "Play a game."
+
+    @staticmethod
+    def instructions() -> str:
+        return "Game instructions go here."
+
+    @staticmethod
+    def screen_size() -> Tuple[int, int]:
+        return (1024, 768)
+
+    @staticmethod
+    def window_size() -> Tuple[int, int]:
+        return (640, 480)
+
+    @staticmethod
+    def init_assets(_path: Path) -> None:
+        pass
 
     def init_renderer(self) -> None:
         self._map_layer = pyscroll.BufferedRenderer(
@@ -294,7 +345,7 @@ class Game:
         self.screen.show_screen()
         pygame.time.wait(3000)
 
-    def instructions(self, title_image: pygame.Surface, instructions: str) -> int:
+    def title_screen(self, title_image: pygame.Surface, instructions: str) -> int:
         """Show instructions and choose start level."""
         clear_keys()
         level = 0
@@ -456,3 +507,69 @@ class Hero(pygame.sprite.Sprite):  # pylint: disable=too-few-public-methods
         self.position += self.velocity * dt
         screen_pos = self.position * self.block_pixels
         self.rect.topleft = (int(screen_pos.x), int(screen_pos.y))
+
+
+def app_main(argv: List[str], app_game_module: types.ModuleType, game_class: type[Game]) -> None:
+    global _
+
+    with importlib_resources.as_file(importlib_resources.files()) as path:
+        # Internationalise all modules that need it.
+        cat = gettext.translation(__package__, path / "locale", fallback=True)
+        _ = cat.gettext
+        app_game_module._ = cat.gettext  # type: ignore[attr-defined]
+
+        # Load assets.
+        app_icon = pygame.image.load(path / "app-icon.png")
+        title_image = pygame.image.load(path / "title.png")
+        hero_image = pygame.image.load(path / "hero.png")
+        die_image = pygame.image.load(path / "die.png")
+
+        # Command-line arguments
+        parser = argparse.ArgumentParser(description=game_class.description())
+        parser.add_argument(
+            "--levels",
+            metavar="DIRECTORY",
+            help=_("a directory or Zip file of levels to use"),
+        )
+        parser.add_argument(
+            "-V",
+            "--version",
+            action="version",
+            version=_("%(prog)s {} ({}) by {}").format(
+                VERSION,
+                datetime(2024, 12, 16).strftime("%d %b %Y"), # FIXME: put date in pyproject.toml
+                metadata["Author-email"],
+            ),
+        )
+        warnings.showwarning = simple_warning(parser.prog)
+        args = parser.parse_args(argv)
+
+        pygame.init()
+        pygame.display.set_icon(app_icon)
+        pygame.mouse.set_visible(False)
+        pygame.font.init()
+        pygame.key.set_repeat()
+        pygame.joystick.init()
+        pygame.display.set_caption(metadata["Name"])
+        screen = Screen(game_class.screen_size(), str(path / "acorn-mode-1.ttf"), 2)
+        die_sound = pygame.mixer.Sound(path / "die.wav")
+        die_sound.set_volume(DEFAULT_VOLUME)
+        game_class.init_assets(path)
+        game = game_class(
+            screen,
+            game_class.window_size(),
+            args.levels or str(path / "levels"),
+            hero_image,
+            die_image,
+            die_sound,
+        )
+
+    try:
+        while True:
+            level = game.title_screen(
+                title_image.convert(),
+                game_class.instructions(),
+            )
+            game.run(level)
+    except KeyboardInterrupt:
+        quit_game()
