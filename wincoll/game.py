@@ -89,17 +89,19 @@ class Game:
     def __init__(
         self,
         screen: Screen,
-        window_size: Tuple[int, int],
+        max_window_size: Tuple[int, int],
         levels_arg: str,
         hero_image: pygame.Surface,
         die_image: pygame.Surface,
         die_sound: pygame.mixer.Sound,
     ) -> None:
-        (self.window_pixel_width, self.window_pixel_height) = window_size
+        self.max_window_size = max_window_size
+        self.window_pixel_width: int
+        self.window_pixel_height: int
         self.screen = screen
-        self.window_scaled_width = self.window_pixel_width * self.screen.window_scale
+        self.window_scaled_width: int
         self.window_pos = (0, 0)
-        self.game_surface = pygame.Surface(window_size)
+        self.game_surface: pygame.Surface
         self.hero_image = hero_image
         self.die_image = die_image
         self.die_sound = die_sound
@@ -154,6 +156,16 @@ class Game:
         # FIXME: Report error if tiles are not square
         assert self.map_data.tile_size[0] == self.map_data.tile_size[1]
         self.block_pixels = self.map_data.tile_size[0]
+        self.window_pixel_width = min(
+            self.level_width * self.block_pixels,
+            self.max_window_size[0],
+        )
+        self.window_pixel_height = min(
+            self.level_height * self.block_pixels,
+            self.max_window_size[1],
+        )
+        self.window_scaled_width = self.window_pixel_width * self.screen.window_scale
+        self.game_surface = pygame.Surface((self.window_pixel_width, self.window_pixel_height))
 
         # Dict mapping tileset GIDs to map gids
         map_gids = self.map_data.tmx.gidmap

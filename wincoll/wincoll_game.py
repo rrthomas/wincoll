@@ -79,6 +79,14 @@ class WincollGame(Game):
                     self.hero.position = Vector2(x, y)
                     self.set(self.hero.position, Tile.EMPTY)
 
+    def restart_level(self) -> None:
+        super().restart_level()
+        self.window_pos = (
+            (self.screen.surface.get_width() - self.window_scaled_width) // 2,
+            (self.screen.surface.get_height() - self.window_scaled_width) // 2
+            + 4 * self.screen.window_scale,
+        )
+
     def unlock(self) -> None:
         """Turn safes into diamonds"""
         for x in range(self.level_width):
@@ -171,7 +179,10 @@ class WincollGame(Game):
         super().show_status()
         self.screen.surface.blit(
             DIAMOND_IMAGE,
-            (2 * self.screen.font_pixels, int(1.5 * self.screen.font_pixels)),
+            (
+                (self.window_pos[0] - self.screen.font_pixels) // 2,
+                int(1.5 * self.screen.font_pixels),
+            ),
         )
         self.screen.print_screen(
             (0, 3),

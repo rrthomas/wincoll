@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.8" tiledversion="1.8.2" orientation="orthogonal" renderorder="right-down" width="8" height="8" tilewidth="16" tileheight="16" infinite="0" nextlayerid="2" nextobjectid="1">
+ <properties>
+  <property name="Title" value="Tiny map"/>
+ </properties>
+ <tileset firstgid="1" source="WinColl.tsx"/>
+ <tileset firstgid="19" source="../../RISC OS/Other/Games/WinColl/wincoll/levels/WinColl.tsx"/>
+ <layer id="1" name="Tile Layer 1" width="8" height="8">
+  <data encoding="csv">
+29,29,29,29,29,29,29,29,
+29,10,10,10,34,34,10,29,
+29,10,10,33,31,31,33,29,
+29,10,10,10,31,31,10,29,
+29,10,10,10,10,10,10,29,
+29,10,10,10,10,10,10,29,
+29,36,10,10,10,10,10,29,
+29,29,29,29,29,29,29,29
+</data>
+ </layer>
+</map>

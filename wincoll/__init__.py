@@ -94,10 +94,6 @@ def main(argv: List[str] = sys.argv[1:]) -> None:
         screen = Screen((640, 512), str(path / "acorn-mode-1.ttf"), 2)
         init_assets(path)
         game = WincollGame(screen, (240, 240), args.levels or str(path / "levels"))
-        game.window_pos = (
-            (screen.surface.get_width() - game.window_scaled_width) // 2,
-            12 * game.screen.window_scale,
-        )
 
     try:
         while True:
