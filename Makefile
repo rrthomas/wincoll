@@ -13,10 +13,14 @@ update-po:
 compile-po:
 	for po in po/*.po; do mo=wincoll/locale/$$(basename $${po%.po})/LC_MESSAGES/wincoll.mo; mkdir -p $$(dirname $$mo); msgfmt --output-file=$$mo $$po; done
 
-build:
+update-pofiles:
 	$(MAKE) update-pot
+	$(MAKE) po/wincoll.pot
 	$(MAKE) update-po
 	$(MAKE) compile-po
+
+build:
+	$(MAKE) update-pofiles
 	python -m build
 
 dist:
