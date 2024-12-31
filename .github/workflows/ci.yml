@@ -29,3 +29,5 @@ jobs:
           tox
           make build
           PYTHONPATH=. python -m wincoll --help
+          pip install .
+          wincoll --help
