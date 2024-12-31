@@ -73,6 +73,7 @@ SAVED_POSITION_FILE = DATA_DIR / "saved_position.pkl"
 
 
 FRAMES_PER_SECOND = 30
+SUBFRAMES = 4
 
 
 def clear_keys() -> None:
@@ -411,7 +412,6 @@ class Game:
             self.screen.show_screen()
             while not self.quit and not self.finished():
                 self.load_position()
-                subframes = 4  # FIXME: global constant
                 subframe = 0
                 while not self.quit and not self.dead and not self.finished():
                     clock.tick(FRAMES_PER_SECOND)
@@ -430,8 +430,8 @@ class Game:
                         if self.hero.velocity != Vector2(0, 0):
                             self.do_move()
                             subframe = 0
-                    self._group.update(1 / subframes)
-                    if subframe == subframes - 1:
+                    self._group.update(1 / SUBFRAMES)
+                    if subframe == SUBFRAMES - 1:
                         self.do_physics()
                     self.draw()
                     self.show_status()
@@ -439,7 +439,7 @@ class Game:
                         self.screen.scale_surface(self.game_surface), self.window_pos
                     )
                     self.screen.show_screen()
-                    subframe = (subframe + 1) % subframes
+                    subframe = (subframe + 1) % SUBFRAMES
                     if subframe == 0:
                         self.hero.velocity = Vector2(0, 0)
                 if self.dead:
