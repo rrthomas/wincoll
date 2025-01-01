@@ -522,7 +522,7 @@ def app_main(
         # Load assets.
         app_icon = pygame.image.load(path / "app-icon.png")
         title_image = pygame.image.load(path / "title.png")
-        hero_image = pygame.image.load(path / "hero.png")
+        hero_image = pygame.image.load(path / "levels/Hero.png")
         die_image = pygame.image.load(path / "die.png")
 
         # Command-line arguments

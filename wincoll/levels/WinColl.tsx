@@ -26,6 +26,6 @@
   <image width="16" height="16" source="Key.png"/>
  </tile>
  <tile id="17" type="hero">
-  <image width="16" height="16" source="Win.png"/>
+  <image width="16" height="16" source="Hero.png"/>
  </tile>
 </tileset>

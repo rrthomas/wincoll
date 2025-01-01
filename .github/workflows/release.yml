@@ -64,7 +64,7 @@ jobs:
       - name: Build the executable (macOS)
         if: ${{ matrix.os == 'macos-13' || matrix.os == 'macos-latest' }}
         run: |
-          ./make-macos-icns ./wincoll/levels/Win.png wincoll.iconset
+          ./make-macos-icns ./wincoll/levels/Hero.png wincoll.iconset
           pyi-makespec --windowed --name WinColl --icon wincoll.icns --add-data "wincoll/*.wav:wincoll/" --add-data "wincoll/*.png:wincoll/" --add-data "wincoll/*.ttf:wincoll/" --add-data "wincoll/levels:wincoll/levels" --add-data "wincoll/locale:wincoll/locale" wincoll/__main__.py
           export version=$(grep version pyproject.toml)
           sed -i '' -e "s/\(name='WinColl.app'\)/\1,\n    $version/" wincoll.spec

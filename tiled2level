@@ -41,7 +41,7 @@ gid_to_char = {
     "wincoll/levels/Earth.png": ".",
     "wincoll/levels/Rock.png": "@",
     "wincoll/levels/Key.png": "K",
-    "wincoll/levels/Win.png": "W",
+    "wincoll/levels/Hero.png": "W",
 }
 lines = []
 text = ""
