@@ -248,7 +248,7 @@ class Game:
             block = Tile.EMPTY
         return Tile(self.map_data.tmx.get_tile_properties(x, y, 0)["type"])
 
-    def set(self, pos: Vector2, tile: Tile) -> None:
+    def _set(self, pos: Vector2, tile: Tile) -> None:
         self._map_blocks[int(pos.y)][int(pos.x)] = self._gids[tile]
         # Update rendered map
         # FIXME: We invoke protected methods and access protected members.
@@ -258,6 +258,11 @@ class Game:
         ml._tile_queue = chain(ml._tile_queue, ml.data.get_tile_images_by_rect(rect))
         # pylint: disable-next=protected-access
         self._map_layer._flush_tile_queue(self._map_layer._buffer)
+
+    def set(self, pos: Vector2, tile: Tile) -> None:
+        # Update map twice, to allow for transparent tiles
+        self._set(pos, Tile.EMPTY)
+        self._set(pos, tile)
 
     def save_position(self) -> None:
         self.set(self.hero.position, Tile.HERO)

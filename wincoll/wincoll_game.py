@@ -91,7 +91,7 @@ Avoid falling rocks!
     def init_assets(path: Path) -> None:
         global DIAMOND_IMAGE
         global COLLECT_SOUND, SLIDE_SOUND, UNLOCK_SOUND
-        DIAMOND_IMAGE = pygame.image.load(path / "diamond.png")
+        DIAMOND_IMAGE = pygame.image.load(path / "levels/Diamond.png")
         COLLECT_SOUND = pygame.mixer.Sound(path / "levels/Collect.wav")
         COLLECT_SOUND.set_volume(DEFAULT_VOLUME)
         SLIDE_SOUND = pygame.mixer.Sound(path / "levels/Slide.wav")
