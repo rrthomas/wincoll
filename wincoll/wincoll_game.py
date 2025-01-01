@@ -9,8 +9,8 @@ from typing import Callable, Tuple
 
 from aenum import extend_enum  # type: ignore
 
-from .game import DEFAULT_VOLUME, Game, Tile
-from .screen import Screen
+from chambercourt.game import DEFAULT_VOLUME, Game, Tile
+from chambercourt.screen import Screen
 
 # Placeholder for gettext
 _: Callable[[str], str] = lambda _: _

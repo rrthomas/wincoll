@@ -39,7 +39,13 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - name: Install Python (Windows, macOS)
+        uses: actions/setup-python@v5
+        if: ${{ matrix.os != 'ubuntu-20.04' }}
+        with:
+          python-version: "3.12"
+      - name: Install deadsnakes PPA (Ubuntu)
+        uses: deadsnakes/action@v3.2.0
         with:
           python-version: "3.12"
       - name: Install non-Python build dependencies (Ubuntu)
@@ -49,7 +55,9 @@ jobs:
         if: ${{ matrix.os == 'windows-latest' }}
         run: |
           nuget install Gettext.Tools -Version 0.22.4 -OutputDirectory c:\nuget;
-          Add-Content $env:GITHUB_PATH "C:\nuget\Gettext.Tools.0.22.4\tools\bin"
+          Add-Content $env:GITHUB_PATH "C:\nuget\Gettext.Tools.0.22.4\tools\bin";
+          nuget install Magick.NET-Q16-AnyCPU -Version 14.3.0 -OutputDirectory c:\nuget;
+          Add-Content $env:GITHUB_PATH "C:\nuget\Magic.NET-Q16-AnyCPU.14.3.0\tools\bin"
       - name: Install Python dependencies
         run: pip install tox build setuptools aenum pygame i18nparse importlib-resources typing-extensions platformdirs pyscroll pytmx
       - name: Install additional dependencies for binary builds
