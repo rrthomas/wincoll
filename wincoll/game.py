@@ -552,7 +552,7 @@ def app_main(
         pygame.joystick.init()
         pygame.display.set_caption(metadata["Name"])
         screen = Screen(game_class.screen_size(), str(path / "acorn-mode-1.ttf"), 2)
-        die_sound = pygame.mixer.Sound(path / "die.wav")
+        die_sound = pygame.mixer.Sound(path / "levels/Die.wav")
         die_sound.set_volume(DEFAULT_VOLUME)
         game_class.init_assets(path)
         game = game_class(

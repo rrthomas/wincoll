@@ -92,11 +92,11 @@ Avoid falling rocks!
         global DIAMOND_IMAGE
         global COLLECT_SOUND, SLIDE_SOUND, UNLOCK_SOUND
         DIAMOND_IMAGE = pygame.image.load(path / "diamond.png")
-        COLLECT_SOUND = pygame.mixer.Sound(path / "Collect.wav")
+        COLLECT_SOUND = pygame.mixer.Sound(path / "levels/Collect.wav")
         COLLECT_SOUND.set_volume(DEFAULT_VOLUME)
-        SLIDE_SOUND = pygame.mixer.Sound(path / "Slide.wav")
+        SLIDE_SOUND = pygame.mixer.Sound(path / "levels/Slide.wav")
         SLIDE_SOUND.set_volume(DEFAULT_VOLUME)
-        UNLOCK_SOUND = pygame.mixer.Sound(path / "Unlock.wav")
+        UNLOCK_SOUND = pygame.mixer.Sound(path / "levels/Unlock.wav")
         UNLOCK_SOUND.set_volume(DEFAULT_VOLUME)
 
     def init_physics(self) -> None:
