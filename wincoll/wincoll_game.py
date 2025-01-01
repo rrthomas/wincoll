@@ -39,7 +39,7 @@ class WincollGame(Game):
         self,
         screen: Screen,
         window_size: Tuple[int, int],
-        levels_arg: str,
+        levels_arg: os.PathLike[str],
         hero_image: pygame.Surface,
         die_image: pygame.Surface,
         die_sound: pygame.mixer.Sound,
@@ -88,28 +88,25 @@ Avoid falling rocks!
         return (240, 240)
 
     @staticmethod
-    def init_assets(path: Path) -> None:
+    def load_assets(levels_path: Path) -> None:
         global DIAMOND_IMAGE
         global COLLECT_SOUND, SLIDE_SOUND, UNLOCK_SOUND
-        DIAMOND_IMAGE = pygame.image.load(path / "levels/Diamond.png")
-        COLLECT_SOUND = pygame.mixer.Sound(path / "levels/Collect.wav")
+        DIAMOND_IMAGE = pygame.image.load(levels_path / "Diamond.png")
+        COLLECT_SOUND = pygame.mixer.Sound(levels_path / "Collect.wav")
         COLLECT_SOUND.set_volume(DEFAULT_VOLUME)
-        SLIDE_SOUND = pygame.mixer.Sound(path / "levels/Slide.wav")
+        SLIDE_SOUND = pygame.mixer.Sound(levels_path / "Slide.wav")
         SLIDE_SOUND.set_volume(DEFAULT_VOLUME)
-        UNLOCK_SOUND = pygame.mixer.Sound(path / "levels/Unlock.wav")
+        UNLOCK_SOUND = pygame.mixer.Sound(levels_path / "Unlock.wav")
         UNLOCK_SOUND.set_volume(DEFAULT_VOLUME)
 
     def init_physics(self) -> None:
-        """Count diamonds on level and find start position."""
+        super().init_physics()
         self.diamonds = 0
         for x in range(self.level_width):
             for y in range(self.level_height):
                 block = self.get(Vector2(x, y))
                 if block in (Tile.DIAMOND, Tile.SAFE):
                     self.diamonds += 1
-                elif block == Tile.HERO:
-                    self.hero.position = Vector2(x, y)
-                    self.set(self.hero.position, Tile.EMPTY)
 
     def restart_level(self) -> None:
         super().restart_level()

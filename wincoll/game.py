@@ -121,7 +121,7 @@ class Game:
         self,
         screen: Screen,
         max_window_size: Tuple[int, int],
-        levels_arg: str,
+        levels_path: os.PathLike[str],
         hero_image: pygame.Surface,
         die_image: pygame.Surface,
         die_sound: pygame.mixer.Sound,
@@ -152,17 +152,17 @@ class Game:
 
         # Load levels
         try:
-            levels_path: Path
-            if zipfile.is_zipfile(levels_arg):
+            real_levels_path: Path
+            if zipfile.is_zipfile(levels_path):
                 tmpdir = TemporaryDirectory()  # pylint: disable=consider-using-with
-                levels_path = Path(tmpdir.name)
-                with zipfile.ZipFile(levels_arg) as z:
-                    z.extractall(levels_path)
+                real_levels_path = Path(tmpdir.name)
+                with zipfile.ZipFile(levels_path) as z:
+                    z.extractall(real_levels_path)
                 atexit.register(lambda tmpdir: tmpdir.cleanup(), tmpdir)
             else:
-                levels_path = Path(levels_arg)
+                real_levels_path = Path(levels_path)
             self.levels_files = sorted(
-                [item for item in levels_path.iterdir() if item.suffix == ".tmx"]
+                [item for item in real_levels_path.iterdir() if item.suffix == ".tmx"]
             )
         except IOError as err:
             die(_("Error reading levels: {}").format(err.strerror))
@@ -187,7 +187,7 @@ class Game:
         return (640, 480)
 
     @staticmethod
-    def init_assets(_path: Path) -> None:
+    def load_assets(_levels_path: Path) -> None:
         pass
 
     def init_renderer(self) -> None:
@@ -339,9 +339,7 @@ class Game:
         self.die_sound.play()
         self.game_surface.blit(
             self.die_image,
-            self.game_to_screen(
-                int(self.hero.position.x), int(self.hero.position.y)
-            ),
+            self.game_to_screen(int(self.hero.position.x), int(self.hero.position.y)),
         )
         self.show_status()
         self.screen.surface.blit(
@@ -471,7 +469,12 @@ class Game:
             self.splurge(self.hero.image)
 
     def init_physics(self) -> None:
-        pass
+        for x in range(self.level_width):
+            for y in range(self.level_height):
+                block = self.get(Vector2(x, y))
+                if block == Tile.HERO:
+                    self.hero.position = Vector2(x, y)
+                    self.set(self.hero.position, Tile.EMPTY)
 
     def do_physics(self) -> None:
         pass
@@ -527,12 +530,6 @@ def app_main(
         _ = cat.gettext
         app_game_module._ = cat.gettext  # type: ignore[attr-defined]
 
-        # Load assets.
-        app_icon = pygame.image.load(path / "app-icon.png")
-        title_image = pygame.image.load(path / "title.png")
-        hero_image = pygame.image.load(path / "levels/Hero.png")
-        die_image = pygame.image.load(path / "levels/Die.png")
-
         # Command-line arguments
         parser = argparse.ArgumentParser(description=game_class.description())
         parser.add_argument(
@@ -549,6 +546,14 @@ def app_main(
         warnings.showwarning = simple_warning(parser.prog)
         args = parser.parse_args(argv)
 
+        levels_path = Path(args.levels or path / "levels")
+
+        # Load assets.
+        app_icon = pygame.image.load(path / "app-icon.png")
+        title_image = pygame.image.load(path / "title.png")
+        hero_image = pygame.image.load(levels_path / "Hero.png")
+        die_image = pygame.image.load(levels_path / "Die.png")
+
         pygame.init()
         pygame.display.set_icon(app_icon)
         pygame.mouse.set_visible(False)
@@ -557,13 +562,13 @@ def app_main(
         pygame.joystick.init()
         pygame.display.set_caption(metadata["Name"])
         screen = Screen(game_class.screen_size(), str(path / "acorn-mode-1.ttf"), 2)
-        die_sound = pygame.mixer.Sound(path / "levels/Die.wav")
+        die_sound = pygame.mixer.Sound(levels_path / "Die.wav")
         die_sound.set_volume(DEFAULT_VOLUME)
-        game_class.init_assets(path)
+        game_class.load_assets(levels_path)
         game = game_class(
             screen,
             game_class.window_size(),
-            args.levels or str(path / "levels"),
+            levels_path,
             hero_image,
             die_image,
             die_sound,
