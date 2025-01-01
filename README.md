@@ -95,7 +95,9 @@ levels.
 
 ## Improving WinColl
 
-WinColl as a game is finished by design. However, I am evolving the code to support other similar games. Usability improvements are always welcome; for example, the ability to rebind keys would be welcome.
+New levels, usability improvements and translations are welcome, as are
+usability improvements: for example, the ability to rebind keys would be
+welcome.
 
 Some levels useful for testing are in `test-levels`.
 
@@ -111,7 +113,7 @@ Reuben Thomas, Alistair Turnbull, Paul Smith and Jeremy Douglas.
 
 The font “Acorn Mode 1”, which is based on the design of Acorn computers’
 system font, as used on the Acorn Archimedes on which WinColl was originally
-written, is by p1.mark and licensed under CC BY-SA 3.0.
+written, is by p1.mark and Reuben Thomas and licensed under CC BY-SA 3.0.
 
 The sound effects are copyrighted and licensed as follows:
 
