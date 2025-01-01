@@ -250,7 +250,7 @@ class Game:
 
     def set(self, pos: Vector2, tile: Tile) -> None:
         self._map_blocks[int(pos.y)][int(pos.x)] = self._gids[tile]
-        # Update map
+        # Update rendered map
         # FIXME: We invoke protected methods and access protected members.
         ml = self._map_layer
         rect = (int(pos.x), int(pos.y), 1, 1)
