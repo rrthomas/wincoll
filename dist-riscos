@@ -9,7 +9,7 @@ subprocess.check_call(["rm", "--force", "!WinColl/Level*,ffd"])
 
 # Convert levels
 for l in Path("wincoll/levels").glob("*.tmx"):
-    subprocess.check_call(["./tiled2level", l, Path("!WinColl") / f"{l.stem},ffd"])
+    subprocess.check_call(["./tiled2riscos", l, Path("!WinColl") / f"{l.stem},ffd"])
 
 # Build Zip
 subprocess.check_call(["mkdir", "-p", "dist"])

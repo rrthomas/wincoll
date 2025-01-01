@@ -14,7 +14,7 @@ import pytmx
 
 # Command-line arguments
 parser = argparse.ArgumentParser(
-    description="Convert Tiled levels to WinColl plain text WinColl format.",
+    description="Convert Tiled WinColl levels to RISC OS plain text format.",
 )
 parser.add_argument(
     "-V",
