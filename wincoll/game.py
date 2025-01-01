@@ -523,7 +523,7 @@ def app_main(
         app_icon = pygame.image.load(path / "app-icon.png")
         title_image = pygame.image.load(path / "title.png")
         hero_image = pygame.image.load(path / "levels/Hero.png")
-        die_image = pygame.image.load(path / "die.png")
+        die_image = pygame.image.load(path / "levels/Die.png")
 
         # Command-line arguments
         parser = argparse.ArgumentParser(description=game_class.description())
