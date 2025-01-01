@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-31 23:48+0000\n"
+"POT-Creation-Date: 2025-01-01 23:33+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,31 +16,6 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
-
-#: wincoll/game.py:168
-msgid "Error reading levels: {}"
-msgstr ""
-
-#: wincoll/game.py:171
-msgid "Could not find any levels"
-msgstr ""
-
-#: wincoll/game.py:369
-msgid "Start level: {}/{}"
-msgstr ""
-
-#: wincoll/game.py:484
-msgid "Level {}:"
-msgstr ""
-
-#: wincoll/game.py:534
-msgid "a directory or Zip file of levels to use"
-msgstr ""
-
-#: wincoll/game.py:540
-#, python-format
-msgid "%(prog)s {} by {}"
-msgstr ""
 
 #: wincoll/wincoll_game.py:55
 msgid "Collect all the diamonds while digging through earth dodging rocks."

@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-31 23:48+0000\n"
+"POT-Creation-Date: 2025-01-01 23:33+0000\n"
 "PO-Revision-Date: 2024-12-16 20:03+0000\n"
 "Last-Translator: Reuben Thomas <rrt@sc3d.org>\n"
 "Language: French\n"
@@ -13,31 +13,6 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: pygettext.py 1.5\n"
-
-#: wincoll/game.py:168
-msgid "Error reading levels: {}"
-msgstr ""
-
-#: wincoll/game.py:171
-msgid "Could not find any levels"
-msgstr ""
-
-#: wincoll/game.py:369
-msgid "Start level: {}/{}"
-msgstr "Niveau à commencer: {}/{}"
-
-#: wincoll/game.py:484
-msgid "Level {}:"
-msgstr "Niveau {}:"
-
-#: wincoll/game.py:534
-msgid "a directory or Zip file of levels to use"
-msgstr "un répertoire ou fichier Zip de niveaux à utiliser"
-
-#: wincoll/game.py:540
-#, python-format
-msgid "%(prog)s {} by {}"
-msgstr "%(prog)s {} de {}"
 
 #: wincoll/wincoll_game.py:55
 msgid "Collect all the diamonds while digging through earth dodging rocks."
@@ -78,6 +53,19 @@ msgstr ""
 "          touches de déplacement)\n"
 "\n"
 "    Tape la barre éspace pour jouer!\n"
+
+#~ msgid "Start level: {}/{}"
+#~ msgstr "Niveau à commencer: {}/{}"
+
+#~ msgid "Level {}:"
+#~ msgstr "Niveau {}:"
+
+#~ msgid "a directory or Zip file of levels to use"
+#~ msgstr "un répertoire ou fichier Zip de niveaux à utiliser"
+
+#, python-format
+#~ msgid "%(prog)s {} by {}"
+#~ msgstr "%(prog)s {} de {}"
 
 #, python-format
 #~ msgid "%(prog)s {} ({}) by Reuben Thomas <rrt@sc3d.org>"
