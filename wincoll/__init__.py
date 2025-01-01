@@ -5,8 +5,9 @@ import re
 import sys
 from typing import List
 
-from . import wincoll_game
 from chambercourt.game import app_main
+
+from . import wincoll_game
 
 
 def main(argv: List[str] = sys.argv[1:]) -> None:
