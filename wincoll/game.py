@@ -330,6 +330,22 @@ class Game:
         if pressed[pygame.K_q]:
             self.quit = True
 
+    def die(self) -> None:
+        self.die_sound.play()
+        self.game_surface.blit(
+            self.die_image,
+            self.game_to_screen(
+                int(self.hero.position.x), int(self.hero.position.y)
+            ),
+        )
+        self.show_status()
+        self.screen.surface.blit(
+            self.screen.scale_surface(self.game_surface), self.window_pos
+        )
+        self.screen.show_screen()
+        pygame.time.wait(1000)
+        self.dead = False
+
     def game_to_screen(self, x: int, y: int) -> Tuple[int, int]:
         origin = self._map_layer.get_center_offset()
         return (origin[0] + x * self.block_pixels, origin[1] + y * self.block_pixels)
@@ -443,20 +459,7 @@ class Game:
                     if subframe == 0:
                         self.hero.velocity = Vector2(0, 0)
                 if self.dead:
-                    self.die_sound.play()
-                    self.game_surface.blit(
-                        self.die_image,
-                        self.game_to_screen(
-                            int(self.hero.position.x), int(self.hero.position.y)
-                        ),
-                    )
-                    self.show_status()
-                    self.screen.surface.blit(
-                        self.screen.scale_surface(self.game_surface), self.window_pos
-                    )
-                    self.screen.show_screen()
-                    pygame.time.wait(1000)
-                    self.dead = False
+                    self.die()
             if self.finished():
                 self.level += 1
         if self.level > self.levels:

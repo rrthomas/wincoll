@@ -161,6 +161,10 @@ Avoid falling rocks!
         side_below_block = self.get(pos + Vector2(0, 1))
         return side_block == Tile.EMPTY and side_below_block == Tile.EMPTY
 
+    def die(self) -> None:
+        SLIDE_SOUND.stop()
+        super().die()
+
     def do_physics(self) -> None:
         # Put Win into the map data for collision detection.
         self.set(self.hero.position, Tile.HERO)
