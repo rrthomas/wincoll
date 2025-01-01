@@ -45,6 +45,7 @@ jobs:
         with:
           python-version: "3.12"
       - name: Install deadsnakes PPA (Ubuntu)
+        if: ${{ matrix.os == 'ubuntu-20.04' }}
         uses: deadsnakes/action@v3.2.0
         with:
           python-version: "3.12"
