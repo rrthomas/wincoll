@@ -179,11 +179,11 @@ Avoid falling rocks!
                 SLIDE_SOUND.play(-1)
             new_fall = True
 
-        for x in range(self.level_width):
-            for y in range(self.level_height - 1, 0, -1):
-                block = self.get(Vector2(x, y))
+        for y in range(self.level_height - 1, -1, -1):
+            for x in range(self.level_width):
+                pos = Vector2(x, y)
+                block = self.get(pos)
                 if block == Tile.ROCK:
-                    pos = Vector2(x, y)
                     pos_below = pos + Vector2(0, 1)
                     block_below = self.get(pos_below)
                     if block_below == Tile.EMPTY:
