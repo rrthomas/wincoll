@@ -53,20 +53,3 @@ msgstr ""
 "          touches de déplacement)\n"
 "\n"
 "    Tape la barre éspace pour jouer!\n"
-
-#~ msgid "Start level: {}/{}"
-#~ msgstr "Niveau à commencer: {}/{}"
-
-#~ msgid "Level {}:"
-#~ msgstr "Niveau {}:"
-
-#~ msgid "a directory or Zip file of levels to use"
-#~ msgstr "un répertoire ou fichier Zip de niveaux à utiliser"
-
-#, python-format
-#~ msgid "%(prog)s {} by {}"
-#~ msgstr "%(prog)s {} de {}"
-
-#, python-format
-#~ msgid "%(prog)s {} ({}) by Reuben Thomas <rrt@sc3d.org>"
-#~ msgstr "%(prog)s {} ({}) de Reuben THOMAS <rrt@sc3d.org>"

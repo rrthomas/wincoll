@@ -58,17 +58,3 @@ msgstr ""
 "\n"
 "    Πατήστε το πλήκτρο διαστήματος\n"
 "          για να παίξετε!\n"
-
-#~ msgid "Start level: {}/{}"
-#~ msgstr "Επίπεδο αρχής: {}/{}"
-
-#~ msgid "Level {}:"
-#~ msgstr "Επίπεδο {}:"
-
-#, python-format
-#~ msgid "%(prog)s {} by {}"
-#~ msgstr "%(prog)s {} από {}"
-
-#, python-format
-#~ msgid "%(prog)s {} ({}) by Reuben Thomas <rrt@sc3d.org>"
-#~ msgstr "%(prog)s {} ({}) από τον Reuben Thomas <rrt@sc3d.org>"
