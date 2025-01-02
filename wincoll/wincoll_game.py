@@ -8,7 +8,6 @@ from pathlib import Path
 from typing import Callable, Tuple
 
 from aenum import extend_enum  # type: ignore
-
 from chambercourt.game import DEFAULT_VOLUME, Game, Tile
 from chambercourt.screen import Screen
 
@@ -229,3 +228,7 @@ Avoid falling rocks!
             SLIDE_SOUND.stop()
             return True
         return False
+
+    def shutdown(self) -> None:
+        SLIDE_SOUND.stop()
+        super().shutdown()
