@@ -47,6 +47,7 @@ jobs = 0
 
 [tool.pylint.MASTER]
 init-hook = 'import sys; sys.path.append(".")'
+init-import = "yes"
 
 [tool.pylint.format]
 const-naming-style = "any"
