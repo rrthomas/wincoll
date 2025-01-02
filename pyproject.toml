@@ -74,7 +74,7 @@ enable = [
 [[tool.cxfreeze.executables]]
 script = "wincoll/__main__.py"
 base = "gui"
-icon = "win"
+icon = "app-icon"
 shortcut_name = "WinColl"
 shortcut_dir = "DesktopFolder"
 
