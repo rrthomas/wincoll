@@ -11,7 +11,7 @@ from . import wincoll_game
 
 
 def main(argv: List[str] = sys.argv[1:]) -> None:
-    app_main(argv, wincoll_game, wincoll_game.WincollGame)
+    app_main(argv, "wincoll", wincoll_game, wincoll_game.WincollGame)
 
 
 if __name__ == "__main__":
