@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-02 18:24+0000\n"
+"POT-Creation-Date: 2025-01-03 01:14+0000\n"
 "PO-Revision-Date: 2024-12-16 20:03+0000\n"
 "Last-Translator: Reuben Thomas <rrt@sc3d.org>\n"
 "Language: Greek\n"
@@ -14,19 +14,18 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: pygettext.py 1.5\n"
 
-#: wincoll/wincoll_game.py:54
-msgid "Collect all the diamonds while digging through earth dodging rocks."
+#: mrmatt/mrmatt_game.py:564
+msgid "Level {}:"
 msgstr ""
-"Συλλέξτε όλα τα διαμάντια ενώ σκάβετε μέσα από τη γη αποφεύγοντας τους "
-"βράχους."
 
 #. TRANSLATORS: Please keep this text wrapped to 40 characters. The font
 #. used in-game is lacking many glyphs, so please test it with your
 #. language and let me know if I need to add glyphs.
-#: wincoll/wincoll_game.py:62
+#: mrmatt/mrmatt_game.py:679
+#, fuzzy
 msgid ""
-"Collect all the diamonds on each level.\n"
-"Get a key to turn safes into diamonds.\n"
+"Collect all the food on each level.\n"
+"FIXME: Boxes, bombs.\n"
 "Avoid falling rocks!\n"
 "\n"
 "    Z/X - Left/Right   '/? - Up/Down\n"
@@ -58,3 +57,71 @@ msgstr ""
 "\n"
 "    Πατήστε το πλήκτρο διαστήματος\n"
 "          για να παίξετε!\n"
+
+#: mrmatt/mrmatt_game.py:707
+msgid "Start level: {}/{}"
+msgstr ""
+
+#: mrmatt/mrmatt_game.py:740
+#, fuzzy
+msgid "Collect all the food while digging through earth dodging rocks."
+msgstr ""
+"Συλλέξτε όλα τα διαμάντια ενώ σκάβετε μέσα από τη γη αποφεύγοντας τους "
+"βράχους."
+
+#: mrmatt/mrmatt_game.py:746
+msgid "a directory of levels to use instead of the built-in ones"
+msgstr ""
+
+#: mrmatt/mrmatt_game.py:752
+#, python-format
+msgid "%(prog)s {} ({}) by Reuben Thomas <rrt@sc3d.org>"
+msgstr ""
+
+#: mrmatt/mrmatt_game.py:781
+msgid "Error reading levels: {}"
+msgstr ""
+
+#: mrmatt/mrmatt_game.py:784
+msgid "Could not find any levels"
+msgstr ""
+
+#~ msgid "Collect all the diamonds while digging through earth dodging rocks."
+#~ msgstr ""
+#~ "Συλλέξτε όλα τα διαμάντια ενώ σκάβετε μέσα από τη γη αποφεύγοντας τους "
+#~ "βράχους."
+
+#~ msgid ""
+#~ "Collect all the diamonds on each level.\n"
+#~ "Get a key to turn safes into diamonds.\n"
+#~ "Avoid falling rocks!\n"
+#~ "\n"
+#~ "    Z/X - Left/Right   '/? - Up/Down\n"
+#~ "     or use the arrow keys to move\n"
+#~ "        S/L - Save/load position\n"
+#~ "    R - Restart level  Q - Quit game\n"
+#~ "        F11 - toggle full screen\n"
+#~ "\n"
+#~ "\n"
+#~ " (choose with movement keys and digits)\n"
+#~ "\n"
+#~ "      Press the space bar to play!\n"
+#~ msgstr ""
+#~ "Συλλέξτε όλα τα διαμάντια σε κάθεεπίπεδο.\n"
+#~ "Πάρτε ένα κλειδί για να μετατρέψετε τα\n"
+#~ "χρηματοκιβώτια σε διαμάντια.\n"
+#~ "Αποφύγετε τις πέτρες που πέφτουν!\n"
+#~ "\n"
+#~ "  Z/X - Αριστερά/Δεξιά '/? - Πάνω/Κάτω\n"
+#~ "   ή χρησιμοποιήστε τα πλήκτρα δρομέα\n"
+#~ "    S/L - Αποθήκευση/φόρτωση θέσης\n"
+#~ "      R - Επανεκκίνηση επιπέδου\n"
+#~ "      Q - Έξοδος από το παιχνίδι\n"
+#~ "    F11 - εναλλαγή πλήρους οθόνης\n"
+#~ "\n"
+#~ "\n"
+#~ "    (επιλέξτε με τα πλήκτρα κίνησης\n"
+#~ "             και τα ψηφία)\n"
+#~ "\n"
+#~ "    Πατήστε το πλήκτρο διαστήματος\n"
+#~ "          για να παίξετε!\n"

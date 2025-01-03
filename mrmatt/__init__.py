@@ -7,11 +7,11 @@ from typing import List
 
 from chambercourt.game import app_main
 
-from . import wincoll_game
+from . import mrmatt_game
 
 
 def main(argv: List[str] = sys.argv[1:]) -> None:
-    app_main(argv, "wincoll", wincoll_game, wincoll_game.WincollGame)
+    app_main(argv, "mrmatt", mrmatt_game, mrmatt_game.WincollGame)
 
 
 if __name__ == "__main__":

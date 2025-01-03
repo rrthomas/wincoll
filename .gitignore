@@ -94,6 +94,6 @@ ENV/
 # WinColl-specific files
 Saved,ffd
 *.tiled-session
-wincoll.icns
+mrmatt.icns
 \!WinColl/??,ffd
-po/wincoll.pot
+po/mrmatt.pot

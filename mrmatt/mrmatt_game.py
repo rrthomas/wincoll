@@ -51,13 +51,13 @@ with warnings.catch_warnings():
     from . import ptext
 
 
-VERSION = importlib.metadata.version("wincoll")
+VERSION = importlib.metadata.version("mrmatt")
 
 with importlib_resources.as_file(importlib_resources.files()) as path:
-    cat = gettext.translation("wincoll", path / "locale", fallback=True)
+    cat = gettext.translation("mrmatt", path / "locale", fallback=True)
     _ = cat.gettext
 
-CACHE_DIR = Path(user_data_dir("wincoll"))
+CACHE_DIR = Path(user_data_dir("mrmatt"))
 CACHE_DIR.mkdir(parents=True, exist_ok=True)
 SAVED_POSITION_FILE = CACHE_DIR / "saved_position.pkl"
 
@@ -770,7 +770,7 @@ def main(argv: List[str] = sys.argv[1:]) -> None:
                 levels_path = Path(args.levels)
         else:
             ctx = importlib_resources.as_file(
-                importlib_resources.files("wincoll.levels")
+                importlib_resources.files("mrmatt.levels")
             )
             levels_path = ctx.__enter__()
             atexit.register(lambda ctx: ctx.__exit__(None, None, None), ctx)

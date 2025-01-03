@@ -1,16 +1,16 @@
-# WinColl
+# MrMatt
 
-https://github.com/rrthomas/wincoll  
+https://github.com/rrthomas/mrmatt  
 
 by Reuben Thomas <rrt@sc3d.org>  
 
-WinColl is a simple puzzle game in which you tunnel through caverns
+MrMatt is a simple puzzle game in which you tunnel through caverns
 collecting diamonds while avoiding being squashed by falling rocks. It is
 based on [Repton](https://en.wikipedia.org/wiki/Repton_(video_game)) (but
 without eggs and monsters).
 
-I originally wrote WinColl for Acorn RISC OS. Original and updated [RISC OS
-versions](<https://github.com/rrthomas/wincoll/RISC OS.md>) are available.
+I originally wrote MrMatt for Acorn RISC OS. Original and updated [RISC OS
+versions](<https://github.com/rrthomas/mrmatt/RISC OS.md>) are available.
 
 The name of the game is an abbreviation of my school’s. “Repton” is also the
 name of a school, but I don’t believe the game was named after it!
@@ -34,7 +34,7 @@ The game provides instructions on how to play.
 ### Binary installers
 
 Installers are available for GNU/Linux, macOS and Windows. See the
-[latest release](https://github.com/wincoll/releases):
+[latest release](https://github.com/mrmatt/releases):
 
 * The GNU/Linux version is a single binary; you need to make it executable
   and then either copy it to a directory on your path, or run it directly:
@@ -53,25 +53,25 @@ Installers are available for GNU/Linux, macOS and Windows. See the
 
 ### Python package
 
-If you are a Python user, this is the simplest way to get WinColl on most
+If you are a Python user, this is the simplest way to get MrMatt on most
 machines.
 
-Install with `pip`: `pip install wincoll`, then execute the command
-`wincoll`.
+Install with `pip`: `pip install mrmatt`, then execute the command
+`mrmatt`.
 
 
 ## Creating and editing levels
 
 Currently, to play edited or new levels you must have a source check-out of
-WinColl from GitHub. (If this doesn’t make sense to you, sorry! I hope to
+MrMatt from GitHub. (If this doesn’t make sense to you, sorry! I hope to
 provide a simpler way to edit and play new levels soon.)
 
-The level files are in the `wincoll/levels` subdirectory of the project, and
+The level files are in the `mrmatt/levels` subdirectory of the project, and
 are [Tiled](https://www.mapeditor.org/) level editor files, so you will need
 to install Tiled to edit them or create new levels.
 
 Having saved an edited level you can install the Python package with
-`pip install .` or run it directly with `PYTHONPATH=. python -m wincoll`.
+`pip install .` or run it directly with `PYTHONPATH=. python -m mrmatt`.
 
 Some notes about level design:
 
@@ -86,14 +86,14 @@ Some notes about level design:
   example, you can place diamonds surrounded by bricks, or have safes but no
   key.
 + A complete level set requires a Tiled tileset and corresponding graphics.
-  You can simply copy the tileset file `WinColl.tsx` and PNG graphics from
-  `wincoll/levels`.
+  You can simply copy the tileset file `MrMatt.tsx` and PNG graphics from
+  `mrmatt/levels`.
 
-I welcome [pull requests](https://github.com/rrthomas/wincoll/pulls) for new
+I welcome [pull requests](https://github.com/rrthomas/mrmatt/pulls) for new
 levels.
 
 
-## Improving WinColl
+## Improving MrMatt
 
 New levels, usability improvements and translations are welcome, as are
 usability improvements: for example, the ability to rebind keys would be
@@ -104,15 +104,15 @@ Some levels useful for testing are in `test-levels`.
 
 ## Copyright and Disclaimer
 
-WinColl is distributed under the GNU Public License version 3, or, at your
+MrMatt is distributed under the GNU Public License version 3, or, at your
 option, any later version. See the file COPYING.
 
 THIS PROGRAM IS PROVIDED AS IS, WITH NO WARRANTY. USE IS AT THE USER'S RISK.
-WinColl’s code is copyright Reuben Thomas, and its levels and graphics by
+MrMatt’s code is copyright Reuben Thomas, and its levels and graphics by
 Reuben Thomas, Alistair Turnbull, Paul Smith and Jeremy Douglas.
 
 The font “Acorn Mode 1”, which is based on the design of Acorn computers’
-system font, as used on the Acorn Archimedes on which WinColl was originally
+system font, as used on the Acorn Archimedes on which MrMatt was originally
 written, is by p1.mark and Reuben Thomas and licensed under CC BY-SA 3.0.
 
 The sound effects are copyrighted and licensed as follows:

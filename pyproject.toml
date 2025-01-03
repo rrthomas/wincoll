@@ -1,5 +1,5 @@
 [project]
-name = "WinColl"
+name = "MrMatt"
 version = "0.9.13"
 description = "Simple rocks-and-diamonds game"
 license = {text = "GPL v3 or later"}
@@ -7,7 +7,7 @@ authors = [
     {name = "Reuben Thomas", email = "rrt@sc3d.org"}
 ]
 readme = "README.md"
-urls = {Homepage = "https://github.com/rrthomas/wincoll"}
+urls = {Homepage = "https://github.com/rrthomas/mrmatt"}
 requires-python = ">= 3.11"
 dependencies = [
     "chambercourt >= 0.9.4",
@@ -21,7 +21,7 @@ classifiers = [
 ]
 
 [project.scripts]
-wincoll = "wincoll:main"
+mrmatt = "mrmatt:main"
 
 [build-system]
 requires = [
@@ -31,11 +31,11 @@ requires = [
 
 [tool.setuptools]
 packages = [
-    "wincoll",
+    "mrmatt",
 ]
 
 [tool.setuptools.package-data]
-wincoll = ["**/*.png", "**/*.wav", "**/*.tmx", "**/*.tsx", "**/*.ttf", "**/*.mo"]
+mrmatt = ["**/*.png", "**/*.wav", "**/*.tmx", "**/*.tsx", "**/*.ttf", "**/*.mo"]
 
 [tool.mypy]
 exclude = ['^dist', '^build']
@@ -73,10 +73,10 @@ enable = [
 ]
 
 [[tool.cxfreeze.executables]]
-script = "wincoll/__main__.py"
+script = "mrmatt/__main__.py"
 base = "gui"
 icon = "app-icon"
-shortcut_name = "WinColl"
+shortcut_name = "MrMatt"
 shortcut_dir = "DesktopFolder"
 
 [tool.cxfreeze.build_exe]
