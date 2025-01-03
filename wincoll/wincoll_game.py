@@ -158,8 +158,12 @@ Avoid falling rocks!
         return side_block == Tile.EMPTY and side_below_block == Tile.EMPTY
 
     def die(self) -> None:
-        SLIDE_SOUND.stop()
+        self.reset_falling()
         super().die()
+
+    def reset_falling(self) -> None:
+        self.falling = False
+        SLIDE_SOUND.stop()
 
     def do_physics(self) -> None:
         # Put Win into the map data for collision detection.
@@ -202,8 +206,7 @@ Avoid falling rocks!
                                 fall(pos, pos_right + Vector2(0, 1))
 
         if new_fall is False:
-            self.falling = False
-            SLIDE_SOUND.stop()
+            self.reset_falling()
 
         self.set(self.hero.position, Tile.EMPTY)
 
@@ -225,10 +228,10 @@ Avoid falling rocks!
 
     def finished(self) -> bool:
         if self.diamonds == 0:
-            SLIDE_SOUND.stop()
+            self.reset_falling()
             return True
         return False
 
     def shutdown(self) -> None:
-        SLIDE_SOUND.stop()
+        self.reset_falling()
         super().shutdown()
