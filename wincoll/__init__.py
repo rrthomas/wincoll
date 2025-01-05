@@ -5,15 +5,13 @@ import re
 import sys
 from typing import List
 
-from chambercourt.game import app_main
-
-from . import wincoll_game
+from .wincoll_game import WincollGame
 
 
 def main(argv: List[str] = sys.argv[1:]) -> None:
-    app_main(argv, "wincoll", wincoll_game, wincoll_game.WincollGame)
+    WincollGame().main(argv)
 
 
 if __name__ == "__main__":
-    sys.argv[0] = re.sub(r"__init__.py$", __package__, sys.argv[0])
+    sys.argv[0] = re.sub(r"__init__.py$", "wincoll", sys.argv[0])
     main()

@@ -4,15 +4,14 @@
 
 import os
 import warnings
+from enum import StrEnum, auto
 from pathlib import Path
-from typing import Callable, Tuple
 
-from aenum import extend_enum  # type: ignore
-from chambercourt.game import DEFAULT_VOLUME, Game, Tile
-from chambercourt.screen import Screen
+from chambercourt.game import DEFAULT_VOLUME, Game
 
 # Placeholder for gettext
-_: Callable[[str], str] = lambda _: _
+def _(_: str) -> str:
+    return _
 
 # Import pygame, suppressing extra messages that it prints on startup.
 os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
@@ -29,22 +28,24 @@ SLIDE_SOUND: pygame.mixer.Sound
 UNLOCK_SOUND: pygame.mixer.Sound
 
 
-for name in ("SAFE", "DIAMOND", "BLOB", "EARTH", "ROCK", "KEY"):
-    extend_enum(Tile, name, name.lower())
+class Tile(StrEnum):
+    """An enumeration representing the available map tiles."""
+
+    EMPTY = auto()
+    BRICK = auto()
+    HERO = auto()
+    SAFE = auto()
+    DIAMOND = auto()
+    BLOB = auto()
+    EARTH = auto()
+    ROCK = auto()
+    KEY = auto()
 
 
-class WincollGame(Game):
-    def __init__(
-        self,
-        screen: Screen,
-        window_size: Tuple[int, int],
-        levels_arg: os.PathLike[str],
-        hero_image: pygame.Surface,
-        die_image: pygame.Surface,
-        die_sound: pygame.mixer.Sound,
-    ) -> None:
+class WincollGame(Game[Tile]):
+    def __init__(self) -> None:
         super().__init__(
-            screen, window_size, levels_arg, hero_image, die_image, die_sound
+            "wincoll", Tile, Tile.HERO, Tile.EMPTY, Tile.BRICK, self.window_size
         )
         self.falling = False
         self.diamonds: int
@@ -78,16 +79,12 @@ Avoid falling rocks!
         # fmt: on
         )
 
-    @staticmethod
-    def screen_size() -> Tuple[int, int]:
-        return (640, 512)
+    screen_size = (640, 512)
 
-    @staticmethod
-    def window_size() -> Tuple[int, int]:
-        return (240, 240)
+    window_size = (240, 240)
 
-    @staticmethod
-    def load_assets(levels_path: Path) -> None:
+    def load_assets(self, path: Path, levels_path: Path) -> None:
+        super().load_assets(path, levels_path)
         global DIAMOND_IMAGE
         global COLLECT_SOUND, SLIDE_SOUND, UNLOCK_SOUND
         DIAMOND_IMAGE = pygame.image.load(levels_path / "Diamond.png")
