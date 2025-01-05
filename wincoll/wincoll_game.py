@@ -87,6 +87,8 @@ Avoid falling rocks!
 
     window_size = (240, 240)
 
+    window_scale = 2
+
     def load_assets(self, path: Path, levels_path: Path) -> None:
         super().load_assets(path, levels_path)
         global DIAMOND_IMAGE
@@ -107,14 +109,6 @@ Avoid falling rocks!
                 block = self.get(Vector2(x, y))
                 if block in (Tile.DIAMOND, Tile.SAFE):
                     self.diamonds += 1
-
-    def restart_level(self) -> None:
-        super().restart_level()
-        self.window_pos = (
-            (self.screen.surface.get_width() - self.window_scaled_width) // 2,
-            (self.screen.surface.get_height() - self.window_scaled_width) // 2
-            + 4 * self.screen.window_scale,
-        )
 
     def unlock(self) -> None:
         """Turn safes into diamonds."""
