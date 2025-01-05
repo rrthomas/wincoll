@@ -38,7 +38,11 @@ Installers are available for GNU/Linux, macOS and Windows. See the
 
 * The GNU/Linux version is a single binary; you need to make it executable
   and then either copy it to a directory on your path, or run it directly:
-  `chmod +x NAME-OF-FILE; ./NAME-OF-FILE`
+  `chmod +x NAME-OF-FILE; ./NAME-OF-FILE`. If you get an error that mentions
+  `error: MESA-LOADER: failed to open …` then you can try the following
+  incantation to run the game:
+  `LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libstdc++.so.6 ./wincoll-Linux-X64`.
+
 * The macOS version is a disk image file containing an application. Drag the
   application to a suitable location (e.g. your Applications folder). macOS
   will probably refuse to run it until you have approved it in System
