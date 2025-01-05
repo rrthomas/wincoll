@@ -16,16 +16,10 @@ jobs:
       - name: Install non-Python build dependencies (Ubuntu)
         if: ${{ matrix.os == 'ubuntu-24.04' }}
         run: sudo apt-get -y install gettext
-      - name: Install non-Python build dependencies (macOS)
-        if: ${{ matrix.os == 'macos-latest' }}
-        run: brew install gettext
       - name: Install Python dependencies
         run: pip install tox build setuptools chambercourt
       - name: Build
         run: |
-          if [ "$RUNNER_OS" != "macOS" ]; then
-            pip install tox
-          fi
           tox
           make build
           PYTHONPATH=. python -m wincoll --help
