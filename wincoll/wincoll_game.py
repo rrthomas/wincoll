@@ -2,6 +2,8 @@
 # Released under the GPL version 3, or (at your option) any later version.
 # mypy: disable-error-code=attr-defined
 
+import gettext
+import importlib
 import os
 import warnings
 from enum import StrEnum, auto
@@ -10,8 +12,8 @@ from pathlib import Path
 from chambercourt.game import DEFAULT_VOLUME, Game
 
 # Placeholder for gettext
-def _(_: str) -> str:
-    return _
+def _(message: str) -> str:
+    return message
 
 # Import pygame, suppressing extra messages that it prints on startup.
 os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
@@ -232,3 +234,13 @@ Avoid falling rocks!
     def shutdown(self) -> None:
         self.reset_falling()
         super().shutdown()
+
+    def main(self, argv: list[str]) -> None:
+        global _
+
+        # Internationalise this module.
+        with importlib.resources.as_file(importlib.resources.files()) as path:
+            cat = gettext.translation("wincoll", path / "locale", fallback=True)
+            _ = cat.gettext
+
+        super().main(argv)
