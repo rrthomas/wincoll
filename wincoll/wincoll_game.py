@@ -18,6 +18,7 @@ from chambercourt.game import DEFAULT_VOLUME, Game
 def _(message: str) -> str:
     return message
 
+
 # Import pygame, suppressing extra messages that it prints on startup.
 os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
 with warnings.catch_warnings():
@@ -49,9 +50,7 @@ class Tile(StrEnum):
 
 class WincollGame(Game[Tile]):
     def __init__(self) -> None:
-        super().__init__(
-            "wincoll", Tile, Tile.HERO, Tile.EMPTY, Tile.BRICK, self.window_size
-        )
+        super().__init__("wincoll", Tile, Tile.HERO, Tile.EMPTY, Tile.BRICK)
         self.falling = False
         self.diamonds: int
 
@@ -62,9 +61,9 @@ class WincollGame(Game[Tile]):
     @staticmethod
     def instructions() -> str:
         # fmt: off
-# TRANSLATORS: Please keep this text wrapped to 40 characters. The font
-# used in-game is lacking many glyphs, so please test it with your
-# language and let me know if I need to add glyphs.
+        # TRANSLATORS: Please keep this text wrapped to 40 characters. The font
+        # used in-game is lacking many glyphs, so please test it with your
+        # language and let me know if I need to add glyphs.
         return _("""\
 Collect all the diamonds on each level.
 Get a key to turn safes into diamonds.
