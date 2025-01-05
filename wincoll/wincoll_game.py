@@ -1,6 +1,8 @@
-# © Reuben Thomas <rrt@sc3d.org> 2024
-# Released under the GPL version 3, or (at your option) any later version.
-# mypy: disable-error-code=attr-defined
+"""WinColl: Main game class.
+
+© Reuben Thomas <rrt@sc3d.org> 2024-2025
+Released under the GPL version 3, or (at your option) any later version.
+"""
 
 import gettext
 import importlib
@@ -10,6 +12,7 @@ from enum import StrEnum, auto
 from pathlib import Path
 
 from chambercourt.game import DEFAULT_VOLUME, Game
+
 
 # Placeholder for gettext
 def _(message: str) -> str:
@@ -115,7 +118,7 @@ Avoid falling rocks!
         )
 
     def unlock(self) -> None:
-        """Turn safes into diamonds"""
+        """Turn safes into diamonds."""
         for x in range(self.level_width):
             for y in range(self.level_height):
                 block = self.get(Vector2(x, y))

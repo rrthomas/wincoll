@@ -3,12 +3,11 @@
 
 import re
 import sys
-from typing import List
 
 from .wincoll_game import WincollGame
 
 
-def main(argv: List[str] = sys.argv[1:]) -> None:
+def main(argv: list[str] = sys.argv[1:]) -> None:
     WincollGame().main(argv)
 
 
