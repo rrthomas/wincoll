@@ -43,13 +43,7 @@ Installers are available for GNU/Linux, macOS and Windows. See the
   application to a suitable location (e.g. your Applications folder). macOS
   will probably refuse to run it until you have approved it in System
   Settings→Privacy and Security, under “Security”.
-* The Windows version is a single `.exe`. Unfortunately it is detected as a
-  virus by most virus scanners, including Microsoft Defender, because Python
-  apps have often been used to distribute malware. Hence, you will probably
-  have to turn off virus scanning before you download it (to prevent it from
-  being immediately quarantined or deleted), and then add an exception for
-  it. After that, you can put the `.exe` file in a suitable location and
-  double-click it to play.
+* The Windows version is a standard Microsoft installer.
 
 ### Python package
 
@@ -90,14 +84,18 @@ Some notes about level design:
   `wincoll/levels`.
 
 I welcome [pull requests](https://github.com/rrthomas/wincoll/pulls) for new
-levels.
+levels, or a simple issue with a level attached, in a Zip file. If GitHub is
+not your thing, feel free to email me your level. It’s helpful if you can
+indicate where you think your level should go in order of increasing
+difficulty.
 
 
 ## Improving WinColl
 
 New levels, usability improvements and translations are welcome, as are
 usability improvements: for example, the ability to rebind keys would be
-welcome.
+welcome. See the [open issues](https://github.com/rrthomas/wincoll/) for
+specific things I’d like improved.
 
 Some levels useful for testing are in `test-levels`.
 
