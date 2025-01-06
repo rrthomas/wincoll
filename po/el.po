@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-05 22:42+0000\n"
+"POT-Creation-Date: 2025-01-06 00:15+0000\n"
 "PO-Revision-Date: 2024-12-16 20:03+0000\n"
 "Last-Translator: Reuben Thomas <rrt@sc3d.org>\n"
 "Language: Greek\n"
@@ -14,7 +14,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: pygettext.py 1.5\n"
 
-#: wincoll/wincoll_game.py:60
+#: wincoll/wincoll_game.py:59
 msgid "Collect all the diamonds while digging through earth dodging rocks."
 msgstr ""
 "Συλλέξτε όλα τα διαμάντια ενώ σκάβετε μέσα από τη γη αποφεύγοντας τους "
@@ -23,7 +23,7 @@ msgstr ""
 #. TRANSLATORS: Please keep this text wrapped to 40 characters. The font
 #. used in-game is lacking many glyphs, so please test it with your
 #. language and let me know if I need to add glyphs.
-#: wincoll/wincoll_game.py:68
+#: wincoll/wincoll_game.py:67
 msgid ""
 "Collect all the diamonds on each level.\n"
 "Get a key to turn safes into diamonds.\n"
