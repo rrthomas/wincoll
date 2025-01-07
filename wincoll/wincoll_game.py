@@ -147,10 +147,16 @@ Avoid falling rocks!
             self.set(new_rockpos, Tile.ROCK)
         self.set(newpos, Tile.EMPTY)
 
-    def can_roll(self, pos: Vector2) -> bool:
-        side_block = self.get(pos)
-        side_below_block = self.get(pos + Vector2(0, 1))
-        return side_block == Tile.EMPTY and side_below_block == Tile.EMPTY
+    def rock_to_roll(self, pos: Vector2) -> bool:
+        if self.get(pos) == Tile.ROCK:
+            block_below = self.get(pos + Vector2(0, 1))
+            return block_below in (
+                Tile.ROCK,
+                Tile.KEY,
+                Tile.DIAMOND,
+                Tile.BLOB,
+            )
+        return False
 
     def die(self) -> None:
         self.reset_falling()
@@ -177,28 +183,26 @@ Avoid falling rocks!
                 SLIDE_SOUND.play(-1)
             new_fall = True
 
-        for y in range(self.level_height - 1, -1, -1):
+        # Scan the map in bottom-to-top left-to-right order (excluding the
+        # top row); for each space consider the rocks above, then above
+        # right, then above left.
+        for y in range(self.level_height - 1, 0, -1):
             for x in range(self.level_width):
                 pos = Vector2(x, y)
                 block = self.get(pos)
-                if block == Tile.ROCK:
-                    pos_below = pos + Vector2(0, 1)
-                    block_below = self.get(pos_below)
-                    if block_below == Tile.EMPTY:
-                        fall(pos, pos_below)
-                    elif block_below in (
-                        Tile.ROCK,
-                        Tile.KEY,
-                        Tile.DIAMOND,
-                        Tile.BLOB,
-                    ):
-                        pos_left = pos + Vector2(-1, 0)
-                        if self.can_roll(pos_left):
-                            fall(pos, pos_left + Vector2(0, 1))
+                if block == Tile.EMPTY:
+                    pos_above = pos + Vector2(0, -1)
+                    block_above = self.get(pos_above)
+                    if block_above == Tile.ROCK:
+                        fall(pos_above, pos)
+                    elif block_above == Tile.EMPTY:
+                        pos_left = pos_above + Vector2(-1, 0)
+                        if self.rock_to_roll(pos_left):
+                            fall(pos_left, pos)
                         else:
-                            pos_right = pos + Vector2(1, 0)
-                            if self.can_roll(pos_right):
-                                fall(pos, pos_right + Vector2(0, 1))
+                            pos_right = pos_above + Vector2(1, 0)
+                            if self.rock_to_roll(pos_right):
+                                fall(pos_right, pos)
 
         if new_fall is False:
             self.reset_falling()
