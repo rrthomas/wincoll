@@ -8,11 +8,11 @@
 # dependencies = ["tmxlib"]
 # ///
 
-import math
 import argparse
-from typing import List
+import math
 
 import tmxlib as tmx
+
 
 # Command-line arguments
 parser = argparse.ArgumentParser(
@@ -25,7 +25,7 @@ parser.add_argument("tiled_file", metavar="TILED-MAP", help="Tiled map output fi
 args = parser.parse_args()
 
 # Read the input and convert tile encoding
-def convert(row: List[str]) -> List[int]:
+def convert(row: list[str]) -> list[int]:
     char_to_num = {
         " ": 10,
         "#": 11,
@@ -40,7 +40,7 @@ def convert(row: List[str]) -> List[int]:
     return list(map(lambda c: char_to_num[c], row))
 
 wincoll_data = []
-with open(args.wincoll_file, "r", encoding="utf-8") as fh:
+with open(args.wincoll_file, encoding="utf-8") as fh:
     for line in fh.readlines():
         wincoll_data += convert(list(line.strip("\n")))
 
