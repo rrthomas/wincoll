@@ -158,10 +158,6 @@ Avoid falling rocks!
             )
         return False
 
-    def die(self) -> None:
-        self.reset_falling()
-        super().die()
-
     def reset_falling(self) -> None:
         self.falling = False
         SLIDE_SOUND.stop()
@@ -226,14 +222,10 @@ Avoid falling rocks!
         )
 
     def finished(self) -> bool:
-        if self.diamonds == 0:
-            self.reset_falling()
-            return True
-        return False
+        return self.diamonds == 0
 
-    def shutdown(self) -> None:
+    def stop_play(self) -> None:
         self.reset_falling()
-        super().shutdown()
 
     def main(self, argv: list[str]) -> None:
         global _
