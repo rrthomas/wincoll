@@ -162,6 +162,10 @@ Avoid falling rocks!
         self.falling = False
         SLIDE_SOUND.stop()
 
+    def die(self) -> None:
+        SLIDE_SOUND.stop()
+        super().die()
+
     def do_physics(self) -> None:
         # Put Win into the map data for collision detection.
         self.set(self.hero.position, Tile.HERO)
