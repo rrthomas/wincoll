@@ -123,8 +123,8 @@ The sound effects are copyrighted and licensed as follows:
   [Ding.wav by datasoundsample](https://freesound.org/s/638638/) under CC
   BY 4.0
 + Rock fall:
-  [WHITE_NOISE-10s.wav by newagesoup](https://freesound.org/s/349315/)
-  under CC 0
+  [Rockfall in mine.wav by Benboncan](https://freesound.org/s/60085/) under
+  CC BY 4.0
 + Safe unlock:
   [Old Church Bell (no noise) by igroglaz](https://freesound.org/s/633208/)
   under CC 0
