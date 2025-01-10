@@ -6,10 +6,10 @@ Released under the GPL version 3, or (at your option) any later version.
 
 import gettext
 import importlib
+import importlib.resources
 import os
 import warnings
 from enum import StrEnum, auto
-from pathlib import Path
 
 from chambercourt.game import DEFAULT_VOLUME, Game
 
@@ -89,16 +89,16 @@ Avoid falling rocks!
 
     window_scale = 2
 
-    def load_assets(self, path: Path, levels_path: Path) -> None:
-        super().load_assets(path, levels_path)
+    def load_assets(self) -> None:
+        super().load_assets()
         global DIAMOND_IMAGE
         global COLLECT_SOUND, SLIDE_SOUND, UNLOCK_SOUND
-        DIAMOND_IMAGE = pygame.image.load(levels_path / "Diamond.png")
-        COLLECT_SOUND = pygame.mixer.Sound(levels_path / "Collect.wav")
+        DIAMOND_IMAGE = pygame.image.load(self.find_asset("Diamond.png"))
+        COLLECT_SOUND = pygame.mixer.Sound(self.find_asset("Collect.wav"))
         COLLECT_SOUND.set_volume(DEFAULT_VOLUME)
-        SLIDE_SOUND = pygame.mixer.Sound(levels_path / "Slide.wav")
+        SLIDE_SOUND = pygame.mixer.Sound(str(self.find_asset("Slide.wav")))
         SLIDE_SOUND.set_volume(DEFAULT_VOLUME)
-        UNLOCK_SOUND = pygame.mixer.Sound(levels_path / "Unlock.wav")
+        UNLOCK_SOUND = pygame.mixer.Sound(str(self.find_asset("Unlock.wav")))
         UNLOCK_SOUND.set_volume(DEFAULT_VOLUME)
 
     def init_physics(self) -> None:
