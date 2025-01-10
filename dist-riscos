@@ -9,8 +9,8 @@ from pathlib import Path
 subprocess.check_call(["rm", "--force", "!WinColl/Level*,ffd"])
 
 # Convert levels
-for l in Path("wincoll/levels").glob("*.tmx"):
-    subprocess.check_call(["./tiled2riscos", l, Path("!WinColl") / f"Level{l.stem},ffd"])
+for line in Path("wincoll/levels").glob("*.tmx"):
+    subprocess.check_call(["./tiled2riscos", line, Path("!WinColl") / f"Level{line.stem},ffd"])
 
 # Build Zip
 subprocess.check_call(["mkdir", "-p", "dist"])
