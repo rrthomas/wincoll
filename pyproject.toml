@@ -3,9 +3,7 @@ name = "WinColl"
 version = "0.9.21"
 description = "Simple rocks-and-diamonds game"
 license = {text = "GPL v3 or later"}
-authors = [
-    {name = "Reuben Thomas", email = "rrt@sc3d.org"}
-]
+authors = [{name = "Reuben Thomas", email = "rrt@sc3d.org"}]
 readme = "README.md"
 urls = {Homepage = "https://github.com/rrthomas/wincoll"}
 requires-python = ">= 3.11"
@@ -24,15 +22,10 @@ classifiers = [
 wincoll = "wincoll:main"
 
 [build-system]
-requires = [
-    "build",
-    "setuptools >= 62.3.0",
-]
+requires = ["build", "setuptools >= 62.3.0"]
 
 [tool.setuptools]
-packages = [
-    "wincoll",
-]
+packages = ["wincoll"]
 
 [tool.setuptools.package-data]
 wincoll = ["**/*.png", "**/*.wav", "**/*.tmx", "**/*.tsx", "**/*.ttf", "**/*.mo"]
