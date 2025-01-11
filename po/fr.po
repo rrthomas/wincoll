@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-11 18:09+0000\n"
+"POT-Creation-Date: 2025-01-11 21:22+0000\n"
 "PO-Revision-Date: 2024-12-16 20:03+0000\n"
 "Last-Translator: Reuben Thomas <rrt@sc3d.org>\n"
 "Language: French\n"
@@ -40,16 +40,17 @@ msgstr ""
 "  ou bouge avec les touches de curseur\n"
 
 #: wincoll/wincoll_game.py:74
+#, fuzzy
 msgid ""
 "        S/L - Save/load position\n"
 "           R - Restart level\n"
 "             Q - Quit game\n"
-"        F11 - toggle full screen\n"
+"         F - toggle full screen\n"
 msgstr ""
 "   S/L - sauvegarder/charger position\n"
 "          R - recommence niveau\n"
 "            A - quitte le jeu\n"
-"        F11 - bascule plein écran\n"
+"         F - bascule plein écran\n"
 
 #: wincoll/wincoll_game.py:79
 msgid " (choose with movement keys and digits)\n"

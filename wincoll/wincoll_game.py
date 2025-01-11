@@ -75,7 +75,7 @@ Avoid falling rocks!
         S/L - Save/load position
            R - Restart level
              Q - Quit game
-        F11 - toggle full screen
+         F - toggle full screen
 """) + "\n\n" + _("""\
  (choose with movement keys and digits)
 """) + "\n" + _("""\
