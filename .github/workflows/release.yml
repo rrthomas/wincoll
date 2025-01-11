@@ -86,7 +86,7 @@ jobs:
         if: ${{ matrix.os == 'windows-latest' }}
         run: |
           pip install cx_Freeze
-          convert wincoll/levels/app-icon.png app-icon.ico
+          convert wincoll\levels\app-icon.png app-icon.ico
           cxfreeze bdist_msi
           mv dist/*.msi dist/wincoll-win64.msi
       - name: Upload the binary (Ubuntu and macOS)
