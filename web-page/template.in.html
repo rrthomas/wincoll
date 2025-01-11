@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+  <link rel="icon" href="$paste{path-to-root.in.py,$path}/favicon.ico">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+  <link rel="stylesheet" type="text/css" href="$paste{path-to-root.in.py,$path}/style.css">
+
+  <title>$include{Title.in.txt}$include{pageinsite.in.py,$path}</title>
+</head>
+
+<body>
+  <main>
+    <div class="mt-1 container main-content center">
+      $include{markdown-to-html.in.sh,$include{dirname,$realpath}/body.in.md}
+      
+    </div>
+  </main>
+
+  <footer class="footer">
+    <ul class="inline-list">
+      <li>© $include{Author.in.txt}</li>
+      <li><small><em>Last updated $include{lastmodified.in.py,$realpath}</em></small></li>
+    </ul>
+  </footer>
+</body>
+
+</html>
