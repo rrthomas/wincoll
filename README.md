@@ -75,17 +75,16 @@ Some notes about level design:
 
 + A set of levels is numbered according to the lexical order of their file
   names.
-+ The supplied levels have a brick wall all the way around. This is
-  conventional but not necessary: there’s an imaginary brick wall around the
-  outside of the level already.
++ Some supplied levels have a brick wall all the way around. This is not
+  necessary: there’s an imaginary brick wall around the outside of the level
+  already.
 + Levels need exactly one start position, given by placing the Win
   character.
 + No checks are done to make sure a level is possible to complete; for
   example, you can place diamonds surrounded by bricks, or have safes but no
   key.
-+ A complete level set requires a Tiled tileset and corresponding graphics.
-  You can simply copy the tileset file `WinColl.tsx` and PNG graphics from
-  `wincoll/levels`.
++ A complete level set requires a Tiled tileset. You can simply copy the
+  tileset file `WinColl.tsx` from `wincoll/levels`.
 
 I welcome [pull requests](https://github.com/rrthomas/wincoll/pulls) for new
 levels, or a simple issue with a level attached, in a Zip file. If GitHub is
