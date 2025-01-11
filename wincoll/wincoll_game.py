@@ -71,8 +71,10 @@ Avoid falling rocks!
 
     Z/X - Left/Right   '/? - Up/Down
      or use the arrow keys to move
+
         S/L - Save/load position
-    R - Restart level  Q - Quit game
+           R - Restart level
+             Q - Quit game
         F11 - toggle full screen
 
 
