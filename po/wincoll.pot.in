@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-11 17:40+0000\n"
+"POT-Creation-Date: 2025-01-11 18:09+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -29,17 +29,26 @@ msgid ""
 "Collect all the diamonds on each level.\n"
 "Get a key to turn safes into diamonds.\n"
 "Avoid falling rocks!\n"
-"\n"
+msgstr ""
+
+#: wincoll/wincoll_game.py:71
+msgid ""
 "    Z/X - Left/Right   '/? - Up/Down\n"
 "     or use the arrow keys to move\n"
-"\n"
+msgstr ""
+
+#: wincoll/wincoll_game.py:74
+msgid ""
 "        S/L - Save/load position\n"
 "           R - Restart level\n"
 "             Q - Quit game\n"
 "        F11 - toggle full screen\n"
-"\n"
-"\n"
-" (choose with movement keys and digits)\n"
-"\n"
-"      Press the space bar to play!\n"
+msgstr ""
+
+#: wincoll/wincoll_game.py:79
+msgid " (choose with movement keys and digits)\n"
+msgstr ""
+
+#: wincoll/wincoll_game.py:81
+msgid "      Press the space bar to play!\n"
 msgstr ""
