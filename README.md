@@ -42,12 +42,14 @@ Installers are available for GNU/Linux, macOS and Windows. See the
   `error: MESA-LOADER: failed to open …` then you can try the following
   incantation to run the game:
   `LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libstdc++.so.6 ./wincoll-Linux-X64`.
-
 * The macOS version is a disk image file containing an application. Drag the
   application to a suitable location (e.g. your Applications folder). macOS
   will probably refuse to run it until you have approved it in System
   Settings→Privacy and Security, under “Security”.
 * The Windows version is a standard Microsoft installer.
+* The RISC OS version should be unpacked with the `unzip` utility on RISC
+  OS; if `!SparkFS` is used, the file names and types will not be set
+  correctly.
 
 ### Python package
 
