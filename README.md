@@ -21,8 +21,8 @@ name of a school, but I don’t believe the game was named after it!
 Paul Smith designed the title graphics, and Alistair Turnbull helped with
 the game graphics.
 
-Level design by Alistair Turnbull, Paul Smith, Jeremy Douglas, Paul Wilson
-and Daniel Thomas.
+Level design by Alistair Turnbull, Paul Wilson, Reuben Thomas, Paul Smith,
+Jeremy Douglas, and Daniel Thomas.
 
 The sounds are from [Freesound](https://freesound.org), lightly adapted.
 
