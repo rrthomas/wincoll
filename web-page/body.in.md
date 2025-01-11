@@ -6,7 +6,7 @@ WinColl is a simple action puzzle game in which you tunnel through caverns colle
 
 [Installers](https://github.com/rrthomas/wincoll/releases/latest) are provided for:
 
-+ [GNU/Linux](https://github.com/rrthomas/wincoll/releases/latest/download/wincoll-Linux-X64.dmg)
++ [GNU/Linux](https://github.com/rrthomas/wincoll/releases/latest/download/wincoll-Linux-X64)
 + [macOS](https://github.com/rrthomas/wincoll/releases/latest/download/wincoll-macOS-ARM64.dmg)
 + [Windows](https://github.com/rrthomas/wincoll/releases/latest/download/wincoll-win64.msi)
 + [RISC OS](https://github.com/rrthomas/wincoll/releases/latest/download/wincoll-riscos.zip)
