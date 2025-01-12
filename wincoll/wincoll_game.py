@@ -52,7 +52,10 @@ class WincollGame(Game[Tile]):
     def __init__(self) -> None:
         super().__init__("wincoll", Tile, Tile.HERO, Tile.EMPTY, Tile.BRICK)
         self.falling = False
+        self.dead = False
         self.diamonds: int
+        self.die_image: pygame.Surface
+        self.die_sound: pygame.mixer.Sound
 
     @staticmethod
     def description() -> str:
@@ -93,6 +96,9 @@ Avoid falling rocks!
         super().load_assets()
         global DIAMOND_IMAGE
         global COLLECT_SOUND, SLIDE_SOUND, UNLOCK_SOUND
+        self.die_image = pygame.image.load(self.find_asset("Die.png"))
+        self.die_sound = pygame.mixer.Sound(self.find_asset("Die.wav"))
+        self.die_sound.set_volume(DEFAULT_VOLUME)
         DIAMOND_IMAGE = pygame.image.load(self.find_asset("Diamond.png"))
         COLLECT_SOUND = pygame.mixer.Sound(self.find_asset("Collect.wav"))
         COLLECT_SOUND.set_volume(DEFAULT_VOLUME)
@@ -104,6 +110,7 @@ Avoid falling rocks!
     def init_physics(self) -> None:
         super().init_physics()
         self.diamonds = 0
+        self.dead = False
         for x in range(self.level_width):
             for y in range(self.level_height):
                 block = self.get(Vector2(x, y))
@@ -162,10 +169,6 @@ Avoid falling rocks!
         self.falling = False
         SLIDE_SOUND.stop()
 
-    def die(self) -> None:
-        SLIDE_SOUND.stop()
-        super().die()
-
     def do_physics(self) -> None:
         # Put Win into the map data for collision detection.
         self.set(self.hero.position, Tile.HERO)
@@ -209,6 +212,17 @@ Avoid falling rocks!
 
         self.set(self.hero.position, Tile.EMPTY)
 
+    def die(self) -> None:
+        self.die_sound.play()
+        self.game_surface.blit(
+            self.die_image,
+            self.game_to_screen((int(self.hero.position.x), int(self.hero.position.y))),
+        )
+        self.show_status()
+        self.show_screen()
+        pygame.time.wait(1000)
+        self.dead = False
+
     def show_status(self) -> None:
         super().show_status()
         self.surface.blit(
@@ -226,10 +240,12 @@ Avoid falling rocks!
         )
 
     def finished(self) -> bool:
-        return self.diamonds == 0
+        return self.diamonds == 0 or self.dead
 
     def stop_play(self) -> None:
         self.reset_falling()
+        if self.dead:
+            self.die()
 
     def main(self, argv: list[str]) -> None:
         global _
