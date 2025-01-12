@@ -24,7 +24,7 @@ os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
 with warnings.catch_warnings():
     warnings.simplefilter("ignore")
     import pygame
-    from pygame import Vector2
+    from pygame import Color, Vector2
 
 
 DIAMOND_IMAGE: pygame.Surface
@@ -85,9 +85,8 @@ Avoid falling rocks!
         )
 
     screen_size = (640, 512)
-
     window_size = (240, 240)
-
+    default_background_colour = Color(0, 0, 255)
     window_scale = 2
 
     def load_assets(self) -> None:
