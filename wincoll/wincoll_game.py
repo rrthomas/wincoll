@@ -212,14 +212,14 @@ Avoid falling rocks!
 
     def show_status(self) -> None:
         super().show_status()
-        self.screen.surface.blit(
+        self.surface.blit(
             DIAMOND_IMAGE,
             (
-                (self.window_pos[0] - self.screen.font_pixels) // 2,
-                int(1.5 * self.screen.font_pixels),
+                (self.window_pos[0] - self.font_pixels) // 2,
+                int(1.5 * self.font_pixels),
             ),
         )
-        self.screen.print_screen(
+        self.print_screen(
             (0, 3),
             str(self.diamonds),
             width=self.window_pos[0],
