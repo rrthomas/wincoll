@@ -129,12 +129,7 @@ Avoid falling rocks!
     def can_move(self, velocity: Vector2) -> bool:
         newpos = self.hero.position + velocity
         block = self.get(newpos)
-        if block in (
-            Tile.EMPTY,
-            Tile.EARTH,
-            Tile.DIAMOND,
-            Tile.KEY,
-        ):
+        if block in (Tile.EMPTY, Tile.EARTH, Tile.DIAMOND, Tile.KEY):
             return True
         if block == Tile.ROCK:
             new_rockpos = self.hero.position + velocity * 2
@@ -169,7 +164,7 @@ Avoid falling rocks!
         self.falling = False
         SLIDE_SOUND.stop()
 
-    def do_physics(self) -> None:
+    def do_play(self) -> None:
         # Put Win into the map data for collision detection.
         self.set(self.hero.position, Tile.HERO)
         new_fall = False
@@ -178,6 +173,7 @@ Avoid falling rocks!
             block_below = self.get(newpos + Vector2(0, 1))
             if block_below == Tile.HERO:
                 self.dead = True
+                self.hero.velocity = Vector2(0, 0)
             self.set(oldpos, Tile.EMPTY)
             self.set(newpos, Tile.ROCK)
             nonlocal new_fall
@@ -211,6 +207,8 @@ Avoid falling rocks!
             self.reset_falling()
 
         self.set(self.hero.position, Tile.EMPTY)
+
+        self.do_move()
 
     def die(self) -> None:
         self.die_sound.play()
