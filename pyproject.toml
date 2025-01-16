@@ -30,6 +30,9 @@ packages = ["wincoll"]
 [tool.setuptools.package-data]
 wincoll = ["**/*.png", "**/*.wav", "**/*.tmx", "**/*.tsx", "**/*.ttf", "**/*.mo"]
 
+[tool.pyright]
+include = ["wincoll"]
+
 [tool.ruff.lint]
 select = ["D", "E", "F", "I", "UP"]
 ignore = ["D1", "D401", "E501"]
