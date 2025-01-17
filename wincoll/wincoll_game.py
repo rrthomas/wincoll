@@ -92,6 +92,12 @@ Avoid falling rocks!
     default_background_colour = Color(0, 0, 255)
     window_scale = 2
 
+    # Utility methods.
+    def reset_falling(self) -> None:
+        self.falling = False
+        SLIDE_SOUND.stop()
+
+    # Overrides.
     def load_assets(self) -> None:
         super().load_assets()
         global DIAMOND_IMAGE
@@ -107,8 +113,8 @@ Avoid falling rocks!
         UNLOCK_SOUND = pygame.mixer.Sound(str(self.find_asset("Unlock.wav")))
         UNLOCK_SOUND.set_volume(DEFAULT_VOLUME)
 
-    def init_physics(self) -> None:
-        super().init_physics()
+    def init_game(self) -> None:
+        super().init_game()
         self.diamonds = 0
         self.dead = False
         for x in range(self.level_width):
@@ -116,15 +122,6 @@ Avoid falling rocks!
                 block = self.get(Vector2(x, y))
                 if block in (Tile.DIAMOND, Tile.SAFE):
                     self.diamonds += 1
-
-    def unlock(self) -> None:
-        """Turn safes into diamonds."""
-        for x in range(self.level_width):
-            for y in range(self.level_height):
-                block = self.get(Vector2(x, y))
-                if block == Tile.SAFE:
-                    self.set(Vector2(x, y), Tile.DIAMOND)
-        UNLOCK_SOUND.play()
 
     def can_move(self, velocity: Vector2) -> bool:
         newpos = self.hero.position + velocity
@@ -136,38 +133,21 @@ Avoid falling rocks!
             return velocity.y == 0 and self.get(new_rockpos) == Tile.EMPTY
         return False
 
-    def do_move(self) -> None:
-        newpos = self.hero.position + self.hero.velocity
-        block = self.get(newpos)
-        if block == Tile.DIAMOND:
-            COLLECT_SOUND.play()
-            self.diamonds -= 1
-        elif block == Tile.KEY:
-            self.unlock()
-        elif block == Tile.ROCK:
-            new_rockpos = newpos + self.hero.velocity
-            self.set(new_rockpos, Tile.ROCK)
-        self.set(newpos, Tile.EMPTY)
-
-    def rock_to_roll(self, pos: Vector2) -> bool:
-        if self.get(pos) == Tile.ROCK:
-            block_below = self.get(pos + Vector2(0, 1))
-            return block_below in (
-                Tile.ROCK,
-                Tile.KEY,
-                Tile.DIAMOND,
-                Tile.BLOB,
-            )
-        return False
-
-    def reset_falling(self) -> None:
-        self.falling = False
-        SLIDE_SOUND.stop()
-
     def do_play(self) -> None:
         # Put Win into the map data for collision detection.
         self.set(self.hero.position, Tile.HERO)
         new_fall = False
+
+        def rock_to_roll(pos: Vector2) -> bool:
+            if self.get(pos) == Tile.ROCK:
+                block_below = self.get(pos + Vector2(0, 1))
+                return block_below in (
+                    Tile.ROCK,
+                    Tile.KEY,
+                    Tile.DIAMOND,
+                    Tile.BLOB,
+                )
+            return False
 
         def fall(oldpos: Vector2, newpos: Vector2) -> None:
             block_below = self.get(newpos + Vector2(0, 1))
@@ -196,11 +176,11 @@ Avoid falling rocks!
                         fall(pos_above, pos)
                     elif block_above == Tile.EMPTY:
                         pos_left = pos_above + Vector2(-1, 0)
-                        if self.rock_to_roll(pos_left):
+                        if rock_to_roll(pos_left):
                             fall(pos_left, pos)
                         else:
                             pos_right = pos_above + Vector2(1, 0)
-                            if self.rock_to_roll(pos_right):
+                            if rock_to_roll(pos_right):
                                 fall(pos_right, pos)
 
         if new_fall is False:
@@ -208,18 +188,24 @@ Avoid falling rocks!
 
         self.set(self.hero.position, Tile.EMPTY)
 
-        self.do_move()
-
-    def die(self) -> None:
-        self.die_sound.play()
-        self.game_surface.blit(
-            self.die_image,
-            self.game_to_screen((int(self.hero.position.x), int(self.hero.position.y))),
-        )
-        self.show_status()
-        self.show_screen()
-        pygame.time.wait(1000)
-        self.dead = False
+        # Move Win.
+        newpos = self.hero.position + self.hero.velocity
+        block = self.get(newpos)
+        if block == Tile.DIAMOND:
+            COLLECT_SOUND.play()
+            self.diamonds -= 1
+        elif block == Tile.KEY:
+            # Turn safes into diamonds.
+            for x in range(self.level_width):
+                for y in range(self.level_height):
+                    block = self.get(Vector2(x, y))
+                    if block == Tile.SAFE:
+                        self.set(Vector2(x, y), Tile.DIAMOND)
+            UNLOCK_SOUND.play()
+        elif block == Tile.ROCK:
+            new_rockpos = newpos + self.hero.velocity
+            self.set(new_rockpos, Tile.ROCK)
+        self.set(newpos, Tile.EMPTY)
 
     def show_status(self) -> None:
         super().show_status()
@@ -243,7 +229,15 @@ Avoid falling rocks!
     def stop_play(self) -> None:
         self.reset_falling()
         if self.dead:
-            self.die()
+            self.die_sound.play()
+            self.game_surface.blit(
+                self.die_image,
+                self.game_to_screen((int(self.hero.position.x), int(self.hero.position.y))),
+            )
+            self.show_status()
+            self.show_screen()
+            pygame.time.wait(1000)
+            self.dead = False
 
     def main(self, argv: list[str]) -> None:
         global _
