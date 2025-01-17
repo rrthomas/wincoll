@@ -27,13 +27,6 @@ with warnings.catch_warnings():
     from pygame import Color, Vector2
 
 
-DIAMOND_IMAGE: pygame.Surface
-
-COLLECT_SOUND: pygame.mixer.Sound
-SLIDE_SOUND: pygame.mixer.Sound
-UNLOCK_SOUND: pygame.mixer.Sound
-
-
 class Tile(StrEnum):
     """An enumeration representing the available map tiles."""
 
@@ -92,26 +85,30 @@ Avoid falling rocks!
     default_background_colour = Color(0, 0, 255)
     window_scale = 2
 
+    diamond_image: pygame.Surface
+
+    collect_sound: pygame.mixer.Sound
+    slide_sound: pygame.mixer.Sound
+    unlock_sound: pygame.mixer.Sound
+
     # Utility methods.
     def reset_falling(self) -> None:
         self.falling = False
-        SLIDE_SOUND.stop()
+        self.slide_sound.stop()
 
     # Overrides.
     def load_assets(self) -> None:
         super().load_assets()
-        global DIAMOND_IMAGE
-        global COLLECT_SOUND, SLIDE_SOUND, UNLOCK_SOUND
         self.die_image = pygame.image.load(self.find_asset("Die.png"))
         self.die_sound = pygame.mixer.Sound(self.find_asset("Die.wav"))
         self.die_sound.set_volume(DEFAULT_VOLUME)
-        DIAMOND_IMAGE = pygame.image.load(self.find_asset("Diamond.png"))
-        COLLECT_SOUND = pygame.mixer.Sound(self.find_asset("Collect.wav"))
-        COLLECT_SOUND.set_volume(DEFAULT_VOLUME)
-        SLIDE_SOUND = pygame.mixer.Sound(str(self.find_asset("Slide.wav")))
-        SLIDE_SOUND.set_volume(DEFAULT_VOLUME)
-        UNLOCK_SOUND = pygame.mixer.Sound(str(self.find_asset("Unlock.wav")))
-        UNLOCK_SOUND.set_volume(DEFAULT_VOLUME)
+        self.diamond_image = pygame.image.load(self.find_asset("Diamond.png"))
+        self.collect_sound = pygame.mixer.Sound(self.find_asset("Collect.wav"))
+        self.collect_sound.set_volume(DEFAULT_VOLUME)
+        self.slide_sound = pygame.mixer.Sound(str(self.find_asset("Slide.wav")))
+        self.slide_sound.set_volume(DEFAULT_VOLUME)
+        self.unlock_sound = pygame.mixer.Sound(str(self.find_asset("Unlock.wav")))
+        self.unlock_sound.set_volume(DEFAULT_VOLUME)
 
     def init_game(self) -> None:
         super().init_game()
@@ -159,7 +156,7 @@ Avoid falling rocks!
             nonlocal new_fall
             if self.falling is False:
                 self.falling = True
-                SLIDE_SOUND.play(-1)
+                self.slide_sound.play(-1)
             new_fall = True
 
         # Scan the map in bottom-to-top left-to-right order (excluding the
@@ -192,7 +189,7 @@ Avoid falling rocks!
         newpos = self.hero.position + self.hero.velocity
         block = self.get(newpos)
         if block == Tile.DIAMOND:
-            COLLECT_SOUND.play()
+            self.collect_sound.play()
             self.diamonds -= 1
         elif block == Tile.KEY:
             # Turn safes into diamonds.
@@ -201,7 +198,7 @@ Avoid falling rocks!
                     block = self.get(Vector2(x, y))
                     if block == Tile.SAFE:
                         self.set(Vector2(x, y), Tile.DIAMOND)
-            UNLOCK_SOUND.play()
+            self.unlock_sound.play()
         elif block == Tile.ROCK:
             new_rockpos = newpos + self.hero.velocity
             self.set(new_rockpos, Tile.ROCK)
@@ -210,7 +207,7 @@ Avoid falling rocks!
     def show_status(self) -> None:
         super().show_status()
         self.surface.blit(
-            DIAMOND_IMAGE,
+            self.diamond_image,
             (
                 (self.window_pos[0] - self.font_pixels) // 2,
                 int(1.5 * self.font_pixels),
