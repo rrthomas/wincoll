@@ -160,7 +160,7 @@ Avoid falling rocks!
             new_fall = True
 
         # Scan the map in bottom-to-top left-to-right order (excluding the
-        # top row); for each space consider the rocks above, then above
+        # top row); for each space consider any rock above, then above
         # right, then above left.
         for y in range(self.level_height - 1, 0, -1):
             for x in range(self.level_width):
