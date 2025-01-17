@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-11 21:22+0000\n"
+"POT-Creation-Date: 2025-01-17 19:11+0000\n"
 "PO-Revision-Date: 2024-12-16 20:03+0000\n"
 "Last-Translator: Reuben Thomas <rrt@sc3d.org>\n"
 "Language: Greek\n"
@@ -14,7 +14,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: pygettext.py 1.5\n"
 
-#: wincoll/wincoll_game.py:59
+#: wincoll/wincoll_game.py:55
 msgid "Collect all the diamonds while digging through earth dodging rocks."
 msgstr ""
 "Συλλέξτε όλα τα διαμάντια ενώ σκάβετε μέσα από τη γη αποφεύγοντας τους "
@@ -23,7 +23,7 @@ msgstr ""
 #. TRANSLATORS: Please keep this text wrapped to 40 characters. The font
 #. used in-game is lacking many glyphs, so please test it with your
 #. language and let me know if I need to add glyphs.
-#: wincoll/wincoll_game.py:67
+#: wincoll/wincoll_game.py:63
 msgid ""
 "Collect all the diamonds on each level.\n"
 "Get a key to turn safes into diamonds.\n"
@@ -35,7 +35,7 @@ msgstr ""
 "διαμάντια. Αποφύγετε τις πέτρες που\n"
 "πέφτουν!\n"
 
-#: wincoll/wincoll_game.py:71
+#: wincoll/wincoll_game.py:67
 msgid ""
 "    Z/X - Left/Right   '/? - Up/Down\n"
 "     or use the arrow keys to move\n"
@@ -43,7 +43,7 @@ msgstr ""
 "  Ζ/Χ - Αριστερά/Δεξιά `/? - Πάνω/Κάτω\n"
 "   ή χρησιμοποιήστε τα πλήκτρα δρομέα\n"
 
-#: wincoll/wincoll_game.py:74
+#: wincoll/wincoll_game.py:70
 msgid ""
 "        S/L - Save/load position\n"
 "           R - Restart level\n"
@@ -55,13 +55,13 @@ msgstr ""
 "      ; - Έξοδος από το παιχνίδι\n"
 "     Φ - εναλλαγή πλήρους οθόνης\n"
 
-#: wincoll/wincoll_game.py:79
+#: wincoll/wincoll_game.py:75
 msgid " (choose with movement keys and digits)\n"
 msgstr ""
 "    (επιλέξτε με τα πλήκτρα κίνησης\n"
 "             και τα ψηφία)\n"
 
-#: wincoll/wincoll_game.py:81
+#: wincoll/wincoll_game.py:77
 msgid "      Press the space bar to play!\n"
 msgstr ""
 "    Πατήστε το πλήκτρο διαστήματος\n"

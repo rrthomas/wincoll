@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-11 21:22+0000\n"
+"POT-Creation-Date: 2025-01-17 19:11+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,27 +17,27 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: wincoll/wincoll_game.py:59
+#: wincoll/wincoll_game.py:55
 msgid "Collect all the diamonds while digging through earth dodging rocks."
 msgstr ""
 
 #. TRANSLATORS: Please keep this text wrapped to 40 characters. The font
 #. used in-game is lacking many glyphs, so please test it with your
 #. language and let me know if I need to add glyphs.
-#: wincoll/wincoll_game.py:67
+#: wincoll/wincoll_game.py:63
 msgid ""
 "Collect all the diamonds on each level.\n"
 "Get a key to turn safes into diamonds.\n"
 "Avoid falling rocks!\n"
 msgstr ""
 
-#: wincoll/wincoll_game.py:71
+#: wincoll/wincoll_game.py:67
 msgid ""
 "    Z/X - Left/Right   '/? - Up/Down\n"
 "     or use the arrow keys to move\n"
 msgstr ""
 
-#: wincoll/wincoll_game.py:74
+#: wincoll/wincoll_game.py:70
 msgid ""
 "        S/L - Save/load position\n"
 "           R - Restart level\n"
@@ -45,10 +45,10 @@ msgid ""
 "         F - toggle full screen\n"
 msgstr ""
 
-#: wincoll/wincoll_game.py:79
+#: wincoll/wincoll_game.py:75
 msgid " (choose with movement keys and digits)\n"
 msgstr ""
 
-#: wincoll/wincoll_game.py:81
+#: wincoll/wincoll_game.py:77
 msgid "      Press the space bar to play!\n"
 msgstr ""
