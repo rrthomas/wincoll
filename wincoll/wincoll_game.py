@@ -11,7 +11,7 @@ import os
 import warnings
 from enum import StrEnum, auto
 
-from chambercourt.game import DEFAULT_VOLUME, Game
+from chambercourt.game import Game
 
 
 # Placeholder for gettext
@@ -101,14 +101,14 @@ Avoid falling rocks!
         super().load_assets()
         self.die_image = pygame.image.load(self.find_asset("Die.png"))
         self.die_sound = pygame.mixer.Sound(self.find_asset("Die.wav"))
-        self.die_sound.set_volume(DEFAULT_VOLUME)
+        self.die_sound.set_volume(self.default_volume)
         self.diamond_image = pygame.image.load(self.find_asset("Diamond.png"))
         self.collect_sound = pygame.mixer.Sound(self.find_asset("Collect.wav"))
-        self.collect_sound.set_volume(DEFAULT_VOLUME)
+        self.collect_sound.set_volume(self.default_volume)
         self.slide_sound = pygame.mixer.Sound(str(self.find_asset("Slide.wav")))
-        self.slide_sound.set_volume(DEFAULT_VOLUME)
+        self.slide_sound.set_volume(self.default_volume)
         self.unlock_sound = pygame.mixer.Sound(str(self.find_asset("Unlock.wav")))
-        self.unlock_sound.set_volume(DEFAULT_VOLUME)
+        self.unlock_sound.set_volume(self.default_volume)
 
     def init_game(self) -> None:
         super().init_game()
