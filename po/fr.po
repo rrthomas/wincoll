@@ -1,12 +1,12 @@
 # French strings for WinColl.
-# Copyright (C) 2024 Reuben Thomas
+# Copyright (C) 2024-2025 Reuben Thomas
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-17 19:11+0000\n"
-"PO-Revision-Date: 2024-12-16 20:03+0000\n"
+"POT-Creation-Date: 2025-01-17 21:13+0000\n"
+"PO-Revision-Date: 2025-01-17 21:14+0000\n"
 "Last-Translator: Reuben Thomas <rrt@sc3d.org>\n"
 "Language: French\n"
 "MIME-Version: 1.0\n"
@@ -30,34 +30,3 @@ msgstr ""
 "Ramasse les diamants de chaque niveau.\n"
 "Une clé transforme les coffres-forts en\n"
 "diamants. Évite les rochers tombants!\n"
-
-#: wincoll/wincoll_game.py:67
-msgid ""
-"    Z/X - Left/Right   '/? - Up/Down\n"
-"     or use the arrow keys to move\n"
-msgstr ""
-"W/X - gauche/droite  '/? - monte/descend\n"
-"  ou bouge avec les touches de curseur\n"
-
-#: wincoll/wincoll_game.py:70
-#, fuzzy
-msgid ""
-"        S/L - Save/load position\n"
-"           R - Restart level\n"
-"             Q - Quit game\n"
-"         F - toggle full screen\n"
-msgstr ""
-"   S/L - sauvegarder/charger position\n"
-"          R - recommence niveau\n"
-"            A - quitte le jeu\n"
-"         F - bascule plein écran\n"
-
-#: wincoll/wincoll_game.py:75
-msgid " (choose with movement keys and digits)\n"
-msgstr ""
-"       (choisis avec les chiffres et\n"
-"          touches de déplacement)\n"
-
-#: wincoll/wincoll_game.py:77
-msgid "      Press the space bar to play!\n"
-msgstr "    Tape la barre éspace pour jouer!\n"

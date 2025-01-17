@@ -64,21 +64,8 @@ class WincollGame(Game[Tile]):
 Collect all the diamonds on each level.
 Get a key to turn safes into diamonds.
 Avoid falling rocks!
-""") + "\n" + _("""\
-    Z/X - Left/Right   '/? - Up/Down
-     or use the arrow keys to move
-""") + "\n" + _("""\
-        S/L - Save/load position
-           R - Restart level
-             Q - Quit game
-         F - toggle full screen
-""") + "\n\n" + _("""\
- (choose with movement keys and digits)
-""") + "\n" + _("""\
-      Press the space bar to play!
-"""
+""")
         # fmt: on
-        )
 
     screen_size = (640, 512)
     window_size = (240, 240)
