@@ -216,7 +216,7 @@ Avoid falling rocks!
             self.die_sound.play()
             self.game_surface.blit(
                 self.die_image,
-                self.game_to_screen((int(self.hero.position.x), int(self.hero.position.y))),
+                self.game_to_screen(self.hero.position),
             )
             self.show_status()
             self.show_screen()
