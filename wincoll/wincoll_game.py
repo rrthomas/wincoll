@@ -167,7 +167,7 @@ Avoid falling rocks!
                             if rock_to_roll(pos_right):
                                 fall(pos_right, pos)
 
-        if new_fall is False:
+        if self.falling and new_fall is False:
             self.reset_falling()
 
         self.set(self.hero.position, Tile.EMPTY)
