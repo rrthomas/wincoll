@@ -107,14 +107,30 @@ Avoid falling rocks!
                 if block in (Tile.DIAMOND, Tile.SAFE):
                     self.diamonds += 1
 
-    def can_move(self, velocity: Vector2) -> bool:
-        newpos = self.hero.position + velocity
+    def try_move(self, delta: Vector2) -> bool:
+        newpos = self.hero.position + delta
         block = self.get(newpos)
-        if block in (Tile.EMPTY, Tile.EARTH, Tile.DIAMOND, Tile.KEY):
+        if block in (Tile.EMPTY, Tile.EARTH):
             return True
-        if block == Tile.ROCK:
-            new_rockpos = self.hero.position + velocity * 2
-            return velocity.y == 0 and self.get(new_rockpos) == Tile.EMPTY
+        elif block == Tile.DIAMOND:
+            self.collect_sound.play()
+            self.diamonds -= 1
+            return True
+        elif block == Tile.KEY:
+            # Turn safes into diamonds.
+            for x in range(self.level_width):
+                for y in range(self.level_height):
+                    block = self.get(Vector2(x, y))
+                    if block == Tile.SAFE:
+                        self.set(Vector2(x, y), Tile.DIAMOND)
+            self.unlock_sound.play()
+            return True
+        elif block == Tile.ROCK:
+            new_rockpos = self.hero.position + delta * 2
+            if delta.y == 0 and self.get(new_rockpos) == Tile.EMPTY:
+                self.set(newpos, Tile.EMPTY)
+                self.set(new_rockpos, Tile.ROCK)
+                return True
         return False
 
     def do_play(self) -> None:
@@ -142,23 +158,6 @@ Avoid falling rocks!
                 self.falling = True
                 self.slide_sound.play(-1)
             new_fall = True
-
-        # Process Win interacting with objects.
-        block = self.get(self.hero.position)
-        if block == Tile.DIAMOND:
-            self.collect_sound.play()
-            self.diamonds -= 1
-        elif block == Tile.KEY:
-            # Turn safes into diamonds.
-            for x in range(self.level_width):
-                for y in range(self.level_height):
-                    block = self.get(Vector2(x, y))
-                    if block == Tile.SAFE:
-                        self.set(Vector2(x, y), Tile.DIAMOND)
-            self.unlock_sound.play()
-        elif block == Tile.ROCK:
-            new_rockpos = self.hero.position + self.hero.velocity
-            self.set(new_rockpos, Tile.ROCK)
 
         # Put Win into the map for collision detection
         self.set(self.hero.position, Tile.HERO)
