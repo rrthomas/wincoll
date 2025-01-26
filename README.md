@@ -134,3 +134,6 @@ The sound effects are copyrighted and licensed as follows:
   under CC 0
 + Death splat:
   [Splat1.wav by Shakedown_M](https://freesound.org/s/685205/) under CC 0
+* End of level whistle slide:
+  [FX swanee whistle down.wav by v0idation](https://freesound.org/s/497093/)
+  under CC 0

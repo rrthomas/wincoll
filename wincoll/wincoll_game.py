@@ -75,13 +75,14 @@ Avoid falling rocks!
     diamond_image: pygame.Surface
 
     collect_sound: pygame.mixer.Sound
-    slide_sound: pygame.mixer.Sound
+    rock_sound: pygame.mixer.Sound
     unlock_sound: pygame.mixer.Sound
+    end_level_sound: pygame.mixer.Sound
 
     # Utility methods.
     def reset_falling(self) -> None:
         self.falling = False
-        self.slide_sound.stop()
+        self.rock_sound.stop()
 
     # Overrides.
     def load_assets(self) -> None:
@@ -92,10 +93,12 @@ Avoid falling rocks!
         self.diamond_image = pygame.image.load(self.find_asset("Diamond.png"))
         self.collect_sound = pygame.mixer.Sound(self.find_asset("Collect.wav"))
         self.collect_sound.set_volume(self.default_volume)
-        self.slide_sound = pygame.mixer.Sound(str(self.find_asset("Slide.wav")))
-        self.slide_sound.set_volume(self.default_volume)
+        self.rock_sound = pygame.mixer.Sound(str(self.find_asset("Slide.wav")))
+        self.rock_sound.set_volume(self.default_volume)
         self.unlock_sound = pygame.mixer.Sound(str(self.find_asset("Unlock.wav")))
         self.unlock_sound.set_volume(self.default_volume)
+        self.end_level_sound = pygame.mixer.Sound(str(self.find_asset("EndLevel.wav")))
+        self.end_level_sound.set_volume(self.default_volume)
 
     def init_game(self) -> None:
         super().init_game()
@@ -156,7 +159,7 @@ Avoid falling rocks!
             nonlocal new_fall
             if self.falling is False:
                 self.falling = True
-                self.slide_sound.play(-1)
+                self.rock_sound.play(-1)
             new_fall = True
 
         # Put Win into the map for collision detection
@@ -187,6 +190,10 @@ Avoid falling rocks!
             self.reset_falling()
 
         self.set(self.hero.position, Tile.EMPTY)
+
+    def end_level(self) -> None:
+        self.end_level_sound.play()
+        super().end_level()
 
     def show_status(self) -> None:
         super().show_status()
