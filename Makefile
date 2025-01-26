@@ -8,7 +8,10 @@ update-pot:
 	find wincoll -name "*.py" | xargs xgettext --add-comments=TRANSLATORS --from-code=utf-8 --default-domain=wincoll --output=po/wincoll.pot.in
 
 update-po:
-	for po in po/*.po; do msgmerge --update $$po po/wincoll.pot; done
+	rm -f po/*.po
+	wget --recursive --level=1 --no-directories \
+			--accept=po --directory-prefix=po --no-verbose \
+			https://translationproject.org/latest/wincoll/
 
 compile-po:
 	for po in po/*.po; do mo=wincoll/locale/$$(basename $${po%.po})/LC_MESSAGES/wincoll.mo; mkdir -p $$(dirname $$mo); msgfmt --output-file=$$mo $$po; done
