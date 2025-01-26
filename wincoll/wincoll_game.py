@@ -133,7 +133,7 @@ Avoid falling rocks!
                 return True
         return False
 
-    def do_play(self) -> None:
+    def update_map(self) -> None:
         new_fall = False
 
         def rock_to_roll(pos: Vector2) -> bool:
