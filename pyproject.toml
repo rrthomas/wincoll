@@ -8,7 +8,7 @@ readme = "README.md"
 urls = {Homepage = "https://github.com/rrthomas/wincoll"}
 requires-python = ">= 3.12"
 dependencies = [
-    "chambercourt >= 0.9.19",
+    "chambercourt >= 0.9.20",
 ]
 classifiers = [
     "Environment :: X11 Applications",
