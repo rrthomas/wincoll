@@ -118,8 +118,6 @@ Avoid falling rocks!
         return False
 
     def do_play(self) -> None:
-        # Put Win into the map data for collision detection.
-        self.set(self.hero.position, Tile.HERO)
         new_fall = False
 
         def rock_to_roll(pos: Vector2) -> bool:
@@ -135,9 +133,8 @@ Avoid falling rocks!
 
         def fall(oldpos: Vector2, newpos: Vector2) -> None:
             block_below = self.get(newpos + Vector2(0, 1))
-            if block_below == Tile.HERO:
+            if block_below == Tile.HERO and not self.finished():
                 self.dead = True
-                self.hero.velocity = Vector2(0, 0)
             self.set(oldpos, Tile.EMPTY)
             self.set(newpos, Tile.ROCK)
             nonlocal new_fall
@@ -145,6 +142,26 @@ Avoid falling rocks!
                 self.falling = True
                 self.slide_sound.play(-1)
             new_fall = True
+
+        # Process Win interacting with objects.
+        block = self.get(self.hero.position)
+        if block == Tile.DIAMOND:
+            self.collect_sound.play()
+            self.diamonds -= 1
+        elif block == Tile.KEY:
+            # Turn safes into diamonds.
+            for x in range(self.level_width):
+                for y in range(self.level_height):
+                    block = self.get(Vector2(x, y))
+                    if block == Tile.SAFE:
+                        self.set(Vector2(x, y), Tile.DIAMOND)
+            self.unlock_sound.play()
+        elif block == Tile.ROCK:
+            new_rockpos = self.hero.position + self.hero.velocity
+            self.set(new_rockpos, Tile.ROCK)
+
+        # Put Win into the map for collision detection
+        self.set(self.hero.position, Tile.HERO)
 
         # Scan the map in bottom-to-top left-to-right order (excluding the
         # top row); for each space consider any rock above, then above
@@ -171,25 +188,6 @@ Avoid falling rocks!
             self.reset_falling()
 
         self.set(self.hero.position, Tile.EMPTY)
-
-        # Move Win.
-        newpos = self.hero.position + self.hero.velocity
-        block = self.get(newpos)
-        if block == Tile.DIAMOND:
-            self.collect_sound.play()
-            self.diamonds -= 1
-        elif block == Tile.KEY:
-            # Turn safes into diamonds.
-            for x in range(self.level_width):
-                for y in range(self.level_height):
-                    block = self.get(Vector2(x, y))
-                    if block == Tile.SAFE:
-                        self.set(Vector2(x, y), Tile.DIAMOND)
-            self.unlock_sound.play()
-        elif block == Tile.ROCK:
-            new_rockpos = newpos + self.hero.velocity
-            self.set(new_rockpos, Tile.ROCK)
-        self.set(newpos, Tile.EMPTY)
 
     def show_status(self) -> None:
         super().show_status()
