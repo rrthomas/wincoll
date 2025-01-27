@@ -11,7 +11,7 @@ import os
 import warnings
 from enum import StrEnum, auto
 
-from chambercourt.game import Game
+from chambercourt.game import Game, Object
 
 
 # Placeholder for gettext
@@ -24,7 +24,7 @@ os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
 with warnings.catch_warnings():
     warnings.simplefilter("ignore")
     import pygame
-    from pygame import Color, Vector2
+    from pygame import Color, Rect, Vector2
 
 
 class Tile(StrEnum):
@@ -49,6 +49,7 @@ class WincollGame(Game[Tile]):
         self.diamonds: int
         self.die_image: pygame.Surface
         self.die_sound: pygame.mixer.Sound
+        self.rocks: list[Object]
 
     @staticmethod
     def description() -> str:
@@ -100,20 +101,49 @@ Avoid falling rocks!
         self.end_level_sound = pygame.mixer.Sound(str(self.find_asset("EndLevel.wav")))
         self.end_level_sound.set_volume(self.default_volume)
 
+    def add_rock(self, pos: Vector2) -> None:
+        self.rocks.append(self.make_object(pos))
+
+    def rock_at(self, pos: Vector2) -> Object | None:
+        rects = list(map(lambda r: r.rect, self.rocks))
+        rock = Rect(
+            pos.x * self.tile_width,
+            pos.y * self.tile_height,
+            self.tile_width,
+            self.tile_height,
+        ).collidelist(rects)
+        if rock == -1:
+            return None
+        return self.rocks[rock]
+
+    def save_position(self) -> None:
+        for rock in self.rocks:
+            self.set(rock.position, Tile.ROCK)
+        super().save_position()
+
     def init_game(self) -> None:
         super().init_game()
         self.diamonds = 0
+        self.rocks = []
         self.dead = False
         for x in range(self.level_width):
             for y in range(self.level_height):
                 block = self.get(Vector2(x, y))
                 if block in (Tile.DIAMOND, Tile.SAFE):
                     self.diamonds += 1
+                elif block == Tile.ROCK:
+                    self.add_rock(Vector2(x, y))
 
     def try_move(self, delta: Vector2) -> bool:
         newpos = self.hero.position + delta
         block = self.get(newpos)
-        if block in (Tile.EMPTY, Tile.EARTH):
+        rock = self.rock_at(newpos)
+        if rock is not None:
+            new_rockpos = self.hero.position + delta * 2
+            if delta.y == 0 and self.get(new_rockpos) == Tile.EMPTY:
+                self.add_frame_object(rock, delta)
+                return True
+        elif block in (Tile.EMPTY, Tile.EARTH):
             return True
         elif block == Tile.DIAMOND:
             self.collect_sound.play()
@@ -128,25 +158,18 @@ Avoid falling rocks!
                         self.set(Vector2(x, y), Tile.DIAMOND)
             self.unlock_sound.play()
             return True
-        elif block == Tile.ROCK:
-            new_rockpos = self.hero.position + delta * 2
-            if delta.y == 0 and self.get(new_rockpos) == Tile.EMPTY:
-                self.set(newpos, Tile.EMPTY)
-                self.set(new_rockpos, Tile.ROCK)
-                return True
         return False
 
     def update_map(self) -> None:
         new_fall = False
 
         def rock_to_roll(pos: Vector2) -> bool:
-            if self.get(pos) == Tile.ROCK:
-                block_below = self.get(pos + Vector2(0, 1))
-                return block_below in (
-                    Tile.ROCK,
-                    Tile.KEY,
-                    Tile.DIAMOND,
-                    Tile.BLOB,
+            if self.rock_at(pos):
+                pos_below = pos + Vector2(0, 1)
+                block_below = self.get(pos_below)
+                return (
+                    block_below in (Tile.KEY, Tile.DIAMOND, Tile.BLOB)
+                    or self.rock_at(pos_below) is not None
                 )
             return False
 
@@ -154,8 +177,9 @@ Avoid falling rocks!
             block_below = self.get(newpos + Vector2(0, 1))
             if block_below == Tile.HERO and not self.finished():
                 self.dead = True
-            self.set(oldpos, Tile.EMPTY)
-            self.set(newpos, Tile.ROCK)
+            rock = self.rock_at(oldpos)
+            assert rock is not None
+            self.add_frame_object(rock, newpos - oldpos)
             nonlocal new_fall
             if self.falling is False:
                 self.falling = True
@@ -172,10 +196,10 @@ Avoid falling rocks!
             for x in range(self.level_width):
                 pos = Vector2(x, y)
                 block = self.get(pos)
-                if block == Tile.EMPTY:
+                if block == Tile.EMPTY and self.rock_at(pos) is None:
                     pos_above = pos + Vector2(0, -1)
                     block_above = self.get(pos_above)
-                    if block_above == Tile.ROCK:
+                    if self.rock_at(pos_above) is not None:
                         fall(pos_above, pos)
                     elif block_above == Tile.EMPTY:
                         pos_left = pos_above + Vector2(-1, 0)
