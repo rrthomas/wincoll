@@ -78,6 +78,7 @@ Avoid falling rocks!
     rock_sound: pygame.mixer.Sound
     unlock_sound: pygame.mixer.Sound
     end_level_sound: pygame.mixer.Sound
+    end_game_sound: pygame.mixer.Sound
 
     # Utility methods.
     def reset_falling(self) -> None:
@@ -99,6 +100,8 @@ Avoid falling rocks!
         self.unlock_sound.set_volume(self.default_volume)
         self.end_level_sound = pygame.mixer.Sound(str(self.find_asset("EndLevel.wav")))
         self.end_level_sound.set_volume(self.default_volume)
+        self.end_game_sound = pygame.mixer.Sound(str(self.find_asset("EndGame.wav")))
+        self.end_game_sound.set_volume(self.default_volume)
 
     def init_game(self) -> None:
         super().init_game()
@@ -192,8 +195,13 @@ Avoid falling rocks!
         self.set(self.hero.position, Tile.EMPTY)
 
     def end_level(self) -> None:
-        self.end_level_sound.play()
+        if self.level < self.num_levels:
+            self.end_level_sound.play()
         super().end_level()
+
+    def win_game(self) -> None:
+        self.end_game_sound.play()
+        super().win_game()
 
     def show_status(self) -> None:
         super().show_status()

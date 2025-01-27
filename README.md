@@ -137,3 +137,6 @@ The sound effects are copyrighted and licensed as follows:
 * End of level whistle slide:
   [FX swanee whistle down.wav by v0idation](https://freesound.org/s/497093/)
   under CC 0
+* End of game fanfare:
+  [Short Brass Fanfare 2.wav by _MC5_](https://freesound.org/s/524848/)
+  under CC BY 4.0
