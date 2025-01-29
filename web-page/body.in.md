@@ -8,7 +8,7 @@
 <h2><a href="https://github.com/rrthomas/wincoll/releases/latest">Downloads</a></h2>
 <ul>
 <li><a href="https://github.com/rrthomas/wincoll/releases/latest/download/wincoll-Linux-X64">GNU/Linux</a></li>
-<li><a href="https://github.com/rrthomas/wincoll/releases/latest/download/wincoll-macOS-ARM64.dmg">macOS</a></li>
+<li><a href="https://github.com/rrthomas/wincoll/releases/latest/download/wincoll-macOS-ARM64.dmg">Mac</a></li>
 <li><a href="https://github.com/rrthomas/wincoll/releases/latest/download/wincoll-win64.msi">Windows</a></li>
 <li><a href="https://github.com/rrthomas/wincoll/releases/latest/download/wincoll-riscos.zip">RISC OS</a></li>
 </ul>
