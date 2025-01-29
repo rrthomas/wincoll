@@ -22,10 +22,6 @@ update-pofiles:
 	$(MAKE) update-po
 	$(MAKE) compile-po
 
-# Show changes to POT file since last release
-show-pot-changes:
-	git diff $$(git tag --sort=-creatordate | head -n 2 | tail -n 1)..$$(git describe --abbrev=0 --tags) po/wincoll.pot.in
-
 announce-pot:
 	woger translationproject \
 		package=$(toml get --toml-path pyproject.toml "tool.setuptools.packages[0]") \
@@ -34,6 +30,7 @@ announce-pot:
 		home=$(toml get --toml-path pyproject.toml project.urls.Homepage) \
 		release_url=https://github.com/rrthomas/chambercourt/releases/download/v$version/$package-$version.tar.gz \
 		description=$(toml get --toml-path pyproject.toml project.description)
+		git diff po/wincoll.pot.in
 
 build:
 	$(MAKE) update-pofiles
