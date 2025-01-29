@@ -28,7 +28,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          submodules: recursive
+          fetch-depth: 0 # Get all commits for setting page timestamps
       - name: Setup Pages
         uses: actions/configure-pages@v4
       - name: Install dependencies
@@ -36,7 +36,9 @@ jobs:
           sudo apt-get -y install discount
           pip install --user linton
       - name: Build pages
-        run: linton publish --base-url /wincoll/ ./web-page ./_site
+        run: |
+          /usr/share/rsync/scripts/git-set-file-times ./web-page
+          linton publish --base-url /wincoll/ ./web-page ./_site
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
 
