@@ -67,7 +67,7 @@ img {
 
 body {
   font-family: 'Acorn Mode 1';
-  font-size: 1.3rem;
+  font-size: 1rem;
   display: flex;
   min-height: 100vh;
   flex-direction: column;
@@ -80,7 +80,11 @@ h1 {
   color: #ffffff;
 }
 
-h2 {
+h2,
+h3,
+h4,
+h5,
+h6 {
   color: #888888;
 }
 
@@ -116,4 +120,8 @@ main {
 
 .footer li~li {
   float: right;
+}
+
+.card {
+  background: #cccccc;
 }

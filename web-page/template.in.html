@@ -24,7 +24,7 @@
   <footer class="footer">
     <ul class="inline-list">
       <li>© $include{Author.in.txt}</li>
-      <li><small><em>Last updated $include{lastmodified.in.py,$realpath}</em></small></li>
+      <li><small><em>Last updated $include{lastmodified.in.py,$include{dirname,$realpath}/body.in.md}</em></small></li>
     </ul>
   </footer>
 </body>

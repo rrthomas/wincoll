@@ -12,13 +12,19 @@
 <li><a href="https://github.com/rrthomas/wincoll/releases/latest/download/wincoll-win64.msi">Windows</a></li>
 <li><a href="https://github.com/rrthomas/wincoll/releases/latest/download/wincoll-riscos.zip">RISC OS</a></li>
 </ul>
-WinColl is a simple action puzzle game in which you tunnel through caverns collecting diamonds while avoiding being squashed by falling rocks.
+<p>WinColl is a simple action puzzle game in which you tunnel through caverns collecting diamonds while avoiding being squashed by falling rocks.</p>
+<p>For more information, including how to design your own levels, see the <a href="https://github.com/rrthomas/wincoll">development page</a>.</p>
 </div>
 </div>
 
-
-For more information, including how to design your own levels, see the [development page](https://github.com/rrthomas/wincoll).
-
+<div class="col-sm-9 m-3 mx-auto">
+<div class="card">
+<div class="card-body">
+<h5 class="card-title">NEWS!</h5>
+<p class="card-text">Version 1.0 is released on 29th January 2025! Thanks so much to the friends who helped me make the original version in 1990, and friends and family who play-tested the new version. A big thanks to Paul Wilson for designing several new levels, and an enormous hurrah for Alistair Turnbull, who designed some of the graphics and levels in 1990 as well as several new levels in 2025, and gave invaluable help with the coding of the new version.</p>
+</div>
+</div>
+</div>
 
 ## Copyright and Disclaimer
 
