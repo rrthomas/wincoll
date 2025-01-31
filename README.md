@@ -1,6 +1,6 @@
 # WinColl
 
-https://github.com/rrthomas/wincoll  
+https://rrthomas.github.io/wincoll  
 
 by Reuben Thomas <rrt@sc3d.org>  
 
