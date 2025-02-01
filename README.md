@@ -34,7 +34,7 @@ The game provides instructions on how to play.
 ### Binary installers
 
 Installers are available for GNU/Linux, macOS and Windows. See the
-[latest release](https://github.com/wincoll/releases):
+[latest release](https://github.com/rrthomas/wincoll/releases/latest):
 
 * The GNU/Linux version is a single binary; you need to make it executable
   and then either copy it to a directory on your path, or run it directly:
