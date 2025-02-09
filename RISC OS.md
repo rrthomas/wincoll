@@ -10,7 +10,7 @@ The sound module `UserVoices` was generated using a program from [RISC User Volu
 * Download and unpack the most recent [RISC OS release](https://github.com/rrthomas/wincoll/releases/latest/wincoll-riscos.zip).
 * Launch `!WinColl` (left double-click it).
 
-WinColl should run on RISC OS 3.5 to 3.7, and could probably be made to run on RISC OS 2 without difficulty.
+WinColl should run on RISC OS 3.5 to 3.7, and could probably be made to run on other versions without difficulty.
 
 The RISC OS version comes with its own level editor. If you would like to submit levels for inclusion in the official release, you will need to convert them to Tiled format, using the `level2riscos` script.
 
