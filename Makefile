@@ -51,7 +51,7 @@ release:
 	twine upload dist/* && \
 	git tag v$$(grep version pyproject.toml | grep -o "[0-9.]\+") && \
 	git push --tags && \
-	$(MAKE) show-pot-changes
+	git diff po/wincoll.pot.in
 
 loc:
 	cloc --exclude-content="ptext module" wincoll/*.py
