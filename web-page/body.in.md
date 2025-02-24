@@ -21,7 +21,7 @@
 <div class="card">
 <div class="card-body">
 <h5 class="card-title">NEWS!</h5>
-<p class="card-text">Version 1.0 is released on 29th January 2025! Thanks so much to the friends who helped me make the original version in 1990, and friends and family who play-tested the new version. A big thanks to Paul Wilson for designing several new levels, and an enormous hurrah for Alistair Turnbull, who designed some of the graphics and levels in 1990 as well as several new levels in 2025, and gave invaluable help with the coding of the new version.</p>
+<p class="card-text">Version 1.1 is released on 24th February 2025! It comes with a fiendish new penultimate level from Paul Wilson, and gamepads should now work on the instructions screen, for selecting the start level and starting the game.</p>
 </div>
 </div>
 </div>
