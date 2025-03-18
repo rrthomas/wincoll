@@ -5,21 +5,37 @@
   <image width="16" height="16" source="Gap.png"/>
  </tile>
  <tile id="10" type="brick">
+  <properties>
+   <property name="solid" type="bool" value="true"/>
+  </properties>
   <image width="16" height="16" source="Brick.png"/>
  </tile>
  <tile id="11" type="safe">
+  <properties>
+   <property name="scoring" type="bool" value="true"/>
+   <property name="solid" type="bool" value="true"/>
+  </properties>
   <image width="16" height="16" source="Safe.png"/>
  </tile>
  <tile id="12" type="diamond">
+  <properties>
+   <property name="scoring" type="bool" value="true"/>
+  </properties>
   <image width="16" height="16" source="Diamond.png"/>
  </tile>
  <tile id="13" type="blob">
+  <properties>
+   <property name="solid" type="bool" value="true"/>
+  </properties>
   <image width="16" height="16" source="Blob.png"/>
  </tile>
  <tile id="14" type="earth">
   <image width="16" height="16" source="Earth.png"/>
  </tile>
  <tile id="15" type="rock">
+  <properties>
+   <property name="solid" type="bool" value="true"/>
+  </properties>
   <image width="16" height="16" source="Rock.png"/>
  </tile>
  <tile id="16" type="key">
