@@ -21,7 +21,7 @@
 <div class="card">
 <div class="card-body">
 <h5 class="card-title">NEWS!</h5>
-<p class="card-text">Version 1.1 is released on 24th February 2025! It comes with a fiendish new penultimate level from Paul Wilson, and gamepads should now work on the instructions screen, for selecting the start level and starting the game.</p>
+<p class="card-text">Version 1.2 is released on 19th March 2025! It fixes level selection with the number keys on the instructions screen.</p>
 </div>
 </div>
 </div>
