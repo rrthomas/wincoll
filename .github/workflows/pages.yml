@@ -34,7 +34,8 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get -y install discount
-          pip install --user linton
+          pip install --user nancy==8.3.0
+          pip install --user linton==1.1.1
       - name: Build pages
         run: |
           /usr/share/rsync/scripts/git-set-file-times ./web-page
