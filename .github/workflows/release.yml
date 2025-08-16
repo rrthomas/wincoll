@@ -63,14 +63,14 @@ jobs:
         if: ${{ matrix.os == 'ubuntu-20.04' }}
         run: |
           pip install pyinstaller
-          PYTHONPATH=. pyinstaller --noconfirm --onefile --windowed --name wincoll-${{ runner.os }}-${{ runner.arch }} --copy-metadata wincoll --add-data "wincoll/levels:wincoll/levels" --add-data "wincoll/locale:wincoll/locale" wincoll/__main__.py
+          PYTHONPATH=. pyinstaller --noconfirm --onefile --windowed --name wincoll-${{ runner.os }}-${{ runner.arch }} --copy-metadata wincoll --add-data "wincoll/levels:wincoll/levels" --add-data "wincoll/locale:wincoll/locale" --collect-all chambercourt wincoll/__main__.py
           ./dist/wincoll-${{ runner.os }}-${{ runner.arch }} --help
       - name: Build the executable (macOS)
         if: ${{ matrix.os == 'macos-13' || matrix.os == 'macos-latest' }}
         run: |
           pip install pyinstaller
           ./make-macos-icns ./wincoll/levels/Hero.png wincoll.iconset
-          pyi-makespec --windowed --name WinColl --icon wincoll.icns --copy-metadata wincoll --add-data "wincoll/levels:wincoll/levels" --add-data "wincoll/locale:wincoll/locale" wincoll/__main__.py
+          pyi-makespec --windowed --name WinColl --icon wincoll.icns --copy-metadata wincoll --add-data "wincoll/levels:wincoll/levels" --add-data "wincoll/locale:wincoll/locale" --collect-all chambercourt wincoll/__main__.py
           export version=$(grep version pyproject.toml)
           sed -i '' -e "s/\(name='WinColl.app'\)/\1,\n    $version/" wincoll.spec
           PYTHONPATH=. pyinstaller --noconfirm wincoll.spec
