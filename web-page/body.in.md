@@ -21,7 +21,7 @@
 <div class="card">
 <div class="card-body">
 <h5 class="card-title">NEWS!</h5>
-<p class="card-text">Version 1.2 is released on 19th March 2025! It fixes level selection with the number keys on the instructions screen.</p>
+<p class="card-text">Version 1.2.1 is released on 16th August 2025! It fixes a bug in the last two releases’ binary installers, which did not work at all on some operating systems.</p>
 </div>
 </div>
 </div>
