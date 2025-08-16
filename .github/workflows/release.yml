@@ -30,7 +30,7 @@ jobs:
       matrix:
         # Use oldest available macOS and Ubuntu for greatest compatibility
         # of resulting binary.
-        os: [ubuntu-20.04, macos-13, macos-latest, windows-latest]
+        os: [ubuntu-22.04, macos-13, macos-latest, windows-latest]
     runs-on: ${{ matrix.os }}
     env:
       GH_TOKEN: ${{ github.token }}
@@ -39,16 +39,16 @@ jobs:
         uses: actions/checkout@v4
       - name: Install Python (Windows, macOS)
         uses: actions/setup-python@v5
-        if: ${{ matrix.os != 'ubuntu-20.04' }}
+        if: ${{ matrix.os != 'ubuntu-22.04' }}
         with:
           python-version: "3.12"
       - name: Install deadsnakes PPA (Ubuntu)
-        if: ${{ matrix.os == 'ubuntu-20.04' }}
+        if: ${{ matrix.os == 'ubuntu-22.04' }}
         uses: deadsnakes/action@v3.2.0
         with:
           python-version: "3.12"
       - name: Install non-Python build dependencies (Ubuntu)
-        if: ${{ matrix.os == 'ubuntu-20.04' }}
+        if: ${{ matrix.os == 'ubuntu-22.04' }}
         run: sudo apt-get -y install gettext
       - name: Install non-Python build dependencies (Windows)
         if: ${{ matrix.os == 'windows-latest' }}
@@ -61,7 +61,7 @@ jobs:
       - name: Build
         run: make dist
       - name: Build the executable (Ubuntu)
-        if: ${{ matrix.os == 'ubuntu-20.04' }}
+        if: ${{ matrix.os == 'ubuntu-22.04' }}
         run: |
           pip install pyinstaller
           PYTHONPATH=. pyinstaller --noconfirm --onefile --windowed --name wincoll-${{ runner.os }}-${{ runner.arch }} --copy-metadata wincoll --add-data "wincoll/levels:wincoll/levels" --add-data "wincoll/locale:wincoll/locale" --collect-all chambercourt wincoll/__main__.py
@@ -103,10 +103,10 @@ jobs:
           file: ./dist/wincoll*.msi
           file_glob: true
       - name: Build the RISC OS distribution
-        if: ${{ matrix.os == 'ubuntu-20.04' }}
+        if: ${{ matrix.os == 'ubuntu-22.04' }}
         run: ./dist-riscos
       - name: Upload the RISC OS distribution
-        if: ${{ matrix.os == 'ubuntu-20.04' }}
+        if: ${{ matrix.os == 'ubuntu-22.04' }}
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ github.token }}
