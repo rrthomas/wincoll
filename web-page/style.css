@@ -17,10 +17,6 @@
     max-width: 60rem;
   }
 
-  .breadcrumb {
-    margin-left: var(--menu-width);
-  }
-
   .menu-navbar {
     width: var(--menu-width);
     overflow-y: scroll;
@@ -100,10 +96,6 @@ main {
 
 .nav-directory::before {
   content: ">";
-}
-
-.breadcrumb {
-  margin-bottom: 0px;
 }
 
 /* Sticky footer */
