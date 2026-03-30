@@ -13,7 +13,7 @@ jobs:
     env:
       GH_TOKEN: ${{ github.token }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Install non-Python build dependencies
         run: sudo apt-get -y install gettext
       - name: Install Python dependencies
@@ -21,7 +21,7 @@ jobs:
       - name: Build
         run: make dist
       - name: Make the release
-        run: gh release create ${{ github.ref_name }} --title "Release ${{ github.ref_name}}" dist/*
+        run: gh release create ${{ github.ref_name }} --title "Release ${{ GitHub.ref_name}}" dist/*
 
   binary-release:
     name: Make binary release
@@ -30,7 +30,7 @@ jobs:
       matrix:
         # Use oldest available macOS and Ubuntu for greatest compatibility
         # of resulting binary.
-        os: [ubuntu-22.04, macos-13, macos-latest, windows-latest]
+        os: [ubuntu-22.04, macos-14, macos-latest, windows-latest]
     runs-on: ${{ matrix.os }}
     env:
       GH_TOKEN: ${{ github.token }}
@@ -38,7 +38,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
       - name: Install Python (Windows, macOS)
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         if: ${{ matrix.os != 'ubuntu-22.04' }}
         with:
           python-version: "3.12"
@@ -67,7 +67,7 @@ jobs:
           PYTHONPATH=. pyinstaller --noconfirm --onefile --windowed --name wincoll-${{ runner.os }}-${{ runner.arch }} --copy-metadata wincoll --add-data "wincoll/levels:wincoll/levels" --add-data "wincoll/locale:wincoll/locale" --collect-all chambercourt wincoll/__main__.py
           ./dist/wincoll-${{ runner.os }}-${{ runner.arch }} --help
       - name: Build the executable (macOS)
-        if: ${{ matrix.os == 'macos-13' || matrix.os == 'macos-latest' }}
+        if: ${{ matrix.os == 'macos-14' || matrix.os == 'macos-latest' }}
         run: |
           pip install pyinstaller
           ./make-macos-icns ./wincoll/levels/Hero.png wincoll.iconset
