@@ -30,7 +30,7 @@ jobs:
       matrix:
         # Use oldest available macOS and Ubuntu for greatest compatibility
         # of resulting binary.
-        os: [ubuntu-22.04, macos-14, macos-latest, windows-latest]
+        os: [ubuntu-22.04, macos-14, windows-latest]
     runs-on: ${{ matrix.os }}
     env:
       GH_TOKEN: ${{ github.token }}
@@ -67,7 +67,7 @@ jobs:
           PYTHONPATH=. pyinstaller --noconfirm --onefile --windowed --name wincoll-${{ runner.os }}-${{ runner.arch }} --copy-metadata wincoll --add-data "wincoll/levels:wincoll/levels" --add-data "wincoll/locale:wincoll/locale" --collect-all chambercourt wincoll/__main__.py
           ./dist/wincoll-${{ runner.os }}-${{ runner.arch }} --help
       - name: Build the executable (macOS)
-        if: ${{ matrix.os == 'macos-14' || matrix.os == 'macos-latest' }}
+        if: ${{ matrix.os == 'macos-14' }}
         run: |
           pip install pyinstaller
           ./make-macos-icns ./wincoll/levels/Hero.png wincoll.iconset
