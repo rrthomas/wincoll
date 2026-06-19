@@ -30,7 +30,7 @@ jobs:
         with:
           fetch-depth: 0 # Get all commits for setting page timestamps
       - name: Setup Pages
-        uses: actions/configure-pages@v4
+        uses: actions/configure-pages@v6
       - name: Install dependencies
         run: |
           pip install --user linton
@@ -39,7 +39,7 @@ jobs:
           /usr/share/rsync/scripts/git-set-file-times ./web-page
           linton publish --base-url /wincoll/ ./web-page ./_site
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v5
 
   # Deployment job
   deploy:
