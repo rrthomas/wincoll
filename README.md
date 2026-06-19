@@ -102,7 +102,7 @@ difficulty.
 
 New levels, usability improvements and translations are welcome, as are
 usability improvements: for example, the ability to rebind keys would be
-welcome. See the [open issues](https://github.com/rrthomas/wincoll/) for
+welcome. See the [open issues](https://github.com/rrthomas/wincoll/issues) for
 specific things I’d like improved.
 
 Some levels useful for testing are in `test-levels`.
