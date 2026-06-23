@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>WinColl</title>
+    <link
+      rel="stylesheet"
+      href="https://pyscript.net/releases/2026.6.1/core.css"
+    />
+    <script
+      type="module"
+      src="https://pyscript.net/releases/2026.6.1/core.js"
+    ></script>
+  </head>
+  <body style="background-color: blue;">
+    <div style="text-align: center;"><canvas id="canvas"></canvas></div>
+    <script type="py-game" config='{"packages": ["wincoll"]}'>
+      import asyncio
+      from wincoll.wincoll_game import WincollGame
+      asyncio.create_task(WincollGame().main([]))
+    </script>
+  </body>
+</html>

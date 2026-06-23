@@ -18,10 +18,18 @@
 </div>
 
 <div class="col-sm-9 m-3 mx-auto">
+<div class="card text-bg-success">
+<div class="card-body">
+<h5 class="card-title text-center"><a href="play.html">PLAY ONLINE!</a></h5>
+</div>
+</div>
+</div>
+
+<div class="col-sm-9 m-3 mx-auto">
 <div class="card">
 <div class="card-body">
 <h5 class="card-title">NEWS!</h5>
-<p class="card-text">Version 1.2.2 is released on 1st November 2025! It fixes a typo in the instructions.</p>
+<p class="card-text">Version 1.2.3 is released on 23rd June 2026! WinColl now runs in the browser.</p>
 </div>
 </div>
 </div>
