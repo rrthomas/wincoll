@@ -194,14 +194,14 @@ Avoid falling rocks!
 
         self.set(self.hero.position, Tile.EMPTY)
 
-    def end_level(self) -> None:
+    async def end_level(self) -> None:
         if self.level < self.num_levels:
             self.end_level_sound.play()
-        super().end_level()
+        await super().end_level()
 
-    def win_game(self) -> None:
+    async def win_game(self) -> None:
         self.end_game_sound.play()
-        super().win_game()
+        await super().win_game()
 
     def show_status(self) -> None:
         super().show_status()
@@ -235,7 +235,7 @@ Avoid falling rocks!
             pygame.time.wait(1000)
             self.dead = False
 
-    def main(self, argv: list[str]) -> None:
+    async def main(self, argv: list[str]) -> None:
         global _
 
         # Internationalise this module.
@@ -243,4 +243,4 @@ Avoid falling rocks!
             cat = gettext.translation("wincoll", path / "locale", fallback=True)
             _ = cat.gettext
 
-        super().main(argv)
+        await super().main(argv)

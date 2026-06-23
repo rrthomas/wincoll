@@ -35,6 +35,8 @@ announce-pot:
 build:
 	$(MAKE) update-pofiles
 	python -m build
+	ln -sf ../$$(ls dist/$(PACKAGE)*.whl) ./browser/
+	echo '{"packages": ["'$$(basename dist/$(PACKAGE)*.whl)'"]}' > ./browser/conf.json
 
 dist:
 	git diff --exit-code && \
