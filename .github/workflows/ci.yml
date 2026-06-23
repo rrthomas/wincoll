@@ -20,7 +20,7 @@ jobs:
         run: pip install tox build setuptools chambercourt
       - name: Build
         run: |
-          tox
+          tox --skip-missing-interpreters
           make build
           PYTHONPATH=. python -m wincoll --help
           pip install .
