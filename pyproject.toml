@@ -22,13 +22,20 @@ classifiers = [
 wincoll = "wincoll:main"
 
 [build-system]
-requires = ["build", "setuptools >= 62.3.0"]
+requires = ["build", "setuptools"]
 
 [tool.setuptools]
 packages = ["wincoll"]
 
 [tool.setuptools.package-data]
-wincoll = ["**/*.png", "**/*.wav", "**/*.tmx", "**/*.tsx", "**/*.ttf", "**/*.mo"]
+wincoll = [
+    "**/*.png",
+    "**/*.wav",
+    "**/*.tmx",
+    "**/*.tsx",
+    "**/*.ttf",
+    "**/*.mo",
+]
 
 [tool.pyright]
 include = ["wincoll"]
