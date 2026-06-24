@@ -8,17 +8,37 @@
       rel="stylesheet"
       href="https://pyscript.net/releases/2026.6.1/core.css"
     />
+    <link rel="stylesheet" href="style.css" />
     <script
       type="module"
       src="https://pyscript.net/releases/2026.6.1/core.js"
     ></script>
   </head>
-  <body style="background-color: blue;">
-    <div style="text-align: center;"><canvas id="canvas"></canvas></div>
+  <body style="background-color: blue">
+    <div style="text-align: center"><canvas id="canvas"></canvas></div>
     <script type="py-game" config='{"packages": ["wincoll"]}'>
       import asyncio
       from wincoll.wincoll_game import WincollGame
       asyncio.create_task(WincollGame().main([]))
+    </script>
+    <script type="text/javascript">
+      let canvas = document.getElementById("canvas");
+      let ctx = canvas.getContext("2d");
+      ctx.fillStyle = "white";
+      let textHeight = 32;
+      let font = new FontFace("AcornMode1", "url(acorn-mode-1.ttf)");
+      font.load().then(function (font) {
+        document.fonts.add(font);
+        ctx.font = `${textHeight}px AcornMode1`;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        let msg = "Loading…";
+        let metrics = ctx.measureText(msg);
+        ctx.fillText(
+          msg,
+          (canvas.width - metrics.width) / 2,
+          (canvas.height - textHeight) / 2,
+        );
+      });
     </script>
   </body>
 </html>
