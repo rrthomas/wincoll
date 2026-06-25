@@ -29,7 +29,7 @@
 <div class="card">
 <div class="card-body">
 <h5 class="card-title">NEWS!</h5>
-<p class="card-text">Version 1.2.3 is released on 23rd June 2026! WinColl now runs in the browser.</p>
+<p class="card-text">Version 1.2.5 is released on 25th June 2026! WinColl now works in mobile browsers!</p>
 </div>
 </div>
 </div>
