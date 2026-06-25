@@ -44,8 +44,9 @@
   clear: both;
 }
 
-/* Images align with text bottom by default */
+/* Images align with text bottom by default, and fit their space */
 img {
+  max-width: 100%;
   vertical-align: text-bottom;
 }
 
