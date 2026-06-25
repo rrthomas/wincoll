@@ -50,6 +50,16 @@ class WincollGame(Game[Tile]):
         self.die_image: pygame.Surface
         self.die_sound: pygame.mixer.Sound
 
+    def init_screen(self) -> None:
+        super().init_screen()
+        # Window can be as wide as the screen, but must leave room for the
+        # level title.
+        self.left_margin = 4 * self.font_pixels
+        self.window_size = (
+            min(self.window_size[0] * self.window_scale, self.screen_size[0] - self.left_margin) // self.window_scale,
+            self.window_size[1],
+        )
+
     @staticmethod
     def description() -> str:
         return _("Collect all the diamonds while digging through earth dodging rocks.")
@@ -102,6 +112,13 @@ Avoid falling rocks!
         self.end_level_sound.set_volume(self.default_volume)
         self.end_game_sound = pygame.mixer.Sound(str(self.find_asset("EndGame.wav")))
         self.end_game_sound.set_volume(self.default_volume)
+
+    def restart_level(self) -> None:
+        super().restart_level()
+        self.window_pos = (
+            (self.surface.get_width() - self.left_margin - self.window_scaled_width) // 2 + self.left_margin,
+            self.window_pos[1],
+        )
 
     def init_game(self) -> None:
         super().init_game()
