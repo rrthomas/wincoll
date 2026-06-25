@@ -1,10 +1,10 @@
 # WinColl
 
 <div class="row">
-<div class="col-lg">
+<div class="col-md">
 <img alt="Detail of a game in progress" src="Screenshot.png">
 </div>
-<div class="col-lg">
+<div class="col-md">
 <h2><a href="https://github.com/rrthomas/wincoll/releases/latest">Downloads</a></h2>
 <ul>
 <li><a href="https://github.com/rrthomas/wincoll/releases/latest/download/wincoll-Linux-X64">GNU/Linux</a></li>
