@@ -99,5 +99,5 @@ Saved,ffd
 *.tiled-session
 wincoll.icns
 \!WinColl/Level??,ffd
-po/wincoll.pot
+po/wincoll.pot*
 _site/
