@@ -17,7 +17,7 @@ jobs:
       - name: Install non-Python build dependencies
         run: sudo apt-get -y install gettext
       - name: Install Python dependencies
-        run: pip install tox build chambercourt
+        run: pip install tox build chambercourt toml-cli
       - name: Build
         run: make dist
       - name: Make the release
