@@ -95,6 +95,7 @@ ENV/
 *.po
 
 # WinColl-specific files
+.envrc
 Saved,ffd
 *.tiled-session
 wincoll.icns
