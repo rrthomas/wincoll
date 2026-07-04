@@ -55,7 +55,7 @@ jobs:
           Add-Content $env:GITHUB_PATH "C:\nuget\Gettext.Tools.0.22.4\tools\bin";
           choco install wget
       - name: Install Python dependencies
-        run: pip install tox build setuptools chambercourt
+        run: pip install tox build chambercourt toml-cli
       - name: Build
         run: make dist
       - name: Build the executable (Ubuntu)
