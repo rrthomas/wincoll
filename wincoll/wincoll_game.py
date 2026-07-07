@@ -4,6 +4,7 @@
 Released under the GPL version 3, or (at your option) any later version.
 """
 
+import asyncio
 import gettext
 import importlib
 import importlib.resources
@@ -56,7 +57,11 @@ class WincollGame(Game[Tile]):
         # level title.
         self.left_margin = 4 * self.font_pixels
         self.window_size = (
-            min(self.window_size[0] * self.window_scale, self.screen_size[0] - self.left_margin) // self.window_scale,
+            min(
+                self.window_size[0] * self.window_scale,
+                self.screen_size[0] - self.left_margin,
+            )
+            // self.window_scale,
             self.window_size[1],
         )
 
@@ -116,7 +121,9 @@ Avoid falling rocks!
     def restart_level(self) -> None:
         super().restart_level()
         self.window_pos = (
-            (self.surface.get_width() - self.left_margin - self.window_scaled_width) // 2 + self.left_margin,
+            (self.surface.get_width() - self.left_margin - self.window_scaled_width)
+            // 2
+            + self.left_margin,
             self.window_pos[1],
         )
 
@@ -239,7 +246,7 @@ Avoid falling rocks!
     def finished(self) -> bool:
         return self.diamonds == 0 or self.dead
 
-    def stop_play(self) -> None:
+    async def stop_play(self) -> None:
         self.reset_falling()
         if self.dead:
             self.die_sound.play()
@@ -249,7 +256,7 @@ Avoid falling rocks!
             )
             self.show_status()
             self.show_screen()
-            pygame.time.wait(1000)
+            await asyncio.sleep(1)
             self.dead = False
 
     async def main(self, argv: list[str]) -> None:
