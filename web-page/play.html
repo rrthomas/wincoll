@@ -14,8 +14,10 @@
       src="https://pyscript.net/releases/2026.6.1/core.js"
     ></script>
   </head>
-  <body style="background-color: blue">
-    <div style="text-align: center"><canvas id="canvas"></canvas></div>
+  <body style="margin: 0; height: 100vh; width: 100vw; background-color: blue">
+    <div style="height: 100%; width: 100%; display: flex; align-items: center; justify-content: center;">
+      <canvas id="canvas"></canvas>
+    </div>
     <script type="py-game" config='{"packages": ["wincoll"]}'>
       import asyncio
       from wincoll.wincoll_game import WincollGame
