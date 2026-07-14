@@ -50,20 +50,17 @@ class WincollGame(Game[Tile]):
         self.diamonds: int
         self.die_image: pygame.Surface
         self.die_sound: pygame.mixer.Sound
+        self.game_window_max = (15, 15)
+        self.screen_extra_x_chars = 4
+        self.default_background_colour = Color(0, 0, 255)
 
-    def init_screen(self) -> None:
-        super().init_screen()
-        # Window can be as wide as the screen, but must leave room for the
-        # level title.
-        self.left_margin = 4 * self.font_pixels
-        self.window_size = (
-            min(
-                self.window_size[0] * self.window_scale,
-                self.screen_size[0] - self.left_margin,
-            )
-            // self.window_scale,
-            self.window_size[1],
-        )
+        self.diamond_image: pygame.Surface
+
+        self.collect_sound: pygame.mixer.Sound
+        self.rock_sound: pygame.mixer.Sound
+        self.unlock_sound: pygame.mixer.Sound
+        self.end_level_sound: pygame.mixer.Sound
+        self.end_game_sound: pygame.mixer.Sound
 
     @staticmethod
     def description() -> str:
@@ -81,19 +78,6 @@ Get a key to turn safes into diamonds.
 Avoid falling rocks!
 """)
         # fmt: on
-
-    screen_size = (640, 512)
-    window_size = (240, 240)
-    default_background_colour = Color(0, 0, 255)
-    window_scale = 2
-
-    diamond_image: pygame.Surface
-
-    collect_sound: pygame.mixer.Sound
-    rock_sound: pygame.mixer.Sound
-    unlock_sound: pygame.mixer.Sound
-    end_level_sound: pygame.mixer.Sound
-    end_game_sound: pygame.mixer.Sound
 
     # Utility methods.
     def reset_falling(self) -> None:
@@ -117,15 +101,6 @@ Avoid falling rocks!
         self.end_level_sound.set_volume(self.default_volume)
         self.end_game_sound = pygame.mixer.Sound(str(self.find_asset("EndGame.wav")))
         self.end_game_sound.set_volume(self.default_volume)
-
-    def restart_level(self) -> None:
-        super().restart_level()
-        self.window_pos = (
-            (self.surface.get_width() - self.left_margin - self.window_scaled_width)
-            // 2
-            + self.left_margin,
-            self.window_pos[1],
-        )
 
     def init_game(self) -> None:
         super().init_game()
@@ -229,8 +204,11 @@ Avoid falling rocks!
 
     def show_status(self) -> None:
         super().show_status()
+        score_diamond = pygame.transform.scale(
+            self.diamond_image, (self.font_pixels, self.font_pixels)
+        )
         self.surface.blit(
-            self.diamond_image,
+            score_diamond,
             (
                 (self.window_pos[0] - self.font_pixels) // 2,
                 int(1.5 * self.font_pixels),
