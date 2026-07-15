@@ -26,7 +26,8 @@
 
       pygame.init()
       pygame.display.set_mode((window.innerWidth, window.innerHeight), 0, vsync=1)
-      asyncio.create_task(WincollGame().main([]))
+      while True:
+          await asyncio.create_task(WincollGame().main([]))
     </script>
     <script type="text/javascript">
       let canvas = document.getElementById("canvas");
