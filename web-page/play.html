@@ -20,7 +20,12 @@
     </div>
     <script type="py-game" config='{"packages": ["wincoll"]}'>
       import asyncio
+      import pygame
       from wincoll.wincoll_game import WincollGame
+      from pyscript import window
+
+      pygame.init()
+      pygame.display.set_mode((window.innerWidth, window.innerHeight), 0, vsync=1)
       asyncio.create_task(WincollGame().main([]))
     </script>
     <script type="text/javascript">

@@ -13,13 +13,26 @@
       src="https://pyscript.net/releases/2026.7.2/core.js"
     ></script>
   </head>
-  <body style="margin: 0; height: 100vh; width: 100vw; background: blue;">
-    <div style="height: 100%; width: 100%; display: flex; align-items: center; justify-content: center;">
+  <body style="margin: 0; height: 100vh; width: 100vw; background: blue">
+    <div
+      style="
+        height: 100%;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      "
+    >
       <canvas id="canvas"></canvas>
     </div>
     <script type="py-game" config="./conf.json">
       import asyncio
+      import pygame
       from wincoll.wincoll_game import WincollGame
+      from pyscript import window
+
+      pygame.init()
+      pygame.display.set_mode((window.innerWidth, window.innerHeight), 0, vsync=1)
       asyncio.create_task(WincollGame().main([]))
     </script>
   </body>
