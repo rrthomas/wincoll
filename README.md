@@ -140,3 +140,6 @@ The sound effects are copyrighted and licensed as follows:
 * End of game fanfare:
   [Short Brass Fanfare 2.wav by _MC5_](https://freesound.org/s/524848/)
   under CC BY 4.0
+* Drill:
+  [Pneumatic Drill by iainmccurdy](https://freesound.org/s/639409/) under CC
+  BY 4.0

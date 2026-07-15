@@ -46,6 +46,7 @@ class WincollGame(Game[Tile]):
     def __init__(self) -> None:
         super().__init__("wincoll", Tile, Tile.HERO, Tile.EMPTY, Tile.BRICK)
         self.falling = False
+        self.drilling = False
         self.dead = False
         self.diamonds: int
         self.die_image: pygame.Surface
@@ -101,6 +102,8 @@ Avoid falling rocks!
         self.end_level_sound.set_volume(self.default_volume)
         self.end_game_sound = pygame.mixer.Sound(str(self.find_asset("EndGame.wav")))
         self.end_game_sound.set_volume(self.default_volume)
+        self.drill_sound = pygame.mixer.Sound(str(self.find_asset("Drill.wav")))
+        self.drill_sound.set_volume(self.default_volume)
 
     def init_game(self) -> None:
         super().init_game()
@@ -112,8 +115,22 @@ Avoid falling rocks!
                 if block in (Tile.DIAMOND, Tile.SAFE):
                     self.diamonds += 1
 
+    def handle_game_keys(self, event: pygame.event.Event) -> None:
+        super().handle_game_keys(event)
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_d:
+            self.drilling = True
+
     def try_move(self, delta: Vector2) -> bool:
         newpos = self.hero.position + delta
+        if self.drilling is True:
+            self.drill_sound.play()
+            self.drilling = False
+            return (
+                newpos.x >= 0
+                and newpos.x < self.level_width
+                and newpos.y >= 0
+                and newpos.y < self.level_height
+            )
         block = self.get(newpos)
         if block in (Tile.EMPTY, Tile.EARTH):
             return True
