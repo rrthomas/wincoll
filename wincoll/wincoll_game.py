@@ -242,6 +242,7 @@ Avoid falling rocks!
         return self.diamonds == 0 or self.dead
 
     async def stop_play(self) -> None:
+        await super().stop_play()
         self.reset_falling()
         if self.dead:
             self.die_sound.play()
