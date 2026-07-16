@@ -55,12 +55,13 @@ jobs:
           Add-Content $env:GITHUB_PATH "C:\nuget\Gettext.Tools.0.22.4\tools\bin";
           choco install wget
       - name: Install Python dependencies
-        run: pip install tox build chambercourt toml-cli cx-Freeze
+        run: pip install tox build chambercourt toml-cli
       - name: Build
         run: make dist
       - name: Build the executable (Ubuntu)
         if: ${{ matrix.os == 'ubuntu-22.04' || matrix.os == 'ubuntu-22.04-arm' }}
         run: |
+          pip install cx-Freeze
           cp ./wincoll/levels/app-icon.png .
           cxfreeze bdist_appimage
           ./dist/WinColl*.AppImage --help
@@ -68,13 +69,20 @@ jobs:
       - name: Build the executable (macOS)
         if: ${{ matrix.os == 'macos-14' }}
         run: |
-          ./make-macos-icns ./wincoll/levels/Hero.png app-icon.iconset
-          cxfreeze bdist_dmg
-          mv build/wincoll-*.dmg build/wincoll-macOS.dmg
+          pip install pyinstaller
+          ./make-macos-icns ./wincoll/levels/Hero.png wincoll.iconset
+          pyi-makespec --windowed --name WinColl --icon wincoll.icns --copy-metadata wincoll --add-data "wincoll/levels:wincoll/levels" --add-data "wincoll/locale:wincoll/locale" --collect-all chambercourt wincoll/__main__.py
+          export version=$(grep version pyproject.toml)
+          sed -i '' -e "s/\(name='WinColl.app'\)/\1,\n    $version/" wincoll.spec
+          PYTHONPATH=. pyinstaller --noconfirm wincoll.spec
+          brew install create-dmg
+          mkdir dmg-folder
+          mv dist/wincoll.app dmg-folder/
+          create-dmg --volname "WinColl ${{ github.ref_name }}" ./dist/wincoll-${{ runner.os }}-${{ runner.arch }}.dmg dmg-folder/
       - name: Build the executable (Windows)
         if: ${{ matrix.os == 'windows-latest' }}
         run: |
-          pip install Pillow
+          pip install cx-Freeze Pillow
           python convert-image wincoll/levels/app-icon.png app-icon.ico
           cxfreeze bdist_msi
           mv dist/*.msi dist/wincoll-win64.msi
@@ -92,7 +100,7 @@ jobs:
         with:
           repo_token: ${{ github.token }}
           tag: ${{ github.ref }}
-          file: ./build/wincoll-*.dmg
+          file: ./dist/wincoll-*.dmg
           file_glob: true
       - name: Upload the binary (Windows)
         if: ${{ matrix.os == 'windows-latest' }}
