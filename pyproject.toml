@@ -1,6 +1,6 @@
 [project]
 name = "WinColl"
-version = "1.3.7.1"
+version = "1.3.8"
 description = "Simple rocks-and-diamonds game"
 license = "GPL-3.0-or-later"
 authors = [{name = "Reuben Thomas", email = "rrt@sc3d.org"}]
@@ -8,7 +8,7 @@ readme = "README.md"
 urls = {Homepage = "https://github.com/rrthomas/wincoll"}
 requires-python = ">= 3.12"
 dependencies = [
-    "chambercourt >= 0.9.56",
+    "chambercourt >= 0.9.57",
 ]
 classifiers = [
     "Environment :: X11 Applications",
