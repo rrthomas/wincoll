@@ -46,4 +46,4 @@ Paul Smith designed the title graphics, and Alistair Turnbull helped with the ga
 
 Level design by Alistair Turnbull, Paul Wilson, Reuben Thomas, Paul Smith, Jeremy Douglas and Daniel Thomas.
 
-The sounds are from [Freesound](https://freesound.org).
+The sounds are from [Freesound](https://freesound.org), and the in-game music from the [The Open Goldberg Variations](https://opengoldbergvariations.org).

@@ -143,3 +143,6 @@ The sound effects are copyrighted and licensed as follows:
 * Drill:
   [Pneumatic Drill by iainmccurdy](https://freesound.org/s/639409/) under CC
   BY 4.0
+
+The in-game music is from the [The Open Goldberg Variations](https://opengoldbergvariations.org),
+played by Kimiko Douglass-Ishizaka, under CC 0.
