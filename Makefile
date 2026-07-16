@@ -25,6 +25,7 @@ update-pofiles:
 
 build:
 	$(MAKE) update-pofiles
+	rm -rf $(PACKAGE).egg-info
 	python -m build
 	rm ./browser/*.whl
 	ln -s ../$$(ls dist/$(PACKAGE)*.whl) ./browser/
