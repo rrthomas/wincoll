@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.8" tiledversion="1.8.2" orientation="orthogonal" renderorder="right-down" width="7" height="8" tilewidth="16" tileheight="16" infinite="0" backgroundcolor="#808080" nextlayerid="2" nextobjectid="1">
+ <properties>
+  <property name="Title" value="Guided rockfall"/>
+ </properties>
+ <tileset firstgid="1" source="WinColl.tsx"/>
+ <tileset firstgid="23" source="../wincoll/levels/WinColl.tsx"/>
+ <layer id="1" name="Tile Layer 1" width="7" height="8">
+  <data encoding="csv">
+33,33,33,33,33,33,33,
+33,35,38,38,38,35,33,
+33,33,42,38,41,33,33,
+33,38,35,35,13,33,33,
+33,38,33,35,35,32,33,
+33,35,33,32,42,32,33,
+33,32,32,40,32,32,33,
+33,33,33,33,33,33,33
+</data>
+ </layer>
+</map>

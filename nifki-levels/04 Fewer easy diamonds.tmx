@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.8" tiledversion="1.8.2" orientation="orthogonal" renderorder="right-down" width="7" height="7" tilewidth="16" tileheight="16" infinite="0" backgroundcolor="#808080" nextlayerid="2" nextobjectid="1">
+ <properties>
+  <property name="Title" value="Fewer easy diamonds"/>
+ </properties>
+ <tileset firstgid="1" source="WinColl.tsx"/>
+ <layer id="1" name="Tile Layer 1" width="7" height="7">
+  <data encoding="csv">
+19,20,11,11,11,19,20,
+21,22,16,16,16,21,22,
+11,16,13,13,13,16,11,
+11,16,13,18,13,16,11,
+11,16,13,13,13,16,11,
+19,20,13,13,13,19,20,
+21,22,11,11,11,21,22
+</data>
+ </layer>
+</map>
