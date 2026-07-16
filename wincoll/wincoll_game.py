@@ -40,6 +40,10 @@ class Tile(StrEnum):
     EARTH = auto()
     ROCK = auto()
     KEY = auto()
+    TOP_LEFT_BRICK = auto()
+    TOP_RIGHT_BRICK = auto()
+    BOTTOM_LEFT_BRICK = auto()
+    BOTTOM_RIGHT_BRICK = auto()
 
 
 class WincollGame(Game[Tile]):
@@ -158,15 +162,11 @@ Avoid falling rocks!
     def update_map(self) -> None:
         new_fall = False
 
-        def rock_to_roll(pos: Vector2) -> bool:
+        def rock_to_roll(pos: Vector2, prop: str) -> bool:
             if self.get(pos) == Tile.ROCK:
                 block_below = self.get(pos + Vector2(0, 1))
-                return block_below in (
-                    Tile.ROCK,
-                    Tile.KEY,
-                    Tile.DIAMOND,
-                    Tile.BLOB,
-                )
+                props = self.get_tile_properties(block_below)
+                return props.get(prop) is True
             return False
 
         def fall(oldpos: Vector2, newpos: Vector2) -> None:
@@ -198,11 +198,11 @@ Avoid falling rocks!
                         fall(pos_above, pos)
                     elif block_above == Tile.EMPTY:
                         pos_left = pos_above + Vector2(-1, 0)
-                        if rock_to_roll(pos_left):
+                        if rock_to_roll(pos_left, "rounded_right"):
                             fall(pos_left, pos)
                         else:
                             pos_right = pos_above + Vector2(1, 0)
-                            if rock_to_roll(pos_right):
+                            if rock_to_roll(pos_right, "rounded_left"):
                                 fall(pos_right, pos)
 
         if self.falling and new_fall is False:
