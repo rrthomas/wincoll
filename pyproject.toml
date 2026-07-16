@@ -52,6 +52,7 @@ convention = "google"
 
 [[tool.cxfreeze.executables]]
 script = "wincoll/__main__.py"
+target_name = "WinColl"
 base = "gui"
 icon = "app-icon"
 shortcut_name = "WinColl"
@@ -59,3 +60,11 @@ shortcut_dir = "DesktopFolder"
 
 [tool.cxfreeze.build_exe]
 include_msvcr = true
+
+[tool.cxfreeze.bdist_mac]
+bundle_name = "WinColl"
+iconfile = "app-icon.icns"
+
+[tool.cxfreeze.bdist_dmg]
+applications_shortcut = true
+background = "builtin-arrow"
