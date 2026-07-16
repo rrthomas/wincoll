@@ -31,7 +31,6 @@ packages = ["wincoll"]
 wincoll = [
     "**/*.png",
     "**/*.wav",
-    "**/*.ogg",
     "**/*.tmx",
     "**/*.tsx",
     "**/*.ttf",
