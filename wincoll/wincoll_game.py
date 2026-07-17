@@ -55,6 +55,7 @@ class WincollGame(Game[Tile]):
         self.diamonds: int
         self.die_image: pygame.Surface
         self.die_sound: pygame.mixer.Sound
+        self.default_screen_scale = 2
         self.game_window_max = (15, 15)
         self.screen_extra_x_chars = 4
         self.default_background_colour = Color(0, 0, 255)
