@@ -61,6 +61,7 @@ class WincollGame(Game[Tile]):
         self.default_background_colour = Color(0, 0, 255)
 
         self.diamond_image: pygame.Surface
+        self.diamond_icon_image: pygame.Surface
 
         self.collect_sound: pygame.mixer.Sound
         self.rock_sound: pygame.mixer.Sound
@@ -97,6 +98,7 @@ Avoid falling rocks!
         self.die_sound = pygame.mixer.Sound(self.find_asset("Die.wav"))
         self.die_sound.set_volume(self.default_volume)
         self.diamond_image = pygame.image.load(self.find_asset("Diamond.png"))
+        self.diamond_icon_image = pygame.image.load(self.find_asset("DiamondIcon.png"))
         self.collect_sound = pygame.mixer.Sound(self.find_asset("Collect.wav"))
         self.collect_sound.set_volume(self.default_volume)
         self.rock_sound = pygame.mixer.Sound(str(self.find_asset("Slide.wav")))
@@ -223,7 +225,7 @@ Avoid falling rocks!
     def show_status(self) -> None:
         super().show_status()
         score_diamond = pygame.transform.scale(
-            self.diamond_image, (self.font_pixels, self.font_pixels)
+            self.diamond_icon_image, (self.font_pixels, self.font_pixels)
         )
         self.surface.blit(
             score_diamond,
