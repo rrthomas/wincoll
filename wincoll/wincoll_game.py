@@ -44,6 +44,16 @@ class Tile(StrEnum):
     TOP_RIGHT_BRICK = auto()
     BOTTOM_LEFT_BRICK = auto()
     BOTTOM_RIGHT_BRICK = auto()
+    TOP_BRICK = auto()
+    BOTTOM_BRICK = auto()
+    LEFT_BRICK = auto()
+    RIGHT_BRICK = auto()
+    BOTTOM_LEFT_TOP_RIGHT_BRICK = auto()
+    TOP_LEFT_BOTTOM_RIGHT_BRICK = auto()
+    TOP_LEFT_CORNER = auto()
+    TOP_RIGHT_CORNER = auto()
+    BOTTOM_LEFT_CORNER = auto()
+    BOTTOM_RIGHT_CORNER = auto()
 
 
 class WincollGame(Game[Tile]):
