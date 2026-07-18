@@ -1,0 +1,108 @@
+#!/usr/bin/env python3
+#
+# © Reuben Thomas <rrt@sc3d.org> 2026
+# Released under the GPL version 3, or (at your option) any later version.
+
+# /// script
+# requires-python = ">=3.12"
+# dependencies = ["pytmx"]
+# ///
+
+import argparse
+import sys
+import warnings
+from warnings import warn
+
+import pytmx
+
+
+num_warnings = 0
+
+
+def simple_warning(msg, cat, filename, lineno, file, line):
+    print(f"{parser.prog}: {msg}", file=file)
+    global num_warnings
+    num_warnings += 1
+
+
+warnings.showwarning = simple_warning
+
+
+def die(code, msg):
+    warn(msg)
+    sys.exit(code)
+
+
+# Command-line arguments
+parser = argparse.ArgumentParser(
+    description="Compare two Tiled WinColl levels and report significant differences.",
+)
+parser.add_argument(
+    "-V",
+    "--version",
+    action="version",
+    version="%(prog)s 0.1 (18 Jul 2026) by Reuben Thomas <rrt@sc3d.org>",
+)
+parser.add_argument("old", metavar="TILED-MAP", help="old Tiled map file")
+parser.add_argument("new", metavar="TILED-MAP", help="new Tiled map file")
+args = parser.parse_args()
+
+
+# Read the input and convert tile GIDs to text
+old_map = pytmx.TiledMap(args.old)
+new_map = pytmx.TiledMap(args.new)
+
+# Check the sizes are the same
+width = old_map.layers[0].width
+height = old_map.layers[0].height
+if width != new_map.layers[0].width or height != new_map.layers[0].height:
+    die(
+        1,
+        f"old map is {width}×{height} but new map is {new_map.layers[0].width}×{new_map.layers[0].height}",
+    )
+
+
+def get_props(map, x, y):
+    props = map.get_tile_properties(x, y, 0)
+    if type(props) is dict:
+        return props
+    return {}
+
+
+for y in range(height):
+    for x in range(width):
+        old_props = get_props(old_map, x, y)
+        new_props = get_props(new_map, x, y)
+        assert old_props is not None and new_props is not None
+        all_props = set()
+        for prop in old_props:
+            all_props.add(prop)
+        for prop in new_props:
+            all_props.add(prop)
+        for prop in all_props:
+            if prop in ("id", "source", "type"):
+                continue
+            old_val = old_props.get(prop)
+            new_val = new_props.get(prop)
+            if prop == "rounded_left":
+                if y == 0 or get_props(old_map, x, y - 1).get("solid"):
+                    continue  # nowhere to roll from
+                if x == 0:
+                    continue  # can't roll left off the map
+                if get_props(old_map, x - 1, y).get("solid") or get_props(
+                    old_map, x - 1, y - 1
+                ).get("solid"):
+                    continue  # can't roll off this block
+            elif prop == "rounded_right":
+                if y == 0 or get_props(old_map, x, y - 1).get("solid"):
+                    continue  # can't roll from above the map
+                if x == width - 1:
+                    continue  # can't roll right off the map
+                if get_props(old_map, x + 1, y).get("solid") or get_props(
+                    old_map, x + 1, y - 1
+                ).get("solid"):
+                    continue  # can't roll right off this block
+            if old_val != new_val:
+                warn(f"({x}, {y}): old has {prop} = {old_val} but new has {new_val}")
+
+exit(0 if num_warnings == 0 else 1)
