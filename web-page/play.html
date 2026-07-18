@@ -18,7 +18,7 @@
     <div style="height: 100%; width: 100%; display: flex; align-items: center; justify-content: center;">
       <canvas id="canvas"></canvas>
     </div>
-    <script type="py-game" config='{"packages": ["wincoll"]}'>
+    <script type="py-game" config='{"packages": ["wincoll"], "files": {"/levels.zip": ""}}'>
       import asyncio
       import pygame
       from wincoll.wincoll_game import WincollGame
@@ -27,7 +27,7 @@
       pygame.init()
       pygame.display.set_mode((window.innerWidth, window.innerHeight), 0, vsync=1)
       while True:
-          await asyncio.create_task(WincollGame().main([]))
+          await asyncio.create_task(WincollGame().main(["--levels", "levels.zip"]))
     </script>
     <script type="text/javascript">
       let canvas = document.getElementById("canvas");

@@ -36,6 +36,7 @@ jobs:
           pip install --user linton
       - name: Build pages
         run: |
+          zip -j ./web-page/levels.zip nifki-levels/*
           /usr/share/rsync/scripts/git-set-file-times ./web-page
           linton publish --base-url /wincoll/ ./web-page ./_site
       - name: Upload artifact
