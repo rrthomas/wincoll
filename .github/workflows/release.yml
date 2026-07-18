@@ -53,7 +53,7 @@ jobs:
         run: |
           nuget install Gettext.Tools -Version 0.22.4 -OutputDirectory c:\nuget;
           Add-Content $env:GITHUB_PATH "C:\nuget\Gettext.Tools.0.22.4\tools\bin";
-          choco install wget
+          choco install wget zip
       - name: Install Python dependencies
         run: pip install tox build chambercourt toml-cli
       - name: Build
