@@ -43,6 +43,27 @@ gid_to_char = {
     "wincoll/levels/Rock.png": "@",
     "wincoll/levels/Key.png": "K",
     "wincoll/levels/Hero.png": "W",
+
+    # These have the same physics as a plain brick.
+    "wincoll/levels/BottomBrick.png": "#",
+    "wincoll/levels/BottomLeftBrick.png": "#",
+    "wincoll/levels/BottomLeftCorner.png": "#",
+    "wincoll/levels/BottomRightBrick.png": "#",
+    "wincoll/levels/BottomRightCorner.png": "#",
+
+    # This have the same physics as a blob.
+    "wincoll/levels/TopBrick.png": "+",
+
+    # Best effort: approximate one-cornered bricks as a blob.
+    # FIXME: add the extra pieces?
+    "wincoll/levels/BottomLeftTopRightBrick.png": "+",
+    "wincoll/levels/LeftBrick.png": "+",
+    "wincoll/levels/RightBrick.png": "+",
+    "wincoll/levels/TopLeftBottomRightBrick.png": "+",
+    "wincoll/levels/TopLeftBrick.png": "+",
+    "wincoll/levels/TopLeftCorner.png": "+",
+    "wincoll/levels/TopRightBrick.png": "+",
+    "wincoll/levels/TopRightCorner.png": "+",
 }
 lines = []
 text = ""
