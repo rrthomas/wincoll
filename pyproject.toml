@@ -1,6 +1,6 @@
 [project]
 name = "WinColl"
-version = "1.3.10"
+version = "1.3.10.1"
 description = "Simple rocks-and-diamonds game"
 license = "GPL-3.0-or-later"
 authors = [{name = "Reuben Thomas", email = "rrt@sc3d.org"}]
