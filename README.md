@@ -1,8 +1,8 @@
 # WinColl
 
-https://rrthomas.github.io/wincoll  
+https://rrthomas.github.io/wincoll
 
-by Reuben Thomas <rrt@sc3d.org>  
+by Reuben Thomas <rrt@sc3d.org>
 
 WinColl is a simple puzzle game in which you tunnel through caverns
 collecting diamonds while avoiding being squashed by falling rocks. It is
@@ -28,7 +28,7 @@ The sounds are from [Freesound](https://freesound.org), lightly adapted.
 
 
 ## Installation and use
- 
+
 The game provides instructions on how to play.
 
 ### Binary installers
@@ -62,16 +62,19 @@ Install with `pip`: `pip install wincoll`, then execute the command
 
 ## Creating and editing levels
 
-Currently, to play edited or new levels you must have a source check-out of
-WinColl from GitHub. (If this doesn’t make sense to you, sorry! I hope to
-provide a simpler way to edit and play new levels soon.)
+The easiest way to create new levels is to modify an existing set of levels,
+which can be found in the [Source code Zip](https://github.com/rrthomas/wincoll/releases).
+To play them, you need to be able to start WinColl from the command line.
+(If this doesn’t make sense to you, sorry! I hope to provide a simpler way
+to create and play new levels soon.)
 
-The level files are in the `wincoll/levels` subdirectory of the project, and
-are [Tiled](https://www.mapeditor.org/) level editor files, so you will need
-to install Tiled to edit them or create new levels.
+The level files are in the `wincoll/levels` subdirectory, and are
+[Tiled](https://www.mapeditor.org/) level editor files, so you will need to
+install Tiled to edit them or create new levels.
 
-Having saved an edited level you can install the Python package with
-`pip install .` or run it directly with `PYTHONPATH=. python -m wincoll`.
+Having saved an edited level you can play it by running
+`wincoll --levels DIRECTORY`, where `DIRECTORY` is the path to the
+directory of levels.
 
 Some notes about level design:
 
@@ -82,6 +85,9 @@ Some notes about level design:
   already.
 + Levels need exactly one start position, given by placing the Win
   character.
++ There are four “corner” pieces which are the same as the bricks with one
+  rounded corner. These should only be used on the perimeter of a level,
+  where they allow the game background to show through.
 + No checks are done to make sure a level is possible to complete; for
   example, you can place diamonds surrounded by bricks, or have safes but no
   key.
@@ -90,6 +96,9 @@ Some notes about level design:
 + When designing a level, you will also need tile graphic files in the
   levels directory, as Tiled cannot find them otherwise. You can copy them
   from `wincoll/levels`.
++ The Python script `level-diff` can be used to check whether two levels are
+  the same. It allows cosmetic differences, in particular, different types
+  of brick that do not change how rocks can roll off them.
 
 I welcome [pull requests](https://github.com/rrthomas/wincoll/pulls) for new
 levels, or a simple issue with a level attached, in a Zip file. If GitHub is
