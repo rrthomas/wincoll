@@ -69,6 +69,10 @@ def get_props(map, x, y):
     return {}
 
 
+def is_permanent(map, x, y):
+    props = get_props(map, x, y)
+    return props.get("solid") and not props.get("scoring") and not props.get("type") == "rock"
+
 for y in range(height):
     for x in range(width):
         old_props = get_props(old_map, x, y)
@@ -85,22 +89,18 @@ for y in range(height):
             old_val = old_props.get(prop)
             new_val = new_props.get(prop)
             if prop == "rounded_left":
-                if y == 0 or get_props(old_map, x, y - 1).get("solid"):
+                if y == 0 or is_permanent(old_map, x, y - 1):
                     continue  # nowhere to roll from
                 if x == 0:
                     continue  # can't roll left off the map
-                if get_props(old_map, x - 1, y).get("solid") or get_props(
-                    old_map, x - 1, y - 1
-                ).get("solid"):
+                if is_permanent(old_map, x - 1, y) or is_permanent(old_map, x - 1, y - 1):
                     continue  # can't roll off this block
             elif prop == "rounded_right":
-                if y == 0 or get_props(old_map, x, y - 1).get("solid"):
+                if y == 0 or is_permanent(old_map, x, y - 1):
                     continue  # can't roll from above the map
                 if x == width - 1:
                     continue  # can't roll right off the map
-                if get_props(old_map, x + 1, y).get("solid") or get_props(
-                    old_map, x + 1, y - 1
-                ).get("solid"):
+                if is_permanent(old_map, x + 1, y) or is_permanent(old_map, x + 1, y - 1):
                     continue  # can't roll right off this block
             if old_val != new_val:
                 warn(f"({x}, {y}): old has {prop} = {old_val} but new has {new_val}")
