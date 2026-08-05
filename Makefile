@@ -30,8 +30,8 @@ build:
 	rm -f ./browser/*.whl
 	ln -s ../$$(ls dist/$(PACKAGE)*.whl) ./browser/
 	echo '{"packages": ["'$$(basename dist/$(PACKAGE)*.whl)'"]}' > ./browser/conf.json
-	zip -j levels.zip nifki-levels/*
-	ln -sf ../levels.zip ./web-page/
+	zip -j intro-levels.zip intro-levels/*
+	ln -sf ../intro-levels.zip ./web-page/levels.zip
 
 dist:
 	git diff --exit-code && \

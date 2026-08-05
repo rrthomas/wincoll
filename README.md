@@ -63,13 +63,13 @@ Install with `pip`: `pip install wincoll`, then execute the command
 ## Creating and editing levels
 
 The easiest way to create new levels is to modify an existing set of levels,
-which can be found in the [Source code Zip](https://github.com/rrthomas/wincoll/releases).
-To play them, you need to be able to start WinColl from the command line.
-(If this doesn’t make sense to you, sorry! I hope to provide a simpler way
-to create and play new levels soon.)
+such as the [intro
+levels](https://github.com/rrthomas/wincoll/releases/latest/download/intro-
+levels.zip). To play them, you need to be able to start WinColl from the
+command line. (If this doesn’t make sense to you, sorry! I hope to provide a
+simpler way to create and play new levels soon.)
 
-The level files are in the `wincoll/levels` subdirectory, and are
-[Tiled](https://www.mapeditor.org/) level editor files, so you will need to
+Unpack `intro-levels.zip`. The levels themselves are [Tiled](https://www.mapeditor.org/) level editor files, so you will need to
 install Tiled to edit them or create new levels.
 
 Having saved an edited level you can play it by running
