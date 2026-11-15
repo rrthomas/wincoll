@@ -54,10 +54,12 @@ Installers are available for GNU/Linux, macOS and Windows. See the
 ### Python package
 
 If you are a Python user, this is the simplest way to get WinColl on most
-machines.
+machines that can’t use one of the binary installers.
 
 Install with `pip`: `pip install wincoll`, then execute the command
 `wincoll`.
+
+Note that with `pip` you don’t get in-game music.
 
 
 ## Creating and editing levels
