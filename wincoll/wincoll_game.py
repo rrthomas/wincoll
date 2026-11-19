@@ -129,7 +129,7 @@ Avoid falling rocks!
         for x in range(self.level_width):
             for y in range(self.level_height):
                 block = self.get(Vector2(x, y))
-                if block in (Tile.DIAMOND, Tile.SAFE):
+                if self.get_tile_properties(block).get("scoring"):
                     self.diamonds += 1
 
     def handle_game_keys(self, event: pygame.event.Event) -> None:
@@ -149,9 +149,10 @@ Avoid falling rocks!
                 and newpos.y < self.level_height
             )
         block = self.get(newpos)
+        props = self.get_tile_properties(block)
         if block in (Tile.EMPTY, Tile.EARTH):
             return True
-        elif block == Tile.DIAMOND:
+        elif not props.get("solid") and props.get("scoring"):
             self.collect_sound.play()
             self.diamonds -= 1
             return True
