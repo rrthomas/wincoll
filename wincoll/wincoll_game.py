@@ -54,6 +54,7 @@ class Tile(StrEnum):
     TOP_RIGHT_CORNER = auto()
     BOTTOM_LEFT_CORNER = auto()
     BOTTOM_RIGHT_CORNER = auto()
+    CROWN = auto()
 
 
 class WincollGame(Game[Tile]):
@@ -111,6 +112,8 @@ Avoid falling rocks!
         self.diamond_icon_image = pygame.image.load(self.find_asset("DiamondIcon.png"))
         self.collect_sound = pygame.mixer.Sound(self.find_asset("Collect.wav"))
         self.collect_sound.set_volume(self.default_volume)
+        self.crown_sound = pygame.mixer.Sound(self.find_asset("Harp.wav"))
+        self.crown_sound.set_volume(self.default_volume)
         self.rock_sound = pygame.mixer.Sound(str(self.find_asset("Slide.wav")))
         self.rock_sound.set_volume(self.default_volume)
         self.unlock_sound = pygame.mixer.Sound(str(self.find_asset("Unlock.wav")))
@@ -153,7 +156,10 @@ Avoid falling rocks!
         if block in (Tile.EMPTY, Tile.EARTH):
             return True
         elif not props.get("solid") and props.get("scoring"):
-            self.collect_sound.play()
+            if block is Tile.CROWN:
+                self.crown_sound.play()
+            else:
+                self.collect_sound.play()
             self.diamonds -= 1
             return True
         elif block == Tile.KEY:

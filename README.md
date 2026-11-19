@@ -143,6 +143,8 @@ The sound effects are copyrighted and licensed as follows:
 + Safe unlock:
   [Old Church Bell (no noise) by igroglaz](https://freesound.org/s/633208/)
   under CC 0
++ Crown collection:
+  [Level Up Magic Harp by Qvantor](https://freesound.org/people/Qvantor/sounds/878598/) under CC 0
 + Death splat:
   [Splat1.wav by Shakedown_M](https://freesound.org/s/685205/) under CC 0
 * End of level whistle slide:
