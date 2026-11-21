@@ -74,7 +74,7 @@ class WincollGame(Game[Tile]):
         self.diamond_image: pygame.Surface
         self.diamond_icon_image: pygame.Surface
 
-        self.collect_sound: pygame.mixer.Sound
+        self.collect_sounds: dict[str, pygame.mixer.Sound]
         self.rock_sound: pygame.mixer.Sound
         self.unlock_sound: pygame.mixer.Sound
         self.end_level_sound: pygame.mixer.Sound
@@ -110,10 +110,12 @@ Avoid falling rocks!
         self.die_sound.set_volume(self.default_volume)
         self.diamond_image = pygame.image.load(self.find_asset("Diamond.png"))
         self.diamond_icon_image = pygame.image.load(self.find_asset("DiamondIcon.png"))
-        self.collect_sound = pygame.mixer.Sound(self.find_asset("Collect.wav"))
-        self.collect_sound.set_volume(self.default_volume)
-        self.crown_sound = pygame.mixer.Sound(self.find_asset("Harp.wav"))
-        self.crown_sound.set_volume(self.default_volume)
+        self.collect_sounds = {
+            "diamond": pygame.mixer.Sound(self.find_asset("Ping.wav")),
+            "crown": pygame.mixer.Sound(self.find_asset("Harp.wav")),
+        }
+        for sound in self.collect_sounds.values():
+            sound.set_volume(self.default_volume)
         self.rock_sound = pygame.mixer.Sound(str(self.find_asset("Slide.wav")))
         self.rock_sound.set_volume(self.default_volume)
         self.unlock_sound = pygame.mixer.Sound(str(self.find_asset("Unlock.wav")))
@@ -156,10 +158,11 @@ Avoid falling rocks!
         if block in (Tile.EMPTY, Tile.EARTH):
             return True
         elif not props.get("solid") and props.get("scoring"):
-            if block is Tile.CROWN:
-                self.crown_sound.play()
-            else:
-                self.collect_sound.play()
+            sound_name = props.get("type")
+            assert sound_name is not None
+            sound = self.collect_sounds.get(sound_name)
+            if sound is not None:
+                sound.play()
             self.diamonds -= 1
             return True
         elif block == Tile.KEY:
