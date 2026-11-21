@@ -112,7 +112,7 @@ Avoid falling rocks!
         self.diamond_icon_image = pygame.image.load(self.find_asset("DiamondIcon.png"))
         self.collect_sounds = {
             "diamond": pygame.mixer.Sound(self.find_asset("Ping.wav")),
-            "crown": pygame.mixer.Sound(self.find_asset("Harp.wav")),
+            "crown": pygame.mixer.Sound(self.find_asset("Trumpet.wav")),
         }
         for sound in self.collect_sounds.values():
             sound.set_volume(self.default_volume)

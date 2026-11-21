@@ -144,7 +144,7 @@ The sound effects are copyrighted and licensed as follows:
   [Old Church Bell (no noise) by igroglaz](https://freesound.org/s/633208/)
   under CC 0
 + Crown collection:
-  [Level Up Magic Harp by Qvantor](https://freesound.org/people/Qvantor/sounds/878598/) under CC 0
+  made from [Trumpet - staccato - F#4 (Sum_SHTrumpet_stac_G3_v2_rr2.wav) by sgossner](https://freesound.org/s/374115/) and [Trumpet - sustain - D5 (Sum_SHTrumpet_sus_D4_v3_rr1.wav) by sgossner](https://freesound.org/s/374159/) under CC 0
 + Death splat:
   [Splat1.wav by Shakedown_M](https://freesound.org/s/685205/) under CC 0
 * End of level whistle slide:
